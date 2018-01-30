@@ -1,5 +1,6 @@
 package game2.game;
 
+import game1.game.Asteroid;
 import game2.utilities.BasicKeys;
 import game2.utilities.JEasyFrame;
 
@@ -16,13 +17,13 @@ public class BasicGame {
     private static final int N_INITIAL_ASTEROIDS = 5;
     private static BasicKeys keys = new BasicKeys();
 
-    List<BasicAsteroid> asteroids;
+    List<Asteroid> asteroids;
     BasicShip ship;
 
     public BasicGame(){
         asteroids = new ArrayList<>();
         for (int i=0; i<N_INITIAL_ASTEROIDS;i++){
-            asteroids.add(BasicAsteroid.makeRandomAsteroid());
+            asteroids.add(Asteroid.makeRandomAsteroid());
         }
         ship = new BasicShip(keys);
 
@@ -46,7 +47,7 @@ public class BasicGame {
 
 
     private void update(){
-        asteroids.forEach(BasicAsteroid::update);
+        asteroids.forEach(Asteroid::update);
         ship.update();
     }
 }

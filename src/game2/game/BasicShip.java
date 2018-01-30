@@ -5,6 +5,7 @@ import game2.utilities.BasicController;
 import game2.utilities.Vector2D;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 import static game1.game.Constants.*;
 
@@ -46,10 +47,26 @@ public class BasicShip {
         turretVec = new Vector2D(0,0);
     }
 
+    //TODO: fix these variables
     public void draw(Graphics2D g){
+        AffineTransform at = g.getTransform();
+        g.translate(position.x, position.y);
+        double rot = direction.angle() + Math.PI / 2;
+        g.rotate(rot);
+        g.scale(DRAWING_SCALE, DRAWING_SCALE);
         g.setColor(COLOR);
-        g.fillOval((int) position.x - RADIUS, (int) position.y - RADIUS, RADIUS*2, RADIUS*2);
-        g.drawLine((int) position.x, (int)position.y, (int) turretVec.x, (int) turretVec.y);
+        g.fillPolygon(XP, YP, XP.length);
+
+        if (thrusting){
+            g.setColor(Color.red);
+            g.fillPolygon(XPTHRUST, YPTHRUST, XPTHRUST.length);
+        }
+        g.setTransform(at);
+
+
+        //g.setColor(COLOR);
+        //g.fillOval((int) position.x - RADIUS, (int) position.y - RADIUS, RADIUS*2, RADIUS*2);
+        //g.drawLine((int) position.x, (int)position.y, (int) turretVec.x, (int) turretVec.y);
     }
 
     public void update(){
