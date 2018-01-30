@@ -1,4 +1,4 @@
-package lab1.utilities;
+package game1.utilities;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -25,6 +25,9 @@ public class BasicKeys extends KeyAdapter implements BasicController {
             case KeyEvent.VK_UP:
                 action.thrust = 1;
                 break;
+            case KeyEvent.VK_DOWN:
+                action.thrust = -1;
+                break;
             case KeyEvent.VK_LEFT:
                 action.turn = -1;
                 break;
@@ -35,6 +38,10 @@ public class BasicKeys extends KeyAdapter implements BasicController {
                 action.shoot = true;
                 break;
         }
+
+        //System.out.println("thrust:" + action.thrust);
+        //System.out.println("turn:" + action.turn);
+        //System.out.println("shoot:" + action.shoot);
     }
 
     @Override
@@ -42,6 +49,9 @@ public class BasicKeys extends KeyAdapter implements BasicController {
         int key = e.getKeyCode();
         switch (key){
             case KeyEvent.VK_UP:
+                action.thrust = 0;
+                break;
+            case KeyEvent.VK_DOWN:
                 action.thrust = 0;
                 break;
             case KeyEvent.VK_LEFT:

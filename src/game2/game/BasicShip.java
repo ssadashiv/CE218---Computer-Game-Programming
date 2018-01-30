@@ -1,14 +1,12 @@
-package lab1.game1;
+package game2.game;
 
-import static lab1.game1.Constants.DT;
-import static lab1.game1.Constants.FRAME_HEIGHT;
-import static lab1.game1.Constants.FRAME_WIDTH;
-
-import lab1.utilities.Action;
-import lab1.utilities.BasicController;
-import lab1.utilities.Vector2D;
+import game2.utilities.Action;
+import game2.utilities.BasicController;
+import game2.utilities.Vector2D;
 
 import java.awt.*;
+
+import static game1.game.Constants.*;
 
 /**
  * Created by el16035 on 29/01/2018.
@@ -30,38 +28,43 @@ public class BasicShip {
     public Vector2D position; //On frame
     public Vector2D velocity; //Per second
 
+    private Vector2D turretVec;
+
     /*
     Direction in which the nose of the ship is pointing
     This will be the direction in which thrust is applied
     It is a unit vector representing the angle by which the ship has rotated
      */
     public Vector2D direction;
-    private BasicController ctrl;
+    private Action action;
 
     public BasicShip(BasicController ctrl){
-        this.ctrl = ctrl;
-
+        action = ctrl.action();
         position = new Vector2D(FRAME_WIDTH /2, FRAME_HEIGHT/2);
         velocity = new Vector2D(0,0);
         direction = new Vector2D(0, -1);
+        turretVec = new Vector2D(0,0);
     }
 
     public void draw(Graphics2D g){
         g.setColor(COLOR);
-        g.drawOval((int) position.x - RADIUS, (int) position.y - RADIUS, RADIUS*2, RADIUS*2);
+        g.fillOval((int) position.x - RADIUS, (int) position.y - RADIUS, RADIUS*2, RADIUS*2);
+        g.drawLine((int) position.x, (int)position.y, (int) turretVec.x, (int) turretVec.y);
     }
 
     public void update(){
+        direction.rotate(STEER_RATE * action.turn * DT);
 
-        Action action = ctrl.action();
+        velocity.addScaled(direction, MAG_ACC * DT * action.thrust);
+        velocity.mult(0.99);
 
-        direction.rotate(STEER_RATE * action.turn);
+        position.addScaled(velocity, DT);
+        position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
 
-        position.x += velocity.x * DT * action.thrust;
-        position.y += velocity.y * DT * action.thrust;
+        setTurretPos(position.x + RADIUS * 2 * Math.cos(direction.angle()), position.y + RADIUS * 2 * Math.sin(direction.angle()));
+    }
 
-        position.x = (position.x + FRAME_WIDTH) % FRAME_WIDTH;
-        position.y = (position.y + FRAME_HEIGHT) % FRAME_HEIGHT;
-
+    private void setTurretPos(double x, double y){
+        turretVec.set(x, y);
     }
 }

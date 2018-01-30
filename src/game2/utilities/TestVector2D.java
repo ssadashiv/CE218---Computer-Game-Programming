@@ -1,12 +1,10 @@
-package lab1.utilities;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertSame;
+package game2.utilities;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 public class TestVector2D {
 
     public static final double APPROX_ZERO = 1E-10;

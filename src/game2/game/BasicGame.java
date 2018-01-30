@@ -1,38 +1,37 @@
-package lab1.game1;
+package game2.game;
 
-import lab1.utilities.BasicController;
-import lab1.utilities.BasicKeys;
-import lab1.utilities.JEasyFrame;
+import game2.utilities.BasicKeys;
+import game2.utilities.JEasyFrame;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static lab1.game1.Constants.DELAY;
+import static game1.game.Constants.DELAY;
 
 /**
  * Created by el16035 on 16/01/2018.
  */
 public class BasicGame {
 
-    public static final int N_INITIAL_ASTEROIDS = 5;
-    public BasicController ctrl;
-    public List<BasicAsteroid> asteroids;
-    public BasicShip ship;
+    private static final int N_INITIAL_ASTEROIDS = 5;
+    private static BasicKeys keys = new BasicKeys();
+
+    List<BasicAsteroid> asteroids;
+    BasicShip ship;
 
     public BasicGame(){
         asteroids = new ArrayList<>();
         for (int i=0; i<N_INITIAL_ASTEROIDS;i++){
             asteroids.add(BasicAsteroid.makeRandomAsteroid());
         }
-
-        ship = new BasicShip(ctrl);
+        ship = new BasicShip(keys);
 
     }
 
     public static void main(String[] args) throws Exception {
         BasicGame game = new BasicGame();
         BasicView view = new BasicView(game);
-        new JEasyFrame(view, "Basic Game").addKeyListener(new BasicKeys());
+        new JEasyFrame(view, "Basic Game").addKeyListener(keys);
 
         while (true){
             game.update();
@@ -46,7 +45,7 @@ public class BasicGame {
     }
 
 
-    public void update(){
+    private void update(){
         asteroids.forEach(BasicAsteroid::update);
         ship.update();
     }

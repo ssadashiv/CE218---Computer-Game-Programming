@@ -1,10 +1,10 @@
-package lab1.game1;
+package game1.game;
 
-import lab1.utilities.Vector2D;
+import game1.utilities.Vector2D;
 
-import static lab1.game1.Constants.DT;
-import static lab1.game1.Constants.FRAME_HEIGHT;
-import static lab1.game1.Constants.FRAME_WIDTH;
+import static game1.game.Constants.DT;
+import static game1.game.Constants.FRAME_HEIGHT;
+import static game1.game.Constants.FRAME_WIDTH;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Random;

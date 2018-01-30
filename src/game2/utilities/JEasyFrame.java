@@ -1,4 +1,4 @@
-package lab1.utilities;
+package game2.utilities;
 
 import javax.swing.*;
 import java.awt.*;

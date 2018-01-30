@@ -1,4 +1,4 @@
-package lab1.game1;
+package game2.game;
 
 import java.awt.*;
 

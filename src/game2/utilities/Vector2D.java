@@ -1,4 +1,4 @@
-package lab1.utilities;
+package game2.utilities;
 
 /**
  * Created by el16035 on 23/01/2018.
