@@ -1,5 +1,7 @@
 package lab1.game1;
 
+import lab1.utilities.BasicController;
+import lab1.utilities.BasicKeys;
 import lab1.utilities.JEasyFrame;
 
 import java.util.ArrayList;
@@ -13,20 +15,24 @@ import static lab1.game1.Constants.DELAY;
 public class BasicGame {
 
     public static final int N_INITIAL_ASTEROIDS = 5;
-    public List<BasicAstroid> asteroids;
+    public BasicController ctrl;
+    public List<BasicAsteroid> asteroids;
+    public BasicShip ship;
 
     public BasicGame(){
         asteroids = new ArrayList<>();
         for (int i=0; i<N_INITIAL_ASTEROIDS;i++){
-            asteroids.add(BasicAstroid.makeRandomAsteroid());
+            asteroids.add(BasicAsteroid.makeRandomAsteroid());
         }
+
+        ship = new BasicShip(ctrl);
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         BasicGame game = new BasicGame();
         BasicView view = new BasicView(game);
-        new JEasyFrame(view, "Basic Game");
+        new JEasyFrame(view, "Basic Game").addKeyListener(new BasicKeys());
 
         while (true){
             game.update();
@@ -41,6 +47,7 @@ public class BasicGame {
 
 
     public void update(){
-        asteroids.forEach(BasicAstroid::update);
+        asteroids.forEach(BasicAsteroid::update);
+        ship.update();
     }
 }

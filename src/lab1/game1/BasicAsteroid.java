@@ -1,5 +1,7 @@
 package lab1.game1;
 
+import lab1.utilities.Vector2D;
+
 import static lab1.game1.Constants.DT;
 import static lab1.game1.Constants.FRAME_HEIGHT;
 import static lab1.game1.Constants.FRAME_WIDTH;
@@ -11,23 +13,21 @@ import java.util.Random;
  * Created by el16035 on 16/01/2018.
  */
 
-public class BasicAstroid{
+public class BasicAsteroid {
     public static final int RADIUS = 10;
     public static final double MAX_SPEED = 100;
     public static final double MIN_SPEED = 10;
 
-    private double x, y;
-    private double vx, vy;
+    private Vector2D position;
+    private Vector2D velocity;
 
-    public BasicAstroid(double x, double y, double vx, double vy){
-        this.x = x;
-        this.y = y;
-        this.vx = vx;
-        this.vy = vy;
+    public BasicAsteroid(double x, double y, double vx, double vy){
+        position = new Vector2D(x, y);
+        velocity = new Vector2D(vx, vy);
     }
 
 
-	public static BasicAstroid makeRandomAsteroid() {
+	public static BasicAsteroid makeRandomAsteroid() {
 	    Random r = new Random();
         int i;
 
@@ -50,23 +50,23 @@ public class BasicAstroid{
             ranVelY *= -1;
         }
 
-        return new BasicAstroid(ranX, ranY, ranVelX, ranVelY);
+        return new BasicAsteroid(ranX, ranY, ranVelX, ranVelY);
     }
     public void update(){
-        x += vx * DT;
-        y += vy * DT;
-        x = (x + FRAME_WIDTH) % FRAME_WIDTH;
-        y = (y + FRAME_HEIGHT) % FRAME_HEIGHT;
+        position.x += velocity.x * DT;
+        position.y += velocity.y * DT;
+        position.x = (position.x + FRAME_WIDTH) % FRAME_WIDTH;
+        position.y = (position.y + FRAME_HEIGHT) % FRAME_HEIGHT;
     }
 
     public void draw(Graphics2D g){
         g.setColor(Color.red);
-        g.fillOval((int) x - RADIUS, (int) y - RADIUS, 2 * RADIUS, 2 * RADIUS);
+        g.fillOval((int) position.x - RADIUS, (int) position.y - RADIUS, 2 * RADIUS, 2 * RADIUS);
     }
 
     @Override
     public String toString(){
-        return "X: " + x+", Y: "+y+", velX: " + vx +", velY: "+vy;
+        return "X: " + position.x+", Y: "+ position.y+", velX: " + velocity.x +", velY: "+ velocity.y;
     }
 
 }

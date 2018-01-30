@@ -15,6 +15,7 @@ public class JEasyFrame extends JFrame {
         getContentPane().add(BorderLayout.CENTER, comp);
         pack();
         setVisible(true);
+
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         repaint();
     }

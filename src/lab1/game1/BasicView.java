@@ -23,9 +23,14 @@ public class BasicView extends JComponent {
         g.setColor(BG_COLOR);
         g.fillRect(0,0,getWidth(), getHeight());
 
-        for (BasicAstroid a: game.asteroids) {
+        for (BasicAsteroid a: game.asteroids) {
             a.draw(g);
         }
+
+        game.ship.draw(g);
+
+
+
     }
 
     @Override
