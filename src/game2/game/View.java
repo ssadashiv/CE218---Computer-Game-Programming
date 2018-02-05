@@ -6,13 +6,13 @@ import java.awt.*;
 /**
  * Created by el16035 on 16/01/2018.
  */
-public class BasicView extends JComponent {
+class View extends JComponent {
     //background colour
 
-    public static final Color BG_COLOR = Color.black;
-    private BasicGame game;
+    private static final Color BG_COLOR = Color.black;
+    private Game game;
 
-    public BasicView(BasicGame game){
+    View(Game game){
         this.game = game;
     }
 
@@ -23,14 +23,9 @@ public class BasicView extends JComponent {
         g.setColor(BG_COLOR);
         g.fillRect(0,0,getWidth(), getHeight());
 
-        for (BasicAsteroid a: game.asteroids) {
-            a.draw(g);
+        for (GameObject o: game.objects) {
+            o.draw(g);
         }
-
-        game.ship.draw(g);
-
-
-
     }
 
     @Override

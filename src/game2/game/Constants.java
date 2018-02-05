@@ -13,4 +13,5 @@ public class Constants {
     //sleep time between two frames
     public static final int DELAY = 20;
     public static final double DT = DELAY / 1000.0;
+    public static final double DRAWING_SCALE = 5.0;
 }

@@ -1,3 +1,4 @@
+/*
 package game1.game;
 
 import game1.utilities.Vector2D;
@@ -9,9 +10,11 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Random;
 
+*/
 /**
  * Created by el16035 on 16/01/2018.
- */
+ *//*
+
 
 public class BasicAsteroid {
     public static final int RADIUS = 10;
@@ -27,7 +30,7 @@ public class BasicAsteroid {
     }
 
 
-	public static BasicAsteroid makeRandomAsteroid() {
+	public static game1.game.Asteroid makeRandomAsteroid() {
 	    Random r = new Random();
         int i;
 
@@ -50,13 +53,11 @@ public class BasicAsteroid {
             ranVelY *= -1;
         }
 
-        return new BasicAsteroid(ranX, ranY, ranVelX, ranVelY);
+        return new game1.game.Asteroid(ranX, ranY, ranVelX, ranVelY);
     }
     public void update(){
-        position.x += velocity.x * DT;
-        position.y += velocity.y * DT;
-        position.x = (position.x + FRAME_WIDTH) % FRAME_WIDTH;
-        position.y = (position.y + FRAME_HEIGHT) % FRAME_HEIGHT;
+        position.addScaled(velocity, DT);
+        position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
     }
 
     public void draw(Graphics2D g){
@@ -66,7 +67,8 @@ public class BasicAsteroid {
 
     @Override
     public String toString(){
-        return "X: " + position.x+", Y: "+ position.y+", velX: " + velocity.x +", velY: "+ velocity.y;
+        return "Pos: " + position.toString() + ", Vel: " + velocity.toString();
     }
 
 }
+*/

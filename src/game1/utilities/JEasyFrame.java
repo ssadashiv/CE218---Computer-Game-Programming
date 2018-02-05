@@ -1,11 +1,14 @@
+/*
 package game1.utilities;
 
 import javax.swing.*;
 import java.awt.*;
 
+*/
 /**
  * Created by el16035 on 16/01/2018.
- */
+ *//*
+
 public class JEasyFrame extends JFrame {
     public Component comp;
 
@@ -20,3 +23,4 @@ public class JEasyFrame extends JFrame {
         repaint();
     }
 }
+*/

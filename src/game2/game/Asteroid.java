@@ -1,10 +1,10 @@
-package game1.game;
+package game2.game;
 
-import game1.utilities.Vector2D;
+import game2.utilities.Vector2D;
 
-import static game1.game.Constants.DT;
-import static game1.game.Constants.FRAME_HEIGHT;
-import static game1.game.Constants.FRAME_WIDTH;
+import static game2.game.Constants.DT;
+import static game2.game.Constants.FRAME_HEIGHT;
+import static game2.game.Constants.FRAME_WIDTH;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Random;
@@ -13,21 +13,18 @@ import java.util.Random;
  * Created by el16035 on 16/01/2018.
  */
 
-public class Asteroid {
-    public static final int RADIUS = 10;
-    public static final double MAX_SPEED = 100;
-    public static final double MIN_SPEED = 10;
+class Asteroid extends GameObject{
+    private static final int RADIUS = 10;
+    private static final double MAX_SPEED = 100;
+    private static final double MIN_SPEED = 10;
 
-    private Vector2D position;
-    private Vector2D velocity;
+    private Asteroid(Vector2D position, Vector2D velocity, double radius){
+        super(position, velocity, radius);
 
-    public Asteroid(double x, double y, double vx, double vy){
-        position = new Vector2D(x, y);
-        velocity = new Vector2D(vx, vy);
     }
 
 
-    public static Asteroid makeRandomAsteroid() {
+    static Asteroid makeRandomAsteroid() {
         Random r = new Random();
         int i;
 
@@ -38,23 +35,19 @@ public class Asteroid {
         double ranVelX = MIN_SPEED + (MAX_SPEED - MIN_SPEED) * r.nextDouble();
         double ranVelY = MIN_SPEED + (MAX_SPEED - MIN_SPEED) * r.nextDouble();
 
-        i = 1 + (2-1) *r.nextInt();
+        i = 1 + r.nextInt();
 
         if (i == 1){
             ranVelX *= -1;
         }
 
-        i = 1 + (2-1) *r.nextInt();
+        i = 1 + r.nextInt();
 
         if (i == 1){
             ranVelY *= -1;
         }
 
-        return new Asteroid(ranX, ranY, ranVelX, ranVelY);
-    }
-    public void update(){
-        position.addScaled(velocity, DT);
-        position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
+        return new Asteroid(new Vector2D(ranX, ranY), new Vector2D(ranVelX, ranVelY), RADIUS);
     }
 
     public void draw(Graphics2D g){

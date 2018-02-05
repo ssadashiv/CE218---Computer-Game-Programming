@@ -1,18 +1,21 @@
+/*
 package game1.game;
 
 import javax.swing.*;
 import java.awt.*;
 
+*/
 /**
  * Created by el16035 on 16/01/2018.
- */
-public class BasicView extends JComponent {
+ *//*
+
+public class View extends JComponent {
     //background colour
 
     public static final Color BG_COLOR = Color.black;
-    private BasicGame game;
+    private Game game;
 
-    public BasicView(BasicGame game){
+    public View(Game game){
         this.game = game;
     }
 
@@ -23,7 +26,7 @@ public class BasicView extends JComponent {
         g.setColor(BG_COLOR);
         g.fillRect(0,0,getWidth(), getHeight());
 
-        for (BasicAsteroid a: game.asteroids) {
+        for (game1.game.Asteroid a: game.asteroids) {
             a.draw(g);
         }
 
@@ -38,3 +41,4 @@ public class BasicView extends JComponent {
         return Constants.FRAME_SIZE;
     }
 }
+*/

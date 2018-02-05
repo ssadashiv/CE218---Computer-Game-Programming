@@ -1,8 +1,11 @@
+/*
 package game1.utilities;
 
+*/
 /**
  * Created by el16035 on 23/01/2018.
- */
+ *//*
+
 public final class Vector2D {
     public double x, y;
 
@@ -170,3 +173,4 @@ public final class Vector2D {
     }
 
 }
+*/

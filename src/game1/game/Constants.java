@@ -1,10 +1,13 @@
+/*
 package game1.game;
 
 import java.awt.*;
 
+*/
 /**
  * Created by el16035 on 16/01/2018.
- */
+ *//*
+
 public class Constants {
     public static final int FRAME_HEIGHT = 480;
     public static final int FRAME_WIDTH = 640;
@@ -14,3 +17,4 @@ public class Constants {
     public static final int DELAY = 20;
     public static final double DT = DELAY / 1000.0;
 }
+*/
