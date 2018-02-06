@@ -13,7 +13,7 @@ import static game2.game.Constants.*;
  * Created by el16035 on 29/01/2018.
  */
 class Ship extends GameObject{
-    private static final int RADIUS = 8;
+    static final int RADIUS = 8;
 
     //Rotation velocity in radians per second
     private static final double STEER_RATE = 2 * Math.PI;
@@ -37,13 +37,15 @@ class Ship extends GameObject{
     private Vector2D direction;
     private Action action;
 
-    public Bullet bullet = null;
+    Bullet bullet = null;
 
-    Ship(Controller ctrl) {
+    public Game game;
+
+    Ship(Controller ctrl, Game game) {
         super(new Vector2D(FRAME_WIDTH/2, FRAME_HEIGHT/2), new Vector2D(0,0), RADIUS);
-
-        createComponents();
+        this.game = game;
         action = ctrl.action();
+        createComponents();
     }
 
     private void createComponents() {
@@ -78,8 +80,7 @@ class Ship extends GameObject{
     //TODO: fix these variables
     public void draw(Graphics2D g) {
         //Draw the turret
-        g.setColor(TURRET_COLOR);
-        g.drawLine((int) position.x, (int)position.y, (int) turretVec.x, (int) turretVec.y);
+
 
 
         AffineTransform at = g.getTransform();
@@ -89,6 +90,9 @@ class Ship extends GameObject{
         g.scale(DRAWING_SCALE, DRAWING_SCALE);
 
 
+        //Draw the turret
+        g.setColor(TURRET_COLOR);
+        g.drawLine(XP[1], YP[1], XP[1], YP[1] + 1);
 
         g.setColor(SHIP_COLOR);
         g.fillPolygon(XP, YP, XP.length);
@@ -108,6 +112,7 @@ class Ship extends GameObject{
         velocity.addScaled(direction, MAG_ACC * DT * action.thrust);
         velocity.mult(1-DRAG);
 
+        //TODO: Fix the turret position.
         setTurretPos(position.x + RADIUS * 3 * Math.cos(direction.angle()), position.y + RADIUS * 3 * Math.sin(direction.angle()));
         super.update();
 
@@ -123,14 +128,19 @@ class Ship extends GameObject{
 
     private void mkBullet(){
         //init the bullet just outside the turret.
-        Vector2D butPos = new Vector2D();
-        butPos.addScaled(turretVec, 1.01);
-
+        Vector2D butPos = new Vector2D(turretVec);
         Vector2D bulVel = new Vector2D(velocity);
+        Vector2D butDir = new Vector2D(direction);
+
         bulVel.addScaled(direction, Bullet.MUZZLE_VEL);
+        bullet = new Bullet(butPos, bulVel, butDir);
 
+        action.shoot = false;
+    }
 
-
-        bullet = new Bullet(butPos, bulVel);
+    public void collisionHandling(GameObject other) {
+        if (!(other instanceof Bullet)){
+            super.collisionHandling(other);
+        }
     }
 }

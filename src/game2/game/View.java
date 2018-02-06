@@ -23,9 +23,12 @@ class View extends JComponent {
         g.setColor(BG_COLOR);
         g.fillRect(0,0,getWidth(), getHeight());
 
-        for (GameObject o: game.objects) {
-            o.draw(g);
+        synchronized (Game.class){
+            for (GameObject o: game.objects) {
+                o.draw(g);
+            }
         }
+
     }
 
     @Override
