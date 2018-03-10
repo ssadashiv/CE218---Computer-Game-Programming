@@ -1,14 +1,18 @@
 package game2.game;
 
-import game2.utilities.Keys;
-import game2.utilities.JEasyFrame;
+import game2.utilities.*;
+import game2.utilities.controllers.AimNShoot;
+import game2.utilities.controllers.Keys;
+import game2.utilities.controllers.RandomAction;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-import static game2.game.Constants.DELAY;
+
 
 /**
  * Created by el16035 on 16/01/2018.
@@ -16,50 +20,70 @@ import static game2.game.Constants.DELAY;
 public class Game {
 
     //TODO: Make several levels. Array with N_INITIAL_ASTEROIDS.
-    private static final int N_INITIAL_ASTEROIDS = 2;
+    private static final int[] N_INITIAL_ASTEROIDS = new int[]{
+            2,
+            3,
+            4,
+            5,
+            6
+    };
+
     private static final int ASTEROID_INIT_SIZE = 2;
-    private static Keys keys = new Keys();
+    private static final int SCORE_NEW_LIFE = 1500;
 
+    private int currentLevel = 1;
     private int score = 0;
-    //List<Asteroid> asteroids;
-    private Ship ship;
+    private int scoreTracker = 0;
+    private PlayerShip playerShip;
+    private int lives  = 3;
 
-    List<GameObject> objects;
+    public List<GameObject> objects;
 
     public Game(){
-        objects = new ArrayList<>();
-
-        ship = new Ship(keys, this);
-        objects.add(ship);
-        for (int i=0; i<N_INITIAL_ASTEROIDS;i++){
-            objects.add(Asteroid.makeRandomAsteroid(ASTEROID_INIT_SIZE));
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
-        Game game = new Game();
-        View view = new View(game);
-        new JEasyFrame(view, "Basic Game").addKeyListener(keys);
-
-        while (true){
-            game.update();
-            view.repaint();
-            try {
-                Thread.sleep(DELAY);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        objects = new CopyOnWriteArrayList<>();
+        spawnShip();
+        objects.addAll(spawnAsteroids());
     }
 
     private void spawnShip(){
+        if (lives > 0){
+            AimNShoot as = new AimNShoot(this);
+            playerShip = new PlayerShip(as);
+            as.setParent(playerShip);
+
+            objects.add(playerShip);
+            SoundManager.extraShip();
+        }else{
+            System.exit(0);
+        }
 
     }
 
+    private List<Asteroid> spawnAsteroids(){
 
-    private void update(){
+        List<Asteroid> newAsteroids = new ArrayList<>();
+        if (currentLevel <= N_INITIAL_ASTEROIDS.length){
+            for (int i=0; i<N_INITIAL_ASTEROIDS[currentLevel - 1];i++){
+                newAsteroids.add(Asteroid.makeRandomAsteroid(ASTEROID_INIT_SIZE));
+            }
+
+            return newAsteroids;
+        }else{
+            System.out.println("All levels cleared. Exiting game");
+            System.exit(0);
+            return null;
+        }
+    }
+
+    void draw(Graphics2D g){
+        g.setColor(Color.WHITE);
+        g.drawString("Score: " + score, 15, 15);
+        g.drawString("Lives Remaining: " + lives, 15, 35);
+        g.drawString("Current Level: " + currentLevel, 15, 55);
+    }
+
+    public void update(){
         Iterator<GameObject> it = objects.iterator();
-
         List<GameObject> newItems = new ArrayList<>();
         while (it.hasNext()){
             GameObject o = it.next();
@@ -70,13 +94,32 @@ public class Game {
             }
         }
         objects.addAll(newItems);
+        if (playerShip.dead){
+            lives --;
+            spawnShip();
+        }
 
         objects.forEach(GameObject::update);
         List<GameObject> alive = objects.stream().filter(o -> !o.dead).collect(Collectors.toList());
 
-        if (ship.bullet != null) {
-            alive.add(ship.bullet);
-            ship.bullet = null;
+        boolean containsAsteroid = false;
+
+        for (GameObject go : alive){
+            if (go instanceof Asteroid){
+                containsAsteroid = true;
+                break;
+            }
+        }
+
+        if (!containsAsteroid){
+            currentLevel ++;
+            List<Asteroid> ast = spawnAsteroids();
+            if (ast != null) alive.addAll(ast);
+        }
+
+        if (playerShip.bullet != null) {
+            alive.add(playerShip.bullet);
+            playerShip.bullet = null;
         }
 
         synchronized (Game.class){
@@ -85,15 +128,24 @@ public class Game {
 
             for (int i = 0; i < objects.size(); i++){
                 for (int j = i + 1; j < objects.size(); j++){
-                    objects.get(i).collisionHandling(objects.get(j));
+                    int score = objects.get(i).collisionHandling(objects.get(j));
+                    if (score > 0){
+                        incScore(score);
+                    }
                 }
             }
         }
     }
 
 
-    public void incScore(){
-        score ++;
+    private void incScore(int x){
+        score += x;
+        scoreTracker += x;
+
+        if (scoreTracker == SCORE_NEW_LIFE){
+            lives ++;
+            scoreTracker = 0;
+        }
         //TODO: Add lives at certain scores.
     }
 

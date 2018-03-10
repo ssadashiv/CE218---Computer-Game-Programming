@@ -7,15 +7,15 @@ import static org.junit.Assert.*;
 
 public class TestVector2D {
 
-    public static final double APPROX_ZERO = 1E-10;
-    public static final int WIDTH = 200;
-    public static final int HEIGHT = 100;
-    public static final double RADIUS = Math.random() * 0.1 * WIDTH;
-    public static final double vx = Math.random() * WIDTH;
-    public static final double vy = Math.random() * HEIGHT;
-    public static final double wx = Math.random() * WIDTH;
-    public static final double wy = Math.random() * HEIGHT;
-    public Vector2D v, w, vCopy, wCopy;
+    private static final double APPROX_ZERO = 1E-10;
+    private static final int WIDTH = 200;
+    private static final int HEIGHT = 100;
+    private static final double RADIUS = Math.random() * 0.1 * WIDTH;
+    private static final double vx = Math.random() * WIDTH;
+    private static final double vy = Math.random() * HEIGHT;
+    private static final double wx = Math.random() * WIDTH;
+    private static final double wy = Math.random() * HEIGHT;
+    private Vector2D v, w, vCopy, wCopy;
 
     // reset v and w to be equal to V and W before every test
     @Before
@@ -27,12 +27,12 @@ public class TestVector2D {
     }
 
     // approximate equality of two double values
-    public static void approxEquals(double d1, double d2) {
+    private static void approxEquals(double d1, double d2) {
         assertEquals(d1, d2, APPROX_ZERO);
     }
 
     // approximate equality of two Vector2D objects
-    public static void approxEquals(Vector2D a, Vector2D b) {
+    private static void approxEquals(Vector2D a, Vector2D b) {
         approxEquals(a.x, b.x);
         approxEquals(a.y, b.y);
     }

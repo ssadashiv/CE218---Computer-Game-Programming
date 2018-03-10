@@ -31,7 +31,7 @@ public final class Vector2D {
     }
 
     // set coordinates based on argument vector
-    public Vector2D set(Vector2D v) {
+    Vector2D set(Vector2D v) {
         x = v.x;
         y = v.y;
         return this;
@@ -49,7 +49,7 @@ public final class Vector2D {
 
     // String for displaying vector as text
     public String toString() {
-        return "(" +x+", "+y+")";
+        return "(" + x + ", " + y + ")";
     }
 
     //  magnitude (= "length") of this vector
@@ -65,15 +65,7 @@ public final class Vector2D {
 
     // angle between this vector and another vector in range [-PI,PI]
     public double angle(Vector2D other) {
-
-        double result = other.angle() - angle();
-        if (result < -Math.PI)
-            result += 2 * Math.PI;
-        if (result > Math.PI)
-            result -= 2 * Math.PI;
-
-        return result;
-
+        return Math.atan2(x - other.x, y - other.y);
     }
 
     // add argument vector
@@ -130,8 +122,7 @@ public final class Vector2D {
 
     // "dot product" ("scalar product") with argument vector
     public double dot(Vector2D v) {
-        System.out.println("og: "+ (this.x * v.x) + (v.y *this.y));
-        return (this.x * v.x) + (v.y *this.y);
+        return (this.x * v.x) + (v.y * this.y);
     }
 
     // distance to argument vector
@@ -144,11 +135,11 @@ public final class Vector2D {
     public Vector2D normalise() {
         double m = mag();
 
-        if (m == 0){
+        if (m == 0) {
             x = y = 0;
-        }else{
-            x = x/m;
-            y = y/m;
+        } else {
+            x = x / m;
+            y = y / m;
         }
 
         return this;
@@ -158,8 +149,8 @@ public final class Vector2D {
     // remember to manage negative values of the coordinates
     public Vector2D wrap(double w, double h) {
 
-        x = (x+w) % w;
-        y = (y+h) % h;
+        x = (x + w) % w;
+        y = (y + h) % h;
 
         return this;
     }
@@ -167,7 +158,7 @@ public final class Vector2D {
     // construct vector with given polar coordinates
     public static Vector2D polar(double angle, double mag) {
 
-        return new Vector2D(mag* Math.cos(angle), mag*Math.sin(angle));
+        return new Vector2D(mag * Math.cos(angle), mag * Math.sin(angle));
     }
 
 }

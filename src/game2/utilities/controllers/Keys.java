@@ -1,14 +1,11 @@
-/*
-package game1.utilities;
+package game2.utilities.controllers;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-*/
 /**
  * Created by el16035 on 29/01/2018.
- *//*
-
+ */
 public class Keys extends KeyAdapter implements Controller {
     Action action;
 
@@ -69,4 +66,3 @@ public class Keys extends KeyAdapter implements Controller {
         }
     }
 }
-*/
