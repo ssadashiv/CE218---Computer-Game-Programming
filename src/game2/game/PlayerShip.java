@@ -47,6 +47,7 @@ class PlayerShip extends Ship{
         timeOutInvincible();
     }
     void update() {
+        System.out.println("TURN: " + action.turn);
         direction.rotate(STEER_RATE * action.turn * DT);
         velocity.addScaled(direction, MAG_ACC * DT * action.thrust);
         velocity.mult(1-DRAG);

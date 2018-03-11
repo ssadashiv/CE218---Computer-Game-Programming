@@ -62,7 +62,7 @@ public abstract class GameObject {
 
 
     public void targetOval(Graphics2D g){
-        g.setColor(Color.red);
+        g.setColor(Color.GREEN);
         g.drawOval((int) position.x - radius / 2, (int) position.y - radius / 2, radius, radius);
 
     }

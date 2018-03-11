@@ -2,6 +2,7 @@ package game2.game;
 
 import game2.utilities.*;
 import game2.utilities.controllers.AimNShoot;
+import game2.utilities.controllers.Controller;
 import game2.utilities.controllers.Keys;
 import game2.utilities.controllers.RandomAction;
 
@@ -38,6 +39,7 @@ public class Game {
     private int lives  = 3;
 
     public List<GameObject> objects;
+    public Keys keys = new Keys();
 
     public Game(){
         objects = new CopyOnWriteArrayList<>();
@@ -50,6 +52,7 @@ public class Game {
             AimNShoot as = new AimNShoot(this);
             playerShip = new PlayerShip(as);
             as.setParent(playerShip);
+
 
             objects.add(playerShip);
             SoundManager.extraShip();

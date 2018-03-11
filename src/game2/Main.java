@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Game game = new Game();
         View view = new View(game);
-        new JEasyFrame(view, "Basic Game").addKeyListener(new Keys());
+        new JEasyFrame(view, "Basic Game").addKeyListener(game.keys);
 
         while (true){
             game.update();
