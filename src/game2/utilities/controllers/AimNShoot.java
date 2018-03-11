@@ -10,9 +10,12 @@ import java.util.TimerTask;
 /**
  * Created by el16035 on 10/03/2018.
  */
+
+//TODO: THE ANGLE IS WRONG
+    // https://stackoverflow.com/questions/23692077/rotate-object-to-face-point?rq=1
+
 public class AimNShoot implements Controller {
     private static final long INTERVAL = 1000;
-    private static final int SHOOT_INTERVAL = 1500;
 
     private Game game;
     private Action action = new Action();
@@ -31,24 +34,18 @@ public class AimNShoot implements Controller {
     }
 
 
+    /*
+getTarget
+    aim
+    shoot
+    repeat
+ * */
     @Override
     public Action action() {
 
 
         Timer t = new Timer();
         t.schedule(new Target(), 0, INTERVAL);
-
-        /*
-        Timer bulletT = new Timer();
-        bulletT.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (canFire) {
-                    action.turn = 0;
-                    action.shoot = true;
-                }
-            }
-        }, 0, SHOOT_INTERVAL);*/
 
         return action;
     }
@@ -68,7 +65,10 @@ public class AimNShoot implements Controller {
 
         private void processTarget() {
             aim();
+            System.out.println("Turn " + action.turn);
+            System.out.println("target null :  " + (target == null));
             while (action.turn != 0 || target != null){
+                System.out.println("Angle: " + getAngle());
                 if (hasAimed()) {
                     action.turn = 0;
                     action.shoot = true;
@@ -85,13 +85,11 @@ public class AimNShoot implements Controller {
         private double getAngle() {
 
             if (target != null) {
-                Vector2D thisDis = new Vector2D(parent.direction).normalise();
-                Vector2D otherDis = new Vector2D(target.position).normalise();
+                Vector2D thisDir = new Vector2D(parent.direction).normalise();
+                Vector2D otherDir = new Vector2D(target.position).subtract(parent.position).normalise();
 
-                return Math.toDegrees(thisDis.dot(otherDis));
+                return Math.toDegrees(thisDir.angle(otherDir));
             }
-
-            action.turn = 0;
             return 0;
 
         }
@@ -103,12 +101,15 @@ public class AimNShoot implements Controller {
                 if (parent.canHit(o)) {
                     if (parent.position.dist(o.position) < minLength) {
                         temp = o;
-                        temp.isTarget = true;
                     }
                 }
 
             }
-            target = temp;
+            if (temp != null){
+                temp.isTarget = true;
+                target = temp;
+            }
+
         }
 
         private boolean hasAimed() {
