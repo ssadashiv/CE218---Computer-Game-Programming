@@ -1,7 +1,7 @@
 package Assignment.MainGame;
 
-import Other.Constants;
-import Utilities.MMButtonListener;
+import Assignment.Other.Constants;
+import Assignment.Utilities.MMButtonListener;
 
 import javax.swing.*;
 import java.awt.*;

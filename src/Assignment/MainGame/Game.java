@@ -1,10 +1,10 @@
 package Assignment.MainGame;
 
 
-import GameObjects.GameObject;
-import GameObjects.PlayerShip;
+import Assignment.GameObjects.GameObject;
+import Assignment.GameObjects.PlayerShip;
 import Assignment.Utilities.Controllers.NewKeys;
-import Utilities.SoundManager;
+import Assignment.Utilities.SoundManager;
 
 import java.awt.*;
 import java.util.List;

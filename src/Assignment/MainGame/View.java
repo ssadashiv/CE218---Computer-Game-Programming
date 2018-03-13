@@ -1,16 +1,17 @@
 package Assignment.MainGame;
 
 import Assignment.GameObjects.GameObject;
-import Utilities.Sprite;
+import Assignment.Utilities.Controllers.KeyBindingController;
+import Assignment.Utilities.Sprite;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
 
-import GameObjects.GameObject;
+import Assignment.GameObjects.GameObject;
 
-import Other.Constants;
+import Assignment.Other.Constants;
 
 /**
  * Created by el16035 on 16/01/2018.
@@ -48,6 +49,7 @@ public class View extends JComponent {
         bgTransf.scale(stretchX, stretchY);
 
 
+        KeyBindingController kbc = new KeyBindingController(this);
 
 
 
@@ -59,14 +61,12 @@ public class View extends JComponent {
         //paint the background
         //g.setBackground(Sprite.map);
 
-        System.out.println("MAP POS:" + Arrays.toString(mapPos));
         int[] newPos = game.shipMapPos();
         if (!isSamePosition(newPos)){
-            System.out.println("swapped colors. new color=" + currentBG.toString());
+            System.out.println("swap");
             mapHelper.setMapPos(newPos);
             mapPos = mapHelper.getMapPos();
             currentBG = mapHelper.getMap(mapPos);
-            System.out.println("swapped colors. new color=" + currentBG.toString());
         }
 
         g.setColor(currentBG);
@@ -79,8 +79,6 @@ public class View extends JComponent {
     }
 
     private boolean isSamePosition(int[] newPos){
-        System.out.println("MAP POS:" + Arrays.toString(mapPos));
-        System.out.println("NEW POS:" + Arrays.toString(newPos));
         for (int i=0;i<mapPos.length;i++) if (mapPos[i] != newPos[i]) return false;
         return true;
     }

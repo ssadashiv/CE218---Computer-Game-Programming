@@ -10,6 +10,7 @@ import Assignment.Utilities.Vector2D;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -60,19 +61,32 @@ public class PlayerShip extends Ship{
 
     public void update(){
         if (position.x < 0){
-            switchMapPos(1, -1);
+            if (!switchMapPos(1, -1)){
+                position.x = 0;
+                velocity.x = 0;
+            }
         }else if (position.x > FRAME_WIDTH){
-            switchMapPos(1, 1);
+            if (!switchMapPos(1, 1)){
+                position.x = FRAME_WIDTH;
+                velocity.x = 0;
+            }
         }else if (position.y < 0){
-            switchMapPos(0, -1);
+            if (!switchMapPos(0, -1)){
+                position.y = 0;
+                velocity.y = 0;
+            }
         }else if (position.y > FRAME_HEIGHT){
-            switchMapPos(0, 1);
+            if (!switchMapPos(0, 1)){
+                position.y = FRAME_HEIGHT;
+                velocity.y = 0;
+            }
+
         }
 
         super.update();
     }
 
-    //method to switch map positions. returns true it is a success
+    //method to switch map positions. returns true if it is a success
     private boolean switchMapPos(int index, int addInt){
         //go to scene to left
         int[] newPos = mapPos;

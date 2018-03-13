@@ -1,7 +1,8 @@
 package Assignment.MainGame;
 
-import Other.Constants;
-import Utilities.MMButtonListener;
+import Assignment.Utilities.MMButtonListener;
+import Assignment.Other.Constants;
+import Assignment.Utilities.MMButtonListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +24,7 @@ public class MainFrame extends JFrame {
         game = new Game(this);
         view = new View(game);
 
-        addKeyListener(game.playerKeys);
+        //addKeyListener(game.playerKeys);
 
         MMButtonListener bl = new MMButtonListener(this);
 

@@ -1,15 +1,15 @@
 package Assignment.GameObjects;
 
-import Utilities.SoundManager;
-import Utilities.Vector2D;
+import Assignment.Utilities.SoundManager;
+import Assignment.Utilities.Vector2D;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-import static Other.Constants.FRAME_HEIGHT;
-import static Other.Constants.FRAME_WIDTH;
-import static Other.Constants.DT;
+import static Assignment.Other.Constants.FRAME_HEIGHT;
+import static Assignment.Other.Constants.FRAME_WIDTH;
+import static Assignment.Other.Constants.DT;
 
 /**
  * Created by el16035 on 05/02/2018.
