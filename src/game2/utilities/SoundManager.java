@@ -97,7 +97,6 @@ public class SoundManager {
 
     // Custom methods playing a particular sound
     // Please add your own methods below
-
     public static void smallAsteroids() {
         play(bangSmall);
     }
@@ -111,5 +110,7 @@ public class SoundManager {
     public static void extraShip() {
         play(extraShip);
     }
-
+    public static void saucerSmall() {
+        play(saucerSmall);
+    }
 }

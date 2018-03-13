@@ -6,6 +6,7 @@ import game2.utilities.controllers.Controller;
 import game2.utilities.controllers.Keys;
 import game2.utilities.controllers.RandomAction;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,21 +37,24 @@ public class Game {
     private int score = 0;
     private int scoreTracker = 0;
     private PlayerShip playerShip;
+    private Saucer saucer;
+
     private int lives  = 3;
 
     public List<GameObject> objects;
     public Keys keys = new Keys();
+    private AimNShoot as = new AimNShoot(this);
 
     public Game(){
         objects = new CopyOnWriteArrayList<>();
         spawnShip();
+        spawnSaucer();
         objects.addAll(spawnAsteroids());
     }
 
     private void spawnShip(){
         if (lives > 0){
-            AimNShoot as = new AimNShoot(this);
-            playerShip = new PlayerShip(as);
+            playerShip = new PlayerShip(keys);
             as.setParent(playerShip);
 
 
@@ -60,6 +64,13 @@ public class Game {
             System.exit(0);
         }
 
+    }
+
+    private void spawnSaucer(){
+        saucer = new Saucer(as);
+        as.setParent(saucer);
+        objects.add(saucer);
+        SoundManager.saucerSmall();
     }
 
     private List<Asteroid> spawnAsteroids(){
@@ -101,6 +112,11 @@ public class Game {
             lives --;
             spawnShip();
         }
+
+        if (saucer.dead) {
+            spawnSaucer();
+        }
+
 
         objects.forEach(GameObject::update);
         List<GameObject> alive = objects.stream().filter(o -> !o.dead).collect(Collectors.toList());

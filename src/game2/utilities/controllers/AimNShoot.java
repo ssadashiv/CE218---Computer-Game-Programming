@@ -1,7 +1,9 @@
 package game2.utilities.controllers;
 
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import game2.game.Game;
 import game2.game.GameObject;
+import game2.game.Ship;
 import game2.utilities.Vector2D;
 
 import java.util.Timer;
@@ -21,7 +23,7 @@ public class AimNShoot implements Controller {
     private Action action = new Action();
 
     private GameObject target = null;
-    private GameObject parent;
+    private Ship parent;
 
     private boolean targeting = false;
 
@@ -29,7 +31,7 @@ public class AimNShoot implements Controller {
         this.game = game;
     }
 
-    public void setParent(GameObject parent) {
+    public void setParent(Ship parent) {
         this.parent = parent;
     }
 
@@ -55,31 +57,35 @@ getTarget
         @Override
         public void run() {
             if (!targeting && parent != null) {
+                System.out.println("finding new target");
                 targeting = true;
-                if (target == null){
-                    findTarget();
-                }
-                processTarget();
+                findTarget();
+
+                if (target != null) aim();
             }
         }
 
         private void processTarget() {
-            aim();
-            System.out.println("Turn " + action.turn);
-            System.out.println("target null :  " + (target == null));
-            while (action.turn != 0 || target != null){
-                System.out.println("Angle: " + getAngle());
+        }
+
+        private void aim() {
+            if (target == null){
+                action.turn = 0;
+                return;
+            }
+
+            action.turn = getAngle() > 0 ? 1 : -1;
+            while (targeting){
                 if (hasAimed()) {
+                    System.out.println("Shooting");
                     action.turn = 0;
                     action.shoot = true;
+                    target.isTarget = false;
                     targeting = false;
                     break;
                 }
             }
-        }
 
-        private void aim() {
-            action.turn = getAngle() > 0 ? 1 : -1;
         }
 
         private double getAngle() {
@@ -98,7 +104,8 @@ getTarget
             GameObject temp = null;
             double minLength = Double.MAX_VALUE;
             for (GameObject o : game.objects) {
-                if (parent.canHit(o)) {
+                if (parent.canShoot(o)) {
+                    System.out.println("found possible target");
                     if (parent.position.dist(o.position) < minLength) {
                         temp = o;
                     }
@@ -113,7 +120,7 @@ getTarget
         }
 
         private boolean hasAimed() {
-            return getAngle() > -10 && getAngle() < 10;
+            return getAngle() > -7 && getAngle() < 7;
         }
     }
 }

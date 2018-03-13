@@ -16,23 +16,18 @@ class Bullet extends GameObject {
     private static final Clip DEATH_SOUND = SoundManager.fire;
     private static final Image IMAGE = Sprite.BULLET;
 
-    private static final Color COLOR = Color.yellow;
     private static final int RADIUS = 2;
     static final double MUZZLE_VEL = 300;
 
-    private Vector2D direction;
-    private Ship parent;
-    //Lifetime of every bullet in milliseconds
+    Ship parent;
+    //Lifetime of every bullet in seconds
     private int lifeTime = 2;
 
-
-    private double newMagFac;
 
     Bullet(Vector2D position, Vector2D velocity, Vector2D direction, Ship parent) {
         super(position, velocity, direction, RADIUS, DEATH_SOUND, IMAGE);
         this.parent = parent;
         double mag = position.mag();
-        newMagFac = (mag + (RADIUS / 2)) / mag;
 
         startTimer();
     }
@@ -63,8 +58,8 @@ class Bullet extends GameObject {
     }
 
     public boolean canHit(GameObject other) {
-        return (other instanceof Asteroid && parent instanceof PlayerShip)
-                || (other instanceof PlayerShip && parent instanceof Saucer);
+        return !(parent instanceof Saucer && other instanceof Saucer) && ((other instanceof Asteroid && parent instanceof PlayerShip) || (other instanceof PlayerShip && parent instanceof Saucer));
+
     }
 
     public int collisionHandling(GameObject other) {

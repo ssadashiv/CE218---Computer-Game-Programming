@@ -19,7 +19,7 @@ public abstract class GameObject {
     public Vector2D velocity;
     public Vector2D direction;
     boolean dead;
-    private int radius;
+    int radius;
     private Clip deathSound;
     private Image image;
 
@@ -49,6 +49,7 @@ public abstract class GameObject {
         double imW = image.getWidth(null);
         double imH = image.getHeight(null);
         AffineTransform t = new AffineTransform();
+
         t.rotate(direction.angle(), 0, 0);
         t.scale(radius * 2 / imW, radius * 2 / imH);
         t.translate(-imW / 2.0, -imH / 2.0);

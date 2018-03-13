@@ -20,7 +20,6 @@ class PlayerShip extends Ship{
     private static final Clip DEATH_SOUND = SoundManager.bangMedium;
     private static final Image IMAGE = Sprite.PLAYER_SHIP;
 
-    private static final Color SHIP_COLOR = Color.cyan;
     private static Vector2D initPos = new Vector2D(FRAME_WIDTH/2, FRAME_HEIGHT/2);
     private static Vector2D initVel = new Vector2D(0,0);
     private static Vector2D initDir = new Vector2D(-1, -1);
@@ -34,31 +33,18 @@ class PlayerShip extends Ship{
     //Constant speed loss factor
     private static final double DRAG = 0.01;
 
-    private Vector2D turretVec;
-
     boolean invincible = true;
     private int countDown = 3;
 
-    Bullet bullet = null;
-
     PlayerShip(Controller ctrl) {
-        super(ctrl, SHIP_COLOR, initPos, initVel, initDir, RADIUS, DEATH_SOUND, IMAGE);
-        turretVec = new Vector2D(0, 0);
+        super(ctrl, initPos, initVel, initDir, RADIUS, DEATH_SOUND, IMAGE);
+
+        setInfo(STEER_RATE, MAG_ACC, DRAG);
         timeOutInvincible();
     }
-    void update() {
-        direction.rotate(STEER_RATE * action.turn * DT);
-        velocity.addScaled(direction, MAG_ACC * DT * action.thrust);
-        velocity.mult(1-DRAG);
 
-        setTurretPos(position.x + RADIUS * 3 * Math.cos(direction.angle()), position.y + RADIUS * 3 * Math.sin(direction.angle()));
-        super.update();
 
-        if (action.shoot){
-            mkBullet();
-            action.shoot = false;
-        }
-    }
+
     private void timeOutInvincible(){
         int delay = 1000;
         int period = 1000;
@@ -72,23 +58,12 @@ class PlayerShip extends Ship{
         }, delay, period);
     }
 
-    private void setTurretPos(double x, double y) {
-        turretVec.set(x, y);
-    }
-
-    private void mkBullet(){
-        //init the bullet just outside the turret.
-
-        Vector2D bulVel = new Vector2D(velocity);
-        bulVel.addScaled(direction, Bullet.MUZZLE_VEL);
-        bullet = new Bullet(new Vector2D(turretVec), bulVel, new Vector2D(direction), this);
-        action.shoot = false;
-
-        SoundManager.fire();
-    }
-
     public boolean canHit(GameObject other) {
         return (other instanceof Asteroid) && !invincible;
+    }
+
+    public boolean canShoot(GameObject other) {
+        return other instanceof Asteroid || other instanceof Saucer;
     }
 
     public int collisionHandling(GameObject other) {
@@ -99,4 +74,6 @@ class PlayerShip extends Ship{
         }
         return 0;
     }
+
+
 }
