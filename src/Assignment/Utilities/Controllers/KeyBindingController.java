@@ -28,31 +28,34 @@ public class KeyBindingController implements Controller{
 
 
     public KeyBindingController(JComponent comp){
-        comp.getInputMap(IFW).put(KeyStroke.getKeyStroke("W"), MOVE_NORTH);
-        comp.getInputMap(IFW).put(KeyStroke.getKeyStroke("S"), MOVE_SOUTH);
+        InputMap im = comp.getInputMap(IFW);
+        ActionMap am = comp.getActionMap();
 
-        comp.getInputMap(IFW).put(KeyStroke.getKeyStroke("A"), MOVE_WEST);
-        comp.getInputMap(IFW).put(KeyStroke.getKeyStroke("D"), MOVE_EAST);
+        im.put(KeyStroke.getKeyStroke("W"), MOVE_NORTH);
+        im.put(KeyStroke.getKeyStroke("S"), MOVE_SOUTH);
 
-        comp.getInputMap(IFW).put(KeyStroke.getKeyStroke("UP"), LOOK_UP);
-        comp.getInputMap(IFW).put(KeyStroke.getKeyStroke("DOWN"), LOOK_DOWN);
+        im.put(KeyStroke.getKeyStroke("A"), MOVE_WEST);
+        im.put(KeyStroke.getKeyStroke("D"), MOVE_EAST);
 
-        comp.getInputMap(IFW).put(KeyStroke.getKeyStroke("LEFT"), LOOK_LEFT);
-        comp.getInputMap(IFW).put(KeyStroke.getKeyStroke("RIGHT"), LOOK_RIGHT);
+        im.put(KeyStroke.getKeyStroke("UP"), LOOK_UP);
+        im.put(KeyStroke.getKeyStroke("DOWN"), LOOK_DOWN);
 
-
-        comp.getActionMap().put(MOVE_NORTH, new MoveY(-1));
-        comp.getActionMap().put(MOVE_SOUTH, new MoveY(1));
-
-        comp.getActionMap().put(MOVE_WEST, new MoveX(-1));
-        comp.getActionMap().put(MOVE_EAST, new MoveX(1));
+        im.put(KeyStroke.getKeyStroke("LEFT"), LOOK_LEFT);
+        im.put(KeyStroke.getKeyStroke("RIGHT"), LOOK_RIGHT);
 
 
-        comp.getActionMap().put(LOOK_UP, new LookY(-1));
-        comp.getActionMap().put(LOOK_DOWN, new LookY(1));
+        am.put(MOVE_NORTH, new MoveY(-1));
+        am.put(MOVE_SOUTH, new MoveY(1));
 
-        comp.getActionMap().put(LOOK_LEFT, new LookX(-1));
-        comp.getActionMap().put(LOOK_RIGHT, new LookX(1));
+        am.put(MOVE_WEST, new MoveX(-1));
+        am.put(MOVE_EAST, new MoveX(1));
+
+
+        am.put(LOOK_UP, new LookY(-1));
+        am.put(LOOK_DOWN, new LookY(1));
+
+        am.put(LOOK_LEFT, new LookX(-1));
+        am.put(LOOK_RIGHT, new LookX(1));
 
     }
 

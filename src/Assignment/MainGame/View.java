@@ -51,6 +51,8 @@ public class View extends JComponent {
 
         KeyBindingController kbc = new KeyBindingController(this);
 
+        setFocusable(true);
+        requestFocusInWindow();
 
 
     }
