@@ -24,7 +24,7 @@ public class MainFrame extends JFrame {
         game = new Game(this);
         view = new View(game);
 
-        //addKeyListener(game.playerKeys);
+        addKeyListener(game.playerKeys);
 
         MMButtonListener bl = new MMButtonListener(this);
 

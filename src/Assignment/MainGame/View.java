@@ -1,13 +1,14 @@
 package Assignment.MainGame;
 
+import Assignment.GameObjects.Bullet;
 import Assignment.GameObjects.GameObject;
-import Assignment.Utilities.Controllers.KeyBindingController;
 import Assignment.Utilities.Sprite;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import Assignment.GameObjects.GameObject;
 
@@ -49,12 +50,6 @@ public class View extends JComponent {
         bgTransf.scale(stretchX, stretchY);
 
 
-        KeyBindingController kbc = new KeyBindingController(this);
-
-        setFocusable(true);
-        requestFocusInWindow();
-
-
     }
 
     @Override
@@ -69,6 +64,16 @@ public class View extends JComponent {
             mapHelper.setMapPos(newPos);
             mapPos = mapHelper.getMapPos();
             currentBG = mapHelper.getMap(mapPos);
+
+
+            Iterator<GameObject> it = game.objects.iterator();
+
+            while (it.hasNext()){
+                GameObject o = it.next();
+                if (o instanceof Bullet) {
+                    it.remove();
+                }
+            }
         }
 
         g.setColor(currentBG);

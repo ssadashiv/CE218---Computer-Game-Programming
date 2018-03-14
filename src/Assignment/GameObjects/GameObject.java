@@ -15,6 +15,10 @@ import static Assignment.Other.Constants.DT;
  * Created by el16035 on 05/02/2018.
  */
 public abstract class GameObject {
+    Vector2D initPos;
+    Vector2D initVel;
+    Vector2D initDir;
+
     Vector2D position;
     Vector2D velocity;
     Vector2D direction;
@@ -25,6 +29,8 @@ public abstract class GameObject {
 
     public boolean isTarget = false;
 
+    ObjectStats stats;
+
     GameObject(Vector2D position, Vector2D velocity, Vector2D direction, int radius, Clip deathSound, Image image) {
         this.position = position;
         this.velocity = velocity;
@@ -32,6 +38,21 @@ public abstract class GameObject {
         this.radius = radius;
         this.deathSound = deathSound;
         this.image = image;
+
+
+        initPos = new Vector2D(position);
+        initVel = new Vector2D(velocity);
+        initDir = new Vector2D(direction);
+
+
+    }
+
+    void setStats(int armour, int livesRemaining, long fireRate, int bulletSpeed, int bulletDamage, int contactDamage, int scrapOnDeath){
+        stats = new ObjectStats(armour, livesRemaining, fireRate, bulletSpeed, bulletDamage, contactDamage, scrapOnDeath);
+    }
+
+    public ObjectStats getStats(){
+        return stats;
     }
 
     private void hit() {

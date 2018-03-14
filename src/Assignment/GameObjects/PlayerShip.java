@@ -2,15 +2,12 @@ package Assignment.GameObjects;
 
 import Assignment.MainGame.MapHelper;
 import Assignment.Utilities.Vector2D;
-import Assignment.MainGame.Game;
 import Assignment.Utilities.Controllers.Controller;
 import Assignment.Utilities.SoundManager;
 import Assignment.Utilities.Sprite;
-import Assignment.Utilities.Vector2D;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
-import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,9 +21,10 @@ public class PlayerShip extends Ship{
     private static final Clip DEATH_SOUND = SoundManager.bangMedium;
     private static final Image IMAGE = Sprite.PLAYER_SHIP;
 
+    //Initial vectors. Position, Velocity, Direction.
     private static final Vector2D INIT_POS = new Vector2D(FRAME_WIDTH/2, FRAME_HEIGHT/2);
     private static final Vector2D INIT_VEL = new Vector2D(0,0);
-    private static final Vector2D INIT_DIR = new Vector2D(-1, -1);
+    private static final Vector2D INIT_DIR = new Vector2D(1, 0);
 
     //Rotation velocity in radians per second
     private static final double STEER_RATE = 2 * Math.PI;
@@ -34,8 +32,18 @@ public class PlayerShip extends Ship{
     //Acceleration when thrust is applied
     private static final double MAG_ACC = 200;
 
-    //Constant speed loss factor
-    private static final double DRAG = 0.01;
+    //Stats
+    private static final int INIT_ARMOUR = 100;
+    private static final int INIT_LIVES = 3;
+
+    //The fire rate of the bullet in milliseconds
+    private static final long FIRE_RATE = 500;
+
+    //the bullet speed. x pixels in a second
+    private static final int BULLET_SPEED = 10;
+    private static final int BULLET_DAMAGE = 15;
+    private static final int CONTACT_DAMAGE = 30;
+    private static final int SCRAP_ON_DEATH = 0;
 
     boolean invincible = true;
     private int countDown = 3;
@@ -46,6 +54,8 @@ public class PlayerShip extends Ship{
     public PlayerShip(Controller ctrl) {
         super(ctrl, INIT_POS, INIT_VEL, INIT_DIR, RADIUS, DEATH_SOUND, IMAGE);
         setInfo(STEER_RATE, MAG_ACC, DRAG);
+        setStats(INIT_ARMOUR, INIT_LIVES, FIRE_RATE, BULLET_SPEED, BULLET_DAMAGE, CONTACT_DAMAGE, SCRAP_ON_DEATH);
+
         timeOutInvincible();
     }
 
@@ -61,24 +71,24 @@ public class PlayerShip extends Ship{
 
     public void update(){
         if (position.x < 0){
-            if (!switchMapPos(1, -1)){
+            if (!canSwitchMapPos(1, -1)){
                 position.x = 0;
-                velocity.x = 0;
+                velocity.x *= WALL_REFLECT;
             }
         }else if (position.x > FRAME_WIDTH){
-            if (!switchMapPos(1, 1)){
+            if (!canSwitchMapPos(1, 1)){
                 position.x = FRAME_WIDTH;
-                velocity.x = 0;
+                velocity.x *= WALL_REFLECT;
             }
         }else if (position.y < 0){
-            if (!switchMapPos(0, -1)){
+            if (!canSwitchMapPos(0, -1)){
                 position.y = 0;
-                velocity.y = 0;
+                velocity.y *= WALL_REFLECT;
             }
         }else if (position.y > FRAME_HEIGHT){
-            if (!switchMapPos(0, 1)){
+            if (!canSwitchMapPos(0, 1)){
                 position.y = FRAME_HEIGHT;
-                velocity.y = 0;
+                velocity.y *= WALL_REFLECT;
             }
 
         }
@@ -87,18 +97,22 @@ public class PlayerShip extends Ship{
     }
 
     //method to switch map positions. returns true if it is a success
-    private boolean switchMapPos(int index, int addInt){
+    private boolean canSwitchMapPos(int index, int addInt){
         //go to scene to left
-        int[] newPos = mapPos;
-        newPos[index] += addInt;
-        if (mapHelper.getMap(newPos) != null){
-            mapHelper.setMapPos(newPos);
-            position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
-            System.out.println("WRAPPING");
+        mapPos[index] += addInt;
+        if (mapHelper.getMap(mapPos) != null){
+            switchMap();
             return true;
         }
+        //reset if not valid map position
+        mapPos[index] -= addInt;
 
         return false;
+    }
+
+    private void switchMap(){
+        mapHelper.setMapPos(mapPos);
+        position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
     }
 
     private void timeOutInvincible(){
