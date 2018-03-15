@@ -12,6 +12,7 @@ import Assignment.Utilities.Vector2D;
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
+
 import java.util.stream.Collectors;
 
 import static Assignment.Other.Constants.FRAME_SIZE;
@@ -35,13 +36,7 @@ public class Game {
         playerKeys = new PlayerKeys(container);
         playerShip = new PlayerShip(playerKeys);
 
-
-
-
         newGame();
-
-
-
     }
 
     void newGame() {
@@ -49,10 +44,16 @@ public class Game {
         score = 0;
         currentLevel = 1;
         spawnShip();
-        //spawnSaucer();
-        //objects.addAll(spawnAsteroids());*/
+        addObstacles();
+    }
 
+    private void spawnShip() {
+        playerShip.resetPos();
+        SoundManager.extraShip();
+        objects.add(playerShip);
+    }
 
+    private void addObstacles(){
         boolean[][] obstacles = MapFileParser.getObstacles();
 
         double obstSize = (double) FRAME_SIZE.height /  (double) obstacles[0].length;
@@ -71,13 +72,6 @@ public class Game {
         }
 
     }
-
-    private void spawnShip() {
-        playerShip.resetPos();
-        SoundManager.extraShip();
-        objects.add(playerShip);
-    }
-
 
     void draw(Graphics2D g) {
         g.setColor(Color.RED);
@@ -107,7 +101,7 @@ public class Game {
             playerShip.bullet = null;
         }
 
-        synchronized (Game.class){
+        synchronized (Game.class) {
             objects.clear();
             objects.addAll(alive);
 

@@ -21,6 +21,7 @@ public abstract class GameObject {
 
     public Vector2D position;
     public Vector2D velocity;
+
     Vector2D direction;
     public boolean dead;
     public int radius;
