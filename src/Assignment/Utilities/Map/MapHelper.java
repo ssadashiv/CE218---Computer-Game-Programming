@@ -1,4 +1,4 @@
-package Assignment.MainGame;
+package Assignment.Utilities.Map;
 
 import java.awt.*;
 import java.util.Arrays;

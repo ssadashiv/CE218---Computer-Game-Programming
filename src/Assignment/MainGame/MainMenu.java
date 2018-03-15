@@ -1,10 +1,11 @@
 package Assignment.MainGame;
 
-import Assignment.Other.Constants;
 import Assignment.Utilities.MMButtonListener;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static Assignment.Other.Constants.FRAME_SIZE;
 
 /**
  * Created by el16035 on 13/03/2018.
@@ -23,13 +24,10 @@ public class MainMenu extends JPanel {
     public MainMenu(MMButtonListener bl) {
         this.buttonListener = bl;
         createButtons();
-
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        //setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     }
 
-    public void setDimensions(Dimension dim) {
-        setSize(dim);
-    }
+
 
     public boolean isOpen() {
         return isOpen;
@@ -83,6 +81,6 @@ public class MainMenu extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        return Constants.FRAME_SIZE;
+        return FRAME_SIZE;
     }
 }

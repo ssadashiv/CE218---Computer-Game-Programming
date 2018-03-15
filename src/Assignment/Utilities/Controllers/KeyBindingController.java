@@ -1,11 +1,14 @@
+/*
 package Assignment.Utilities.Controllers;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+*/
 /**
  * Created by eriklange on 13.03.2018.
- */
+ *//*
+
 public class KeyBindingController implements Controller{
 
 
@@ -125,11 +128,13 @@ public class KeyBindingController implements Controller{
 
     }
 
-    /*
+    */
+/*
 
 
 
-        /*
+        */
+/*
         *
         * pressed.add(e.getKeyCode());
         if (!pressed.isEmpty()) {
@@ -177,5 +182,7 @@ public class KeyBindingController implements Controller{
                 }
             }
         }
-        * */
+        * *//*
+
 }
+*/

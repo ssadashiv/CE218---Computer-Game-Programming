@@ -7,6 +7,8 @@ import Assignment.Utilities.MMButtonListener;
 import javax.swing.*;
 import java.awt.*;
 
+import static Assignment.Other.Constants.FRAME_SIZE;
+
 /**
  * Created by el16035 on 16/01/2018.
  */
@@ -24,17 +26,19 @@ public class MainFrame extends JFrame {
         game = new Game(this);
         view = new View(game);
 
-        //addKeyListener(game.playerKeys);
+        addKeyListener(game.playerKeys);
 
         MMButtonListener bl = new MMButtonListener(this);
 
         menu = new MainMenu(bl);
-        menu.setSize(Constants.FRAME_SIZE);
         getContentPane().add(BorderLayout.CENTER, menu);
 
         menu.openPanel();
 
         pack();
+
+
+        setResizable(false);
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 

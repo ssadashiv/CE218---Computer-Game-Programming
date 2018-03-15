@@ -1,17 +1,16 @@
 package Assignment.MainGame;
 
+import Assignment.GameObjects.Bullet;
 import Assignment.GameObjects.GameObject;
-import Assignment.Utilities.Controllers.KeyBindingController;
+import Assignment.Utilities.Map.MapHelper;
 import Assignment.Utilities.Sprite;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.util.Arrays;
+import java.util.Iterator;
 
-import Assignment.GameObjects.GameObject;
-
-import Assignment.Other.Constants;
+import static Assignment.Other.Constants.FRAME_SIZE;
 
 /**
  * Created by el16035 on 16/01/2018.
@@ -36,24 +35,7 @@ public class View extends JComponent {
         mapHelper = new MapHelper();
         mapPos = mapHelper.getMapPos();
         currentBG = mapHelper.getMap(mapPos);
-
         game.setShipMapHelper(mapHelper);
-
-        double imWidth = im.getWidth(null);
-        double imHeight = im.getHeight(null);
-
-        double stretchX = (imWidth > Constants.FRAME_WIDTH ? 1 : Constants.FRAME_WIDTH / imWidth);
-        double stretchY = (imHeight > Constants.FRAME_HEIGHT ? 1 : Constants.FRAME_WIDTH / imHeight);
-
-        bgTransf = new AffineTransform();
-        bgTransf.scale(stretchX, stretchY);
-
-
-        KeyBindingController kbc = new KeyBindingController(this);
-
-        setFocusable(true);
-        requestFocusInWindow();
-
 
     }
 
@@ -69,6 +51,16 @@ public class View extends JComponent {
             mapHelper.setMapPos(newPos);
             mapPos = mapHelper.getMapPos();
             currentBG = mapHelper.getMap(mapPos);
+
+
+            Iterator<GameObject> it = game.objects.iterator();
+
+            while (it.hasNext()){
+                GameObject o = it.next();
+                if (o instanceof Bullet) {
+                    it.remove();
+                }
+            }
         }
 
         g.setColor(currentBG);
@@ -87,6 +79,6 @@ public class View extends JComponent {
 
     @Override
     public Dimension getPreferredSize() {
-        return Constants.FRAME_SIZE;
+        return FRAME_SIZE;
     }
 }
