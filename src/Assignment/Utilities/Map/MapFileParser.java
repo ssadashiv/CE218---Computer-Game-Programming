@@ -1,15 +1,19 @@
 package Assignment.Utilities.Map;
 
+import Assignment.Other.SharedValues;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import static Assignment.Other.Constants.FRAME_SIZE;
 
 /**
  * Created by el16035 on 14/03/2018.
  */
 public class MapFileParser {
     private static String DIR_NAME = "maps/";
-    private static String FILE_NAME = "map1";
+    private static String FILE_NAME = "maps";
     private static String FORMAT = ".txt";
     private static boolean[][] obstacles;
     private static int obstacleCount;
@@ -37,6 +41,8 @@ public class MapFileParser {
         String firstLine = input.nextLine();
         obstacleCount = firstLine.length();
         obstacles = new boolean[obstacleCount][obstacleCount];
+        SharedValues.gridSize = obstacleCount;
+        SharedValues.cellSize = (int) (FRAME_SIZE.getWidth() / (double) SharedValues.gridSize);
         int i = 0;
 
         while (input.hasNextLine()){
@@ -52,5 +58,7 @@ public class MapFileParser {
             }
             System.out.println();
         }
+
+        SharedValues.mapLoaded = true;
     }
 }

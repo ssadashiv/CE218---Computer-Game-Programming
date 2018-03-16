@@ -10,52 +10,6 @@ import static Assignment.Other.Constants.DT;
  * Created by el16035 on 14/03/2018.
  */
 public class HitDetection {
-
-    //Methods testing which side objOne comparing to objTwo
-    /*public static boolean hitFromNorth(GameObject objOne, GameObject objTwo) {
-        Rectangle objOnePos = getOldPos(objOne);
-        Rectangle objTwoPos = objTwo.getBounds();
-
-
-        boolean testCase1 = objOnePos.x + (objOnePos.width) >= objTwoPos.x;
-        boolean testCase2 = objOnePos.x <= (objTwoPos.x + objTwoPos.width);
-        boolean testCase3 = objOnePos.y + (objOnePos.height)<= objTwoPos.y;
-
-        if (testCase1 && testCase2 && testCase3) {
-            System.out.println("hit from north");
-            return true;
-        }
-        return false;
-    }
-    public static boolean hitFromSouth(GameObject objOne, GameObject objTwo) {
-        return false;
-    }
-    public static boolean hitFromWest(GameObject objOne, GameObject objTwo) {
-        return false;
-    }
-    public static boolean hitFromEast(GameObject objOne, GameObject objTwo) {
-        Rectangle objOnePos = getOldPos(objOne);
-        Rectangle objTwoPos = objTwo.getBounds();
-
-        boolean testCase1 = objOnePos.y + objOnePos.height <= objTwoPos.y;
-        boolean testCase2 = objOnePos.y >= objTwoPos.y + objTwoPos.height;
-        boolean testCase3 = objOnePos.x >= objTwoPos.x + objTwoPos.width;
-
-        if (testCase1 && testCase2 && testCase3) {
-            System.out.println("hit from east");
-            return true;
-        }
-        return false;
-    }
-
-    private static Rectangle getOldPos(GameObject obj){
-        Vector2D origVel = new Vector2D(obj.velocity).mult(-1);
-        Rectangle bounds = obj.getBounds();
-        bounds.x -= origVel.x * DT;
-        bounds.y -= origVel.y * DT;
-        return bounds;
-    }*/
-
     public static String whichDirection(GameObject objOne, GameObject objTwo){
         Rectangle oneBounds = objOne.getBounds();
         Rectangle twoBounds = objTwo.getBounds();

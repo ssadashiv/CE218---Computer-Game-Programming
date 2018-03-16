@@ -10,13 +10,13 @@ import java.awt.event.KeyEvent;
  *//*
 
 public class Keys extends KeyAdapter implements Controller {
-    Action action;
+    OldAction action;
 
     public Keys(){
-        action = new Action();
+        action = new OldAction();
     }
 
-    public Action action(){
+    public OldAction action(){
         return action;
     }
 

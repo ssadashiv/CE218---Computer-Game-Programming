@@ -7,7 +7,7 @@ package game1.utilities;
  *//*
 
 public interface Controller {
-    Action action();
+    OldAction action();
 
 }
 */

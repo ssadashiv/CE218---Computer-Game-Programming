@@ -4,6 +4,7 @@ package Assignment.MainGame;
 import Assignment.GameObjects.GameObject;
 import Assignment.GameObjects.Obstacle;
 import Assignment.GameObjects.PlayerShip;
+import Assignment.Utilities.Controllers.KeyBindingController;
 import Assignment.Utilities.Controllers.PlayerKeys;
 import Assignment.Utilities.Map.*;
 import Assignment.Utilities.SoundManager;
@@ -13,6 +14,7 @@ import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import static Assignment.Other.Constants.FRAME_SIZE;
@@ -26,17 +28,14 @@ public class Game {
     private int score;
 
     public List<GameObject> objects;
-    public PlayerKeys playerKeys;
-    private PlayerShip playerShip;
-    MainFrame container;
+    public KeyBindingController playerKeys;
+    public  PlayerShip playerShip;
 
-    public Game(MainFrame container) {
-        this.container = container;
-        objects = new LinkedList<>();
-        playerKeys = new PlayerKeys(container);
-        playerShip = new PlayerShip(playerKeys);
+    public Game() {
+        objects = new CopyOnWriteArrayList<>();
+        //playerKeys = new PlayerKeys(container);
 
-        newGame();
+
     }
 
     void newGame() {
@@ -47,6 +46,12 @@ public class Game {
         addObstacles();
     }
 
+    public void setPlayerKeys(KeyBindingController kbc){
+        playerKeys = kbc;
+        playerShip = new PlayerShip(playerKeys);
+        newGame();
+    }
+
     private void spawnShip() {
         playerShip.resetPos();
         SoundManager.extraShip();
@@ -55,9 +60,10 @@ public class Game {
 
     private void addObstacles(){
         boolean[][] obstacles = MapFileParser.getObstacles();
+        for (GameObject o : objects) o.setGridSize();
+
 
         double obstSize = (double) FRAME_SIZE.height /  (double) obstacles[0].length;
-        System.out.println("Obs size="+obstSize);
 
 
         for (int i = 0; i < obstacles.length; i++) {
@@ -80,7 +86,7 @@ public class Game {
         g.drawString("Current Level: " + currentLevel, 15, 55);
     }
 
-    public void setShipMapHelper(MapHelper mh) {
+    public void setMapHelper(MapHelper mh) {
         playerShip.setMapHelper(mh);
     }
 

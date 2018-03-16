@@ -43,7 +43,7 @@ public class Ship {
      *//*
 
     public Vector2D direction;
-    private Action action;
+    private OldAction action;
 
     public Ship(Controller ctrl){
         action = ctrl.action();

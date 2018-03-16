@@ -1,13 +1,11 @@
 package Assignment.MainGame;
 
+import Assignment.Utilities.Controllers.KeyBindingController;
 import Assignment.Utilities.MMButtonListener;
-import Assignment.Other.Constants;
-import Assignment.Utilities.MMButtonListener;
+import Assignment.Utilities.Map.MapHelper;
 
 import javax.swing.*;
 import java.awt.*;
-
-import static Assignment.Other.Constants.FRAME_SIZE;
 
 /**
  * Created by el16035 on 16/01/2018.
@@ -23,22 +21,30 @@ public class MainFrame extends JFrame {
 
     MainFrame(String title){
         super(title);
-        game = new Game(this);
+        game = new Game();
         view = new View(game);
 
-        addKeyListener(game.playerKeys);
+        KeyBindingController kbc = new KeyBindingController(view, this);
+        game.setPlayerKeys(kbc);
+
+        MapHelper mapHelper = new MapHelper();
+        game.setMapHelper(mapHelper);
+        view.setMapHelper(mapHelper);
+
 
         MMButtonListener bl = new MMButtonListener(this);
 
         menu = new MainMenu(bl);
-        getContentPane().add(BorderLayout.CENTER, menu);
+        openMenu();
+        EastPanel eastPanel = new EastPanel(this, view.mapHelper, game.playerShip);
 
-        menu.openPanel();
+        view.setEastPanel(eastPanel);
+
+        getContentPane().add(BorderLayout.WEST, menu);
+        getContentPane().add(BorderLayout.EAST, eastPanel);
 
         pack();
-
-
-        setResizable(false);
+        setResizable(true);
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -55,6 +61,10 @@ public class MainFrame extends JFrame {
         return menu.isOpen();
     }
 
+    public void openMenu(){
+        menu.openPanel();
+
+    }
 
     public void startGame(boolean startNew){
         menu.closePanel();

@@ -11,15 +11,15 @@ import java.util.Set;
  * Created by el16035 on 29/01/2018.
  */
 public class PlayerKeys extends KeyAdapter implements Controller {
-    private NewAction action;
+    private Action action;
     private MainFrame frame;
 
     public PlayerKeys(MainFrame frame) {
-        action = new NewAction();
+        action = new Action();
         this.frame = frame;
     }
 
-    public NewAction newAction() {
+    public Action action() {
         return action;
     }
 

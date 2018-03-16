@@ -1,6 +1,6 @@
 package Assignment.GameObjects;
 
-import Assignment.Utilities.Controllers.NewAction;
+import Assignment.Utilities.Controllers.Action;
 import Assignment.Utilities.Controllers.Controller;
 import Assignment.Utilities.SoundManager;
 import Assignment.Utilities.Vector2D;
@@ -16,11 +16,11 @@ import static Assignment.Other.Constants.*;
  * Created by el16035 on 27/02/2018.
  */
 public abstract class Ship extends GameObject {
-    private NewAction action;
+    private Action action;
     private double drag;
+    private Vector2D prevDirection;
     private double steerRate;
     private double magAcc;
-    private Vector2D prevDirection;
 
     private Vector2D turretVec = new Vector2D(0, 0);
     public Bullet bullet = null;
@@ -29,9 +29,8 @@ public abstract class Ship extends GameObject {
 
     Ship(Controller ctrl, Vector2D pos, Vector2D vel, Vector2D direction, int radius, Clip deathSound, Image image) {
         super(pos, vel, direction, radius, deathSound, image);
-        this.action = ctrl.newAction();
+        this.action = ctrl.action();
         prevDirection = new Vector2D(direction);
-
     }
 
     public abstract boolean canShoot(GameObject other);
@@ -57,7 +56,8 @@ public abstract class Ship extends GameObject {
         }
 
         direction = prevDirection;
-        //direction.rotate(steerRate * action.turn * DT);
+
+
         velocity.addScaled(new Vector2D(action.thrustWest, action.thrustNorth), magAcc * DT);
         velocity.mult(1 - drag);
 
@@ -85,13 +85,7 @@ public abstract class Ship extends GameObject {
 
     private void mkBullet() {
         //init the bullet just outside the turret.
-
-        System.out.println("making bullet");
         Vector2D bulVel = new Vector2D(velocity);
-        System.out.println("dir.x=" + direction.x);
-        System.out.println("dir.y=" + direction.y);
-        System.out.println("vel.x=" + velocity.x);
-        System.out.println("vel.y=" + velocity.y);
         bulVel.addScaled(direction, Bullet.MUZZLE_VEL);
         bullet = new Bullet(new Vector2D(turretVec), bulVel, new Vector2D(direction), this);
         SoundManager.fire();

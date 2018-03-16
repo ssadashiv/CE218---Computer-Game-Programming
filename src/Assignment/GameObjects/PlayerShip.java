@@ -37,7 +37,7 @@ public class PlayerShip extends Ship{
     private static final int INIT_LIVES = 3;
 
     //The fire rate of the bullet in milliseconds
-    private static final long FIRE_RATE = 500;
+    private static final int FIRE_RATE = 500;
 
     //the bullet speed. x pixels in a second
     private static final int BULLET_SPEED = 10;
@@ -50,6 +50,10 @@ public class PlayerShip extends Ship{
 
     private MapHelper mapHelper;
     private int[] mapPos;
+
+    //A boolean variable deciding if the ship can shoot or not
+    //It will for example be false when the ship is switching rooms.
+    private boolean canFire = true;
 
     public PlayerShip(Controller ctrl) {
         super(ctrl, INIT_POS, INIT_VEL, INIT_DIR, RADIUS, DEATH_SOUND, IMAGE);
@@ -71,22 +75,22 @@ public class PlayerShip extends Ship{
 
     public void update(){
         if (position.x < 0){
-            if (!canSwitchMapPos(1, -1)){
+            if (!canSwitchRooms(1, -1)){
                 position.x = 0;
                 velocity.x *= WALL_REFLECT;
             }
         }else if (position.x > FRAME_WIDTH){
-            if (!canSwitchMapPos(1, 1)){
+            if (!canSwitchRooms(1, 1)){
                 position.x = FRAME_WIDTH;
                 velocity.x *= WALL_REFLECT;
             }
         }else if (position.y < 0){
-            if (!canSwitchMapPos(0, -1)){
+            if (!canSwitchRooms(0, -1)){
                 position.y = 0;
                 velocity.y *= WALL_REFLECT;
             }
         }else if (position.y > FRAME_HEIGHT){
-            if (!canSwitchMapPos(0, 1)){
+            if (!canSwitchRooms(0, 1)){
                 position.y = FRAME_HEIGHT;
                 velocity.y *= WALL_REFLECT;
             }
@@ -97,11 +101,11 @@ public class PlayerShip extends Ship{
     }
 
     //method to switch map positions. returns true if it is a success
-    private boolean canSwitchMapPos(int index, int addInt){
+    private boolean canSwitchRooms(int index, int addInt){
         //go to scene to left
         mapPos[index] += addInt;
         if (mapHelper.getMap(mapPos) != null){
-            switchMap();
+            switchRoom();
             return true;
         }
         //reset if not valid map position
@@ -110,9 +114,12 @@ public class PlayerShip extends Ship{
         return false;
     }
 
-    private void switchMap(){
+    //Method to make the ship switch maps
+    private void switchRoom(){
+        canFire = false;
         mapHelper.setMapPos(mapPos);
         position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
+        canFire = true;
     }
 
     private void timeOutInvincible(){

@@ -7,14 +7,19 @@ import Assignment.Utilities.Vector2D;
 import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static Assignment.Other.Constants.*;
+import static Assignment.Other.SharedValues.gridSize;
+import static Assignment.Other.SharedValues.mapLoaded;
 
 /**
  * Created by el16035 on 05/02/2018.
  */
 public abstract class GameObject {
+
     Vector2D initPos;
     Vector2D initVel;
     Vector2D initDir;
@@ -32,6 +37,11 @@ public abstract class GameObject {
 
     ObjectStats stats;
 
+    public boolean[][] grid;
+
+    //Stores the last updated coordinates of the currenct object.
+    //public List<int[]> gridPositions = new ArrayList<>();
+
     GameObject(Vector2D position, Vector2D velocity, Vector2D direction, int radius, Clip deathSound, Image image) {
         this.position = position;
         this.velocity = velocity;
@@ -44,15 +54,52 @@ public abstract class GameObject {
         initPos = new Vector2D(position);
         initVel = new Vector2D(velocity);
         initDir = new Vector2D(direction);
-
+        setGridSize();
 
     }
 
-    void setStats(int armour, int livesRemaining, long fireRate, int bulletSpeed, int bulletDamage, int contactDamage, int scrapOnDeath){
+    void setStats(int armour, int livesRemaining, int fireRate, int bulletSpeed, int bulletDamage, int contactDamage, int scrapOnDeath) {
         stats = new ObjectStats(armour, livesRemaining, fireRate, bulletSpeed, bulletDamage, contactDamage, scrapOnDeath);
     }
 
-    public ObjectStats getStats(){
+    public void setGridSize(){
+        grid = new boolean[gridSize][gridSize];
+    }
+    public void updateGrid() {
+        setGridSize();
+        for (int[] co : getGridPos()) grid[co[0]][co[1]] = true;
+    }
+
+    private List<int[]> getGridPos() {
+        Rectangle bounds = getBounds();
+        List<int[]> newPos = new ArrayList<>();
+
+        int gSize = gridSize -1;
+        double fSize = FRAME_HEIGHT;
+
+        int[][] pos = {
+                {(int)(bounds.x / fSize * gSize),(int) (bounds.y /fSize * gSize)},
+                {(int)((bounds.x + bounds.width) /fSize * gSize),(int) ( bounds.y /fSize * gSize)},
+                {(int)(bounds.x / fSize *gSize),(int) ((bounds.y + bounds.height) /fSize * gSize)},
+                {(int)((bounds.x + bounds.width) /fSize * gSize),(int) ((bounds.y + bounds.height) / fSize *gSize)}
+        };
+        for (int[] co : pos){
+            if (!newPos.contains(co) && withinArrRange(co)){
+                newPos.add(co);
+            }
+        }
+
+        return newPos;
+    }
+
+    private boolean withinArrRange(int[] intArr){
+        for (int i=0;i<intArr.length;i++){
+            if (intArr[i] < 0 || intArr[i] >= gridSize) return false;
+        }
+        return true;
+    }
+
+    public ObjectStats getStats() {
         return stats;
     }
 
@@ -63,6 +110,7 @@ public abstract class GameObject {
 
     public void update() {
         position.addScaled(velocity, DT);
+        updateGrid();
         //position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
     }
 
@@ -88,7 +136,7 @@ public abstract class GameObject {
     }
 
 
-    public void targetOval(Graphics2D g){
+    public void targetOval(Graphics2D g) {
         g.setColor(Color.GREEN);
         g.drawOval((int) position.x - radius / 2, (int) position.y - radius / 2, radius, radius);
 
@@ -97,7 +145,7 @@ public abstract class GameObject {
     public abstract boolean canHit(GameObject other);
 
     private boolean overlap(GameObject other) {
-        if (this instanceof Obstacle || other instanceof Obstacle){
+        if (this instanceof Obstacle || other instanceof Obstacle) {
             return getBounds().intersects(other.getBounds());
         }
         double length = position.dist(other.position);
@@ -108,7 +156,7 @@ public abstract class GameObject {
         if (getClass() != other.getClass() && overlap(other)) {
             if (this instanceof Obstacle || other instanceof Obstacle) {
                 hitObstacle(other);
-            }else{
+            } else {
                 this.hit();
                 other.hit();
             }
@@ -116,14 +164,14 @@ public abstract class GameObject {
         }
     }
 
-    private void hitObstacle(GameObject o){
+    private void hitObstacle(GameObject o) {
         GameObject ship;
         GameObject obstacle;
 
-        if (this instanceof Obstacle){
+        if (this instanceof Obstacle) {
             ship = o;
             obstacle = this;
-        }else{
+        } else {
             ship = this;
             obstacle = o;
         }
@@ -133,24 +181,20 @@ public abstract class GameObject {
 
         String direction = HitDetection.whichDirection(ship, obstacle);
 
-        switch (direction){
+        switch (direction) {
             case "north":
-                System.out.println("hit from north");
                 ship.position.y = obsPos.y - ship.radius;
                 ship.velocity.y *= WALL_REFLECT;
                 break;
             case "south":
-                System.out.println("hit from south");
                 ship.position.y = obsPos.y + obsRad + ship.radius;
                 ship.velocity.y *= WALL_REFLECT;
                 break;
             case "west":
-                System.out.println("hit from west");
                 ship.position.x = obsPos.x - ship.radius;
                 ship.velocity.x *= WALL_REFLECT;
                 break;
             case "east":
-                System.out.println("hit from east");
                 ship.position.x = obsPos.x + obsRad + ship.radius;
                 ship.velocity.x *= WALL_REFLECT;
                 break;
@@ -158,10 +202,10 @@ public abstract class GameObject {
         }
     }
 
-    public Rectangle getBounds(){
-        if (this instanceof Obstacle){
-            return new Rectangle((int)position.x, (int) position.y, radius, radius);
+    public Rectangle getBounds() {
+        if (this instanceof Obstacle) {
+            return new Rectangle((int) position.x, (int) position.y, radius, radius);
         }
-        return new Rectangle((int)position.x - radius, (int) position.y - radius, radius * 2, radius * 2);
+        return new Rectangle((int) position.x - radius, (int) position.y - radius, radius * 2, radius * 2);
     }
 }

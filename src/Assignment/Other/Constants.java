@@ -23,4 +23,7 @@ public class Constants {
 
     //Constant speed loss factor for any controlled GameObject
     public static final double DRAG = 0.01;
+
+
+
 }
