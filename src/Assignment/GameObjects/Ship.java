@@ -41,8 +41,8 @@ public abstract class Ship extends GameObject {
         this.drag = drag;
     }
 
-    public void resetPos(){
-        stats.newLife();
+    public void resetPosition(){
+        stats.resetStats();
 
         position = new Vector2D(initPos);
         velocity = new Vector2D(initVel);

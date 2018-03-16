@@ -47,6 +47,14 @@ public class ObjectStats {
         stats.put(LIVES_REMAINING, getLivesRemaining() -1);
     }
 
+    void resetStats(){
+        stats = new HashMap<>(initStats.getStats());
+    }
+
+    public Map<String, Integer> getStats() {
+        return stats;
+    }
+
     public void addMaxArmour(int amount){
         stats.put(MAX_ARMOUR, getMaxArmour() + amount);
     }

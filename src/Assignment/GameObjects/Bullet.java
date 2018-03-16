@@ -45,7 +45,10 @@ public class Bullet extends GameObject {
     }
 
     public void collisionHandling(GameObject other) {
-        if (canHit(other)) super.collisionHandling(other);
+        if (canHit(other)) {
+            System.out.println("hit");
+            super.collisionHandling(other);
+        }
 
     }
 }

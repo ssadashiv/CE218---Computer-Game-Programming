@@ -1,5 +1,7 @@
 package Assignment.Other;
 
+import Assignment.Utilities.Vector2D;
+
 import java.awt.*;
 
 /**
@@ -24,6 +26,6 @@ public class Constants {
     //Constant speed loss factor for any controlled GameObject
     public static final double DRAG = 0.01;
 
-
-
+    //Vectors for immobile game objects
+    public static final Vector2D VEC_PLACEHOLDER = new Vector2D(0,0);
 }

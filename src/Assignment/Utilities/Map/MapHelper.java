@@ -1,5 +1,7 @@
 package Assignment.Utilities.Map;
 
+import Assignment.MainGame.Game;
+
 import java.awt.*;
 import java.util.Arrays;
 import java.util.Random;
@@ -43,18 +45,19 @@ public class MapHelper {
                 map[i][j] = new Color(r, g, b);
             }
         }
-
-
     }
 
 
     private int[] mapPos;
+
+    private Game game;
 
     public MapHelper(){
         resetMap();
     }
 
     public void resetMap(){
+        System.out.println("reset called in maphelper");
         mapPos = INIT_POS;
         exploredRooms = new int[map.length][map[0].length];
         updateMap();
@@ -66,7 +69,6 @@ public class MapHelper {
     }
 
     private void setNeighbourRooms(){
-        System.out.println("setNeighboi");
         int[][] newVisibleRooms = new int[4][2];
         newVisibleRooms[0] = new int[]{mapPos[0]-1, mapPos[1]};
         newVisibleRooms[1] = new int[]{mapPos[0]+1, mapPos[1]};
@@ -82,12 +84,6 @@ public class MapHelper {
 
     private void setVisitedRooms(){
         exploredRooms[mapPos[0]][mapPos[1]] = ROOM_VISITED;
-    }
-
-
-    //check whether two ints in a for loop is indexes of the map array
-    private static boolean isInArrRange(int i, int j){
-        return (i >= 0 && i < MAP_SIZE) && (j >= 0 && j < MAP_SIZE);
     }
 
     public Color getMap(int[] index){
@@ -114,7 +110,7 @@ public class MapHelper {
 
     public void setMapPos(int[] newPos){
         mapPos = newPos;
-        System.out.println("new map pos:" + Arrays.toString(mapPos));
+        game.closeDoors();
         updateMap();
     }
 

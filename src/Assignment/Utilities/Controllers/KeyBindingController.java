@@ -13,7 +13,7 @@ import java.awt.event.KeyEvent;
  */
 
 
-public class KeyBindingController implements Controller{
+public class KeyBindingController implements Controller {
 
 
     private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
@@ -40,13 +40,11 @@ public class KeyBindingController implements Controller{
     private static final String OPEN_MENU = "open menu";
 
 
-
-
     private Action action;
 
     private MainFrame frame;
 
-    public KeyBindingController(JComponent comp, MainFrame frame){
+    public KeyBindingController(JComponent comp, MainFrame frame) {
         this.frame = frame;
         action = new Action();
         InputMap im = comp.getInputMap(IFW);
@@ -104,8 +102,8 @@ public class KeyBindingController implements Controller{
         am.put(LOOK_LEFT, new LookX(-1));
         am.put(LOOK_RIGHT, new LookX(1));
 
-        am.put(STOP_Y_AXIS, new LookY(0));
-        am.put(STOP_X_AXIS, new LookX(0));
+        am.put(STOP_LOOK_Y, new LookY(0));
+        am.put(STOP_LOOK_X, new LookX(0));
 
 
         am.put(SHOOT_BULLET, new ShootBullet(true));
@@ -127,93 +125,80 @@ public class KeyBindingController implements Controller{
     }
 
 
-
-    class MoveX extends AbstractAction{
+    class MoveX extends AbstractAction {
         private int newX;
 
-        private MoveX(int newThrust){
+        private MoveX(int newThrust) {
             this.newX = newThrust;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             action.thrustWest = newX;
-            System.out.println("SOMETHING PRESSED: " + e.getActionCommand() + " NEW thrustwest " + action.thrustWest);
 
         }
 
 
     }
 
-    class MoveY extends AbstractAction{
+    class MoveY extends AbstractAction {
         private int newY;
 
-        private MoveY(int newY){
+        private MoveY(int newY) {
             this.newY = newY;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
             action.thrustNorth = newY;
-            System.out.println("SOMETHING PRESSED: " + e.getActionCommand() + " NEW thrustnorth: " + action.thrustNorth);
 
         }
 
 
     }
 
-    class LookX extends AbstractAction{
+    class LookX extends AbstractAction {
         private int newLookX;
 
-        private LookX(int newLookX){
-           this.newLookX = newLookX;
+        private LookX(int newLookX) {
+            this.newLookX = newLookX;
         }
 
         @Override
-        public void actionPerformed(ActionEvent e){
-
+        public void actionPerformed(ActionEvent e) {
             action.directionX = newLookX;
-            System.out.println("SOMETHING PRESSED: " + e.getActionCommand() + " NEW DIR X: " + action.directionX);
 
         }
 
     }
 
-    class LookY extends AbstractAction{
+    class LookY extends AbstractAction {
         private int newLookY;
 
-        private LookY(int newLookY){
-           this.newLookY = newLookY;
+        private LookY(int newLookY) {
+            this.newLookY = newLookY;
         }
 
         @Override
-        public void actionPerformed(ActionEvent e){
-
-
+        public void actionPerformed(ActionEvent e) {
             action.directionY = newLookY;
-            System.out.println("SOMETHING PRESSED: " + e.getActionCommand() + " NEW DIR Y: " + action.directionY);
         }
 
     }
 
-    class ShootBullet extends AbstractAction{
+    class ShootBullet extends AbstractAction {
         private boolean isShooting;
 
-        private ShootBullet(boolean isShooting){
+        private ShootBullet(boolean isShooting) {
             this.isShooting = isShooting;
         }
 
         @Override
-        public void actionPerformed(ActionEvent e){
-
-
+        public void actionPerformed(ActionEvent e) {
             action.shoot = isShooting;
-            System.out.println("SOMETHING PRESSED: " + e.getActionCommand() + " NEW SHOOTING: " + action.shoot);
         }
 
     }
-
 
 
 }

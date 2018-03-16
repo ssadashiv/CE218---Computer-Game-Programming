@@ -1,5 +1,7 @@
 package Assignment.Utilities.Map;
 
+import Assignment.GameObjects.GameObject;
+import Assignment.GameObjects.Obstacle;
 import Assignment.Other.SharedValues;
 
 import java.io.File;
@@ -15,7 +17,7 @@ public class MapFileParser {
     private static String DIR_NAME = "maps/";
     private static String FILE_NAME = "maps";
     private static String FORMAT = ".txt";
-    private static boolean[][] obstacles;
+    private static char[][] obstacles;
     private static int obstacleCount;
 
 
@@ -23,7 +25,7 @@ public class MapFileParser {
 
     }
 
-    public static boolean[][] getObstacles(){
+    public static char[][] getObstacles(){
         readFile();
         return obstacles;
     }
@@ -40,21 +42,34 @@ public class MapFileParser {
     private static void fileToArray(Scanner input){
         String firstLine = input.nextLine();
         obstacleCount = firstLine.length();
-        obstacles = new boolean[obstacleCount][obstacleCount];
+        obstacles = new char[obstacleCount][obstacleCount];
         SharedValues.gridSize = obstacleCount;
         SharedValues.cellSize = (int) (FRAME_SIZE.getWidth() / (double) SharedValues.gridSize);
         int i = 0;
 
+        GameObject temp;
         while (input.hasNextLine()){
             String line = (i == 0) ? firstLine : input.nextLine();
-            for (int j = 0; j<line.length(); j++) obstacles[i][j] = (line.charAt(j) == '#');
+            for (int j = 0; j<line.length(); j++) {
+                obstacles[i][j] = line.charAt(j);
+            }
             i++;
         }
 
+        /*
+        GameObject temp;
+        while (input.hasNextLine()){
+            String line = (i == 0) ? firstLine : input.nextLine();
+            for (int j = 0; j<line.length(); j++) {
+                obstacles[i][j] = (line.charAt(j) == '#');
+            }
+            i++;
+        }*/
+
         for (int x = 0; x<obstacles.length;x++){
             for (int j=0;j<obstacles[x].length;j++){
-                String p = obstacles[x][j] ? "#" : "-";
-                System.out.print(p);
+                //String p = obstacles[x][j] ? "#" : "-";
+                System.out.print(obstacles[x][j]);
             }
             System.out.println();
         }

@@ -1,5 +1,6 @@
 package Assignment.GameObjects;
 
+import Assignment.Utilities.Animation;
 import Assignment.Utilities.Map.MapHelper;
 import Assignment.Utilities.Vector2D;
 import Assignment.Utilities.Controllers.Controller;
@@ -12,18 +13,20 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static Assignment.Other.Constants.*;
+import static Assignment.Other.SharedValues.cellSize;
 
 /**
  * Created by el16035 on 29/01/2018.
  */
-public class PlayerShip extends Ship{
+public class PlayerShip extends Ship {
     private static final int RADIUS = 15;
     private static final Clip DEATH_SOUND = SoundManager.bangMedium;
     private static final Image IMAGE = Sprite.PLAYER_SHIP;
+    private static final long SWITCH_ROOM_ANIMATION_DURATION = 700;
 
     //Initial vectors. Position, Velocity, Direction.
-    private static final Vector2D INIT_POS = new Vector2D(FRAME_WIDTH/2, FRAME_HEIGHT/2);
-    private static final Vector2D INIT_VEL = new Vector2D(0,0);
+    private static final Vector2D INIT_POS = new Vector2D(FRAME_WIDTH / 2, FRAME_HEIGHT / 2);
+    private static final Vector2D INIT_VEL = new Vector2D(0, 0);
     private static final Vector2D INIT_DIR = new Vector2D(1, 0);
 
     //Rotation velocity in radians per second
@@ -51,10 +54,6 @@ public class PlayerShip extends Ship{
     private MapHelper mapHelper;
     private int[] mapPos;
 
-    //A boolean variable deciding if the ship can shoot or not
-    //It will for example be false when the ship is switching rooms.
-    private boolean canFire = true;
-
     public PlayerShip(Controller ctrl) {
         super(ctrl, INIT_POS, INIT_VEL, INIT_DIR, RADIUS, DEATH_SOUND, IMAGE);
         setInfo(STEER_RATE, MAG_ACC, DRAG);
@@ -64,33 +63,41 @@ public class PlayerShip extends Ship{
     }
 
 
-    public void setMapHelper(MapHelper mh){
+    public void resetPosition() {
+        mapHelper.resetMap();
+        mapPos = mapHelper.getMapPos();
+        super.resetPosition();
+    }
+
+
+    public void setMapHelper(MapHelper mh) {
         this.mapHelper = mh;
         mapPos = mapHelper.getMapPos();
     }
 
-    public int[] getMapPos(){
+
+    public int[] getMapPos() {
         return mapPos;
     }
 
-    public void update(){
-        if (position.x < 0){
-            if (!canSwitchRooms(1, -1)){
+    public void update() {
+        if (position.x < 0) {
+            if (!canSwitchRooms(1, -1)) {
                 position.x = 0;
                 velocity.x *= WALL_REFLECT;
             }
-        }else if (position.x > FRAME_WIDTH){
-            if (!canSwitchRooms(1, 1)){
+        } else if (position.x > FRAME_WIDTH) {
+            if (!canSwitchRooms(1, 1)) {
                 position.x = FRAME_WIDTH;
                 velocity.x *= WALL_REFLECT;
             }
-        }else if (position.y < 0){
-            if (!canSwitchRooms(0, -1)){
+        } else if (position.y < 0) {
+            if (!canSwitchRooms(0, -1)) {
                 position.y = 0;
                 velocity.y *= WALL_REFLECT;
             }
-        }else if (position.y > FRAME_HEIGHT){
-            if (!canSwitchRooms(0, 1)){
+        } else if (position.y > FRAME_HEIGHT) {
+            if (!canSwitchRooms(0, 1)) {
                 position.y = FRAME_HEIGHT;
                 velocity.y *= WALL_REFLECT;
             }
@@ -101,10 +108,10 @@ public class PlayerShip extends Ship{
     }
 
     //method to switch map positions. returns true if it is a success
-    private boolean canSwitchRooms(int index, int addInt){
+    private boolean canSwitchRooms(int index, int addInt) {
         //go to scene to left
         mapPos[index] += addInt;
-        if (mapHelper.getMap(mapPos) != null){
+        if (mapHelper.getMap(mapPos) != null) {
             switchRoom();
             return true;
         }
@@ -115,28 +122,44 @@ public class PlayerShip extends Ship{
     }
 
     //Method to make the ship switch maps
-    private void switchRoom(){
-        canFire = false;
+    private void switchRoom() {
         mapHelper.setMapPos(mapPos);
         position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
-        canFire = true;
+        velocity.set(0, 0);
+
+        Vector2D newPos = new Vector2D(position);
+        if (position.x > FRAME_WIDTH / 4 * 3) {
+            newPos.x = FRAME_WIDTH - cellSize - radius;
+            direction.set(-1, 0);
+        } else if (position.x < FRAME_WIDTH / 4) {
+            newPos.x = cellSize + radius;
+            direction.set(1, 0);
+        } else if (position.y > FRAME_HEIGHT / 4 * 3) {
+            newPos.y = FRAME_HEIGHT - cellSize - radius;
+            direction.set(0, -1);
+        } else {
+            newPos.y = cellSize + radius;
+            direction.set(0, 1);
+        }
+
+        Animation.moveObject(this, newPos, SWITCH_ROOM_ANIMATION_DURATION);
     }
 
-    private void timeOutInvincible(){
+    private void timeOutInvincible() {
         int delay = 1000;
         int period = 1000;
 
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
-                countDown --;
-                if (countDown== 0) invincible = false;
+                countDown--;
+                if (countDown == 0) invincible = false;
             }
         }, delay, period);
     }
 
     public boolean canHit(GameObject other) {
-        return other instanceof Obstacle;
+        return other instanceof Obstacle || other instanceof DoorButton;
     }
 
     public boolean canShoot(GameObject other) {

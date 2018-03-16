@@ -11,11 +11,11 @@ import static Assignment.Other.Constants.FRAME_SIZE;
  * Created by el16035 on 13/03/2018.
  */
 public class MainMenu extends JPanel {
-    public static String newGameText = "New Game";
-    public static String resumeText = "Resume Game";
-    public static String scoresText = "Scores";
-    public static String settingsText = "Settings";
-    public static String exitText = "Exit";
+    public static final String NEW_GAME_TEXT = "New Game";
+    public static final String RESUME_TEXT = "Resume Game";
+    public static final String SCORES = "Scores";
+    public static final String SETTINGS_TEXT = "Settings";
+    public static final String EXIT_TEXT = "Exit";
     private boolean isOpen = true;
 
     private MMButtonListener buttonListener;
@@ -35,23 +35,23 @@ public class MainMenu extends JPanel {
 
 
     private void createButtons() {
-        JButton newGame = new JButton(newGameText);
+        JButton newGame = new JButton(NEW_GAME_TEXT);
         newGame.setSize(100, 40);
         newGame.setVisible(true);
 
-        JButton resume = new JButton(resumeText);
+        JButton resume = new JButton(RESUME_TEXT);
         resume.setSize(100, 40);
         resume.setVisible(true);
 
-        JButton scores = new JButton(scoresText);
+        JButton scores = new JButton(SCORES);
         scores.setSize(100, 40);
         scores.setVisible(true);
 
-        JButton settings = new JButton(settingsText);
+        JButton settings = new JButton(SETTINGS_TEXT);
         settings.setSize(100, 40);
         settings.setVisible(true);
 
-        JButton exit = new JButton(exitText);
+        JButton exit = new JButton(EXIT_TEXT);
         exit.setSize(100, 40);
         exit.setVisible(true);
 

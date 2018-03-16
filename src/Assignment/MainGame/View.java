@@ -90,15 +90,15 @@ public class View extends JComponent {
             it.next().draw(g);
         }
         game.draw(g);
-
-        g.setColor(Color.WHITE);
+/*
+        g.setColor(Color.GREEN);
         for (int i=0;i<gridSize;i++){
-            g.drawLine(i* cellSize,0, FRAME_HEIGHT, 0);
+            g.drawLine(i* cellSize,0, i* cellSize, FRAME_HEIGHT);
         }
 
         for (int j=0;j<gridSize;j++){
-            g.drawLine(0, j* cellSize, 0, FRAME_HEIGHT);
-        }
+            g.drawLine(0, j* cellSize, FRAME_WIDTH, j* cellSize);
+        }*/
     }
 
     public void setEastPanel(EastPanel eastPanel){

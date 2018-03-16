@@ -9,11 +9,12 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import static Assignment.Other.Constants.*;
+import static Assignment.Other.SharedValues.cellSize;
 import static Assignment.Other.SharedValues.gridSize;
-import static Assignment.Other.SharedValues.mapLoaded;
 
 /**
  * Created by el16035 on 05/02/2018.
@@ -35,9 +36,12 @@ public abstract class GameObject {
 
     public boolean isTarget = false;
 
+    public boolean canMove = true;
+
     ObjectStats stats;
 
-    public boolean[][] grid;
+    public List<int[]> gridCoordinates = new ArrayList<>();
+    //public boolean[][] grid;
 
     //Stores the last updated coordinates of the currenct object.
     //public List<int[]> gridPositions = new ArrayList<>();
@@ -54,7 +58,7 @@ public abstract class GameObject {
         initPos = new Vector2D(position);
         initVel = new Vector2D(velocity);
         initDir = new Vector2D(direction);
-        setGridSize();
+        //updateGrid();
 
     }
 
@@ -62,38 +66,38 @@ public abstract class GameObject {
         stats = new ObjectStats(armour, livesRemaining, fireRate, bulletSpeed, bulletDamage, contactDamage, scrapOnDeath);
     }
 
-    public void setGridSize(){
-        grid = new boolean[gridSize][gridSize];
-    }
     public void updateGrid() {
-        setGridSize();
-        for (int[] co : getGridPos()) grid[co[0]][co[1]] = true;
-    }
+        gridCoordinates.clear();
 
-    private List<int[]> getGridPos() {
         Rectangle bounds = getBounds();
-        List<int[]> newPos = new ArrayList<>();
-
-        int gSize = gridSize -1;
+        //int gridSize = gridSize-1;
         double fSize = FRAME_HEIGHT;
 
+        System.out.println("CELLSIZE="+cellSize);
         int[][] pos = {
-                {(int)(bounds.x / fSize * gSize),(int) (bounds.y /fSize * gSize)},
-                {(int)((bounds.x + bounds.width) /fSize * gSize),(int) ( bounds.y /fSize * gSize)},
-                {(int)(bounds.x / fSize *gSize),(int) ((bounds.y + bounds.height) /fSize * gSize)},
-                {(int)((bounds.x + bounds.width) /fSize * gSize),(int) ((bounds.y + bounds.height) / fSize *gSize)}
+                {(int) (bounds.x / fSize * cellSize), (int) (bounds.y / fSize * cellSize)}, // TOP LEFT
+                {(int) ((bounds.x + bounds.width) / fSize * cellSize), (int) (bounds.y / fSize * cellSize)}, //
+                {(int) (bounds.x / fSize * cellSize), (int) ((bounds.y + bounds.height) / fSize * cellSize)},
+                {(int) ((bounds.x + bounds.width) / fSize * cellSize), (int) ((bounds.y + bounds.height) / fSize * cellSize)}
         };
-        for (int[] co : pos){
-            if (!newPos.contains(co) && withinArrRange(co)){
-                newPos.add(co);
+
+        for (int[] co : pos) {
+            if (withinArrRange(co)) {
+                gridCoordinates.add(co);
             }
         }
 
-        return newPos;
+        gridCoordinates = new ArrayList<>(new LinkedHashSet<>(gridCoordinates));
+
+/*
+        if (this instanceof PlayerShip){
+            for (int[] arr : gridCoordinates) System.out.println(Arrays.toString(arr));
+        }*/
+
     }
 
-    private boolean withinArrRange(int[] intArr){
-        for (int i=0;i<intArr.length;i++){
+    private boolean withinArrRange(int[] intArr) {
+        for (int i = 0; i < intArr.length; i++) {
             if (intArr[i] < 0 || intArr[i] >= gridSize) return false;
         }
         return true;
@@ -109,8 +113,8 @@ public abstract class GameObject {
     }
 
     public void update() {
-        position.addScaled(velocity, DT);
-        updateGrid();
+        if (canMove) position.addScaled(velocity, DT);
+        //updateGrid();
         //position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
     }
 
@@ -130,6 +134,10 @@ public abstract class GameObject {
 
         if (isTarget) targetOval(g);
 
+        drawHitBox(g);
+    }
+
+    void drawHitBox(Graphics2D g){
         Rectangle r = getBounds();
         g.setColor(Color.RED);
         g.drawRect(r.x, r.y, r.width, r.height);
@@ -142,9 +150,13 @@ public abstract class GameObject {
 
     }
 
+    void setImage(Image newImage){
+        this.image = newImage;
+    }
+
     public abstract boolean canHit(GameObject other);
 
-    private boolean overlap(GameObject other) {
+    boolean overlap(GameObject other) {
         if (this instanceof Obstacle || other instanceof Obstacle) {
             return getBounds().intersects(other.getBounds());
         }
@@ -153,59 +165,21 @@ public abstract class GameObject {
     }
 
     public void collisionHandling(GameObject other) {
-        if (getClass() != other.getClass() && overlap(other)) {
-            if (this instanceof Obstacle || other instanceof Obstacle) {
-                hitObstacle(other);
+        if (overlap(other)) {
+            if (other instanceof Obstacle) {
+                HitDetection.HitObstacle(this, other);
+            } else if (other instanceof DoorButton) {
+                HitDetection.HitDoorButton(this, other);
             } else {
                 this.hit();
                 other.hit();
             }
 
-        }
-    }
-
-    private void hitObstacle(GameObject o) {
-        GameObject ship;
-        GameObject obstacle;
-
-        if (this instanceof Obstacle) {
-            ship = o;
-            obstacle = this;
-        } else {
-            ship = this;
-            obstacle = o;
-        }
-
-        Vector2D obsPos = new Vector2D(obstacle.position);
-        double obsRad = obstacle.radius;
-
-        String direction = HitDetection.whichDirection(ship, obstacle);
-
-        switch (direction) {
-            case "north":
-                ship.position.y = obsPos.y - ship.radius;
-                ship.velocity.y *= WALL_REFLECT;
-                break;
-            case "south":
-                ship.position.y = obsPos.y + obsRad + ship.radius;
-                ship.velocity.y *= WALL_REFLECT;
-                break;
-            case "west":
-                ship.position.x = obsPos.x - ship.radius;
-                ship.velocity.x *= WALL_REFLECT;
-                break;
-            case "east":
-                ship.position.x = obsPos.x + obsRad + ship.radius;
-                ship.velocity.x *= WALL_REFLECT;
-                break;
 
         }
     }
 
     public Rectangle getBounds() {
-        if (this instanceof Obstacle) {
-            return new Rectangle((int) position.x, (int) position.y, radius, radius);
-        }
         return new Rectangle((int) position.x - radius, (int) position.y - radius, radius * 2, radius * 2);
     }
 }

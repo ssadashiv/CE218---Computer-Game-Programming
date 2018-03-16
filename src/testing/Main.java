@@ -13,9 +13,10 @@ public class Main {
     };
 
     public static void main(String[] args) {
+        double l = 1.9;
+        int i = (int) l;
 
-        double l = 100/3;
-        System.out.println(l);
+        System.out.println(i);
 
     }
 }
