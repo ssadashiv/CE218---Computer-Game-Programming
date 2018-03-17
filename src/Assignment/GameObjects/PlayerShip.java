@@ -3,7 +3,7 @@ package Assignment.GameObjects;
 import Assignment.Utilities.Animation;
 import Assignment.Utilities.Map.MapHelper;
 import Assignment.Utilities.Vector2D;
-import Assignment.Utilities.Controllers.Controller;
+import Assignment.Utilities.Controllers.PlayerControllers.Controller;
 import Assignment.Utilities.SoundManager;
 import Assignment.Utilities.Sprite;
 
@@ -22,7 +22,6 @@ public class PlayerShip extends Ship {
     private static final int RADIUS = 15;
     private static final Clip DEATH_SOUND = SoundManager.bangMedium;
     private static final Image IMAGE = Sprite.PLAYER_SHIP;
-    private static final long SWITCH_ROOM_ANIMATION_DURATION = 700;
 
     //Initial vectors. Position, Velocity, Direction.
     private static final Vector2D INIT_POS = new Vector2D(FRAME_WIDTH / 2, FRAME_HEIGHT / 2);
@@ -64,7 +63,6 @@ public class PlayerShip extends Ship {
 
 
     public void resetPosition() {
-        mapHelper.resetMap();
         mapPos = mapHelper.getMapPos();
         super.resetPosition();
     }
@@ -111,7 +109,7 @@ public class PlayerShip extends Ship {
     private boolean canSwitchRooms(int index, int addInt) {
         //go to scene to left
         mapPos[index] += addInt;
-        if (mapHelper.getMap(mapPos) != null) {
+        if (mapHelper.doesRoomExist(mapPos)) {
             switchRoom();
             return true;
         }
@@ -125,9 +123,9 @@ public class PlayerShip extends Ship {
     private void switchRoom() {
         mapHelper.setMapPos(mapPos);
         position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
-        velocity.set(0, 0);
-
         Vector2D newPos = new Vector2D(position);
+
+
         if (position.x > FRAME_WIDTH / 4 * 3) {
             newPos.x = FRAME_WIDTH - cellSize - radius;
             direction.set(-1, 0);

@@ -1,0 +1,29 @@
+Updates 17.03.18
+
+New classes
+- Map
+	- Creates and stores a 2D array of Rooms
+- Room
+	- Stores information about a room
+		- All obstacles, enemies, buttons etc.
+- RandomNumberHelper
+	- Creates random numbers, but every number has its own probablity
+- ChargeBot
+	- An enemy which charges the player if the player is within the bot's sector
+- ChargeBotCtrl
+	- A Controller for the ChargeBot
+- StatsPanel
+	- A panel which is left of the main frame
+	- Displays the stats of the player's ship.
+- InfoPanel
+	- A superclass which StatsPanel and EastPanel inherit from.
+
+Classes Changed
+- Doors
+	- Now closes upon entering a new room
+Other
+- Made a randmo map generator
+	- Generates a random map every time a new game is launched
+
+Error fixed:
+- None

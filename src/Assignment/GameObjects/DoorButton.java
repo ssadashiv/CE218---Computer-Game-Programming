@@ -1,5 +1,6 @@
 package Assignment.GameObjects;
 
+import Assignment.Utilities.HitDetection;
 import Assignment.Utilities.Map.Room;
 import Assignment.Utilities.SoundManager;
 import Assignment.Utilities.Sprite;
@@ -24,7 +25,6 @@ public class DoorButton extends GameObject {
     public DoorButton(Room room, Vector2D position, int radius){
         super(position, VEC_PLACEHOLDER, VEC_PLACEHOLDER, radius, SOUND, NOT_PRESSED);
         this.room = room;
-        room.addObjective(this);
     }
 
     public boolean isPressed(){
@@ -39,7 +39,9 @@ public class DoorButton extends GameObject {
 
     public void collisionHandling(GameObject other) {
         if (canHit(other)) {
-            super.collisionHandling(other);
+            if (overlap(other)) {
+                HitDetection.HitDoorButton(other, this);
+            }
         }
     }
 

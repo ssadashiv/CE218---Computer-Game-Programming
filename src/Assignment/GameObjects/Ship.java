@@ -1,7 +1,7 @@
 package Assignment.GameObjects;
 
-import Assignment.Utilities.Controllers.Action;
-import Assignment.Utilities.Controllers.Controller;
+import Assignment.Utilities.Controllers.PlayerControllers.Action;
+import Assignment.Utilities.Controllers.PlayerControllers.Controller;
 import Assignment.Utilities.SoundManager;
 import Assignment.Utilities.Vector2D;
 

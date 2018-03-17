@@ -10,5 +10,6 @@ public class SharedValues {
     public static int cellSize;
 
     public static boolean mapLoaded = false;
+    public static boolean gamePaused = true;
 
 }

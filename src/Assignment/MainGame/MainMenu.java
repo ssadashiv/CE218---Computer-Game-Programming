@@ -1,5 +1,6 @@
 package Assignment.MainGame;
 
+import Assignment.Other.SharedValues;
 import Assignment.Utilities.MMButtonListener;
 
 import javax.swing.*;
@@ -16,7 +17,6 @@ public class MainMenu extends JPanel {
     public static final String SCORES = "Scores";
     public static final String SETTINGS_TEXT = "Settings";
     public static final String EXIT_TEXT = "Exit";
-    private boolean isOpen = true;
 
     private MMButtonListener buttonListener;
 
@@ -28,11 +28,13 @@ public class MainMenu extends JPanel {
     }
 
 
+/*
 
     public boolean isOpen() {
         return isOpen;
     }
 
+*/
 
     private void createButtons() {
         JButton newGame = new JButton(NEW_GAME_TEXT);
@@ -71,12 +73,12 @@ public class MainMenu extends JPanel {
 
     public void closePanel() {
         setVisible(false);
-        isOpen = false;
+        SharedValues.gamePaused = false;
     }
 
     public void openPanel() {
         setVisible(true);
-        isOpen = true;
+        SharedValues.gamePaused = true;
     }
 
     @Override

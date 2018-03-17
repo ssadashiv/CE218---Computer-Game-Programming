@@ -1,0 +1,26 @@
+Updates 16.03.18
+
+New classes
+- DoorButton
+	- Adds a button to the map
+	- When pressed, do a specific action
+- Room
+	- Contains information about 
+		- Objectives that needs to be cleared for the doors in the room to open
+			- This will include enemies in the future
+		- Obstacles
+		- If all of the objectives in in the objective List have been cleared, open the doors to the neighboring rooms
+- Door
+	- inherits the Obstacle object
+	- is a thinner version of obstacle, which shows the doors of a room
+	- all the doors are locked when entering/spawning in a room, the playert must complete the room's task to open them.
+- Animation
+	- Contains method to animate moving objects
+
+Other
+- Fixed the game and resume gamne functions
+	- The new game button asks if the player wants to start a new game if a game is already running
+	- The resume game button now does not work if the game is not already running.
+
+Error fixed:
+- Fixed a bug where the KeyBindingController moveX and moveY did not work

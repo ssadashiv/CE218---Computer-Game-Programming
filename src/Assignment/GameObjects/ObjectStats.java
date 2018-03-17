@@ -1,6 +1,7 @@
 package Assignment.GameObjects;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,7 +41,6 @@ public class ObjectStats {
     ObjectStats(Map<String, Integer> initMap){
         stats = new HashMap<>(initMap);
     }
-
 
     void newLife(){
         stats.put(ARMOUR, getMaxArmour());
@@ -84,7 +84,7 @@ public class ObjectStats {
     public int getLivesRemaining() {
         return stats.get(LIVES_REMAINING);
     }
-    public long getFireRate() {
+    public int getFireRate() {
         return  stats.get(FIRE_RATE);
     }
 

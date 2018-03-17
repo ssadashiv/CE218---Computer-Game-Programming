@@ -1,0 +1,14 @@
+Updates 14.03.18
+
+Made a class ObjectStats which contains most of the information about a GameObject
+- Contains variable known to the player, such as Armour, Lives etc
+
+Made a class Bullet which is an object for bullets fired by a ship.
+Added obstacles to the maps
+- Maps parsed from .txt files under the 'maps' folder
+
+Added hit detection
+- Does not work for bullets if the ship is too close to an obstacle
+
+The player's ship cannot go into an invalid map position
+- if the player crashes into a wall, the velocity x or y will be multiplied with a constant WALL_REFLECT which makes the ship bounce off the wall.

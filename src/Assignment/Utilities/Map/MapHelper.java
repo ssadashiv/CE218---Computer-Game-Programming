@@ -1,10 +1,6 @@
 package Assignment.Utilities.Map;
 
-import Assignment.MainGame.Game;
-
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Random;
 
 
 /**
@@ -12,9 +8,7 @@ import java.util.Random;
  */
 
 public class MapHelper {
-    private static final int MAP_SIZE = 5;
-    private static final int[] INIT_POS = {1,1};
-
+    private static final int[] ROOM_SIZE_AT_LEVEL = new int[]{7, 9, 11};
     //If room has been visited by the player
     public static final int ROOM_VISITED = 2;
 
@@ -24,46 +18,43 @@ public class MapHelper {
     //Unexplored room
     public static final int ROOM_NOT_VISIBLE = 0;
 
-    private static Color[][] map = new Color[MAP_SIZE][MAP_SIZE];
+    //private static Color[][] map = new Color[MAP_SIZE][MAP_SIZE];
 
 
-    //int 2d array which stores which rooms have been visited before.
+    //int 2d array which stores which rooms have00 been visited before.
     //2 = visited, 1 = neighbor to a visited room, 0= not visited or is neighbour to a visited room
     private int[][] exploredRooms;
-
-
-    static {
-
-        Random ran = new Random();
-
-        for (int i = 0;i<map.length;i++){
-            for (int j = 0; j<map[i].length;j++){
-                float r = ran.nextFloat();
-                float g = ran.nextFloat();
-                float b = ran.nextFloat();
-
-                map[i][j] = new Color(r, g, b);
-            }
-        }
-    }
-
-
     private int[] mapPos;
+    private int currentLevel;
 
-    private Game game;
-
-    public MapHelper(){
-        resetMap();
+    private Map map;
+    public boolean roomChanged = true;
+  /*  public MapHelper(){
+    }
+    */
+    public void setLevelAndMap(int currentLevel){
+        this.currentLevel = currentLevel;
+        newMap();
     }
 
-    public void resetMap(){
+    public Map getMap() {
+        return map;
+    }
+
+    public boolean doesRoomExist(int[] position){
+        return map.doesRoomExist(position);
+    }
+
+    public void newMap(){
         System.out.println("reset called in maphelper");
-        mapPos = INIT_POS;
-        exploredRooms = new int[map.length][map[0].length];
+        map = new Map(ROOM_SIZE_AT_LEVEL[currentLevel-1]);
+        mapPos = map.getInitPos();
+        exploredRooms = new int[map.size][map.size];
         updateMap();
     }
 
-    private void updateMap(){
+    public void updateMap(){
+        roomChanged = true;
         setNeighbourRooms();
         setVisitedRooms();
     }
@@ -86,22 +77,31 @@ public class MapHelper {
         exploredRooms[mapPos[0]][mapPos[1]] = ROOM_VISITED;
     }
 
-    public Color getMap(int[] index){
-        if (roomExists(index)) return map[index[0]][index[1]];
+    public Color getRoomColor(int[] index){
+        if (roomExists(index)) return map.getRoomAtPosition(index).getRoomColor();
 
         System.out.println("return null");
         return null;
     }
 
     public Color[][] getMiniMap(){
-        return map;
+        Color[][] colorMap = new Color[map.size][map.size];
+        for (int i =0;i<colorMap.length;i++){
+            for (int j=0;j<colorMap[i].length;j++){
+                int[] index = new int[]{i,j};
+                if (map.doesRoomExist(index)){
+                    colorMap[i][j] = map.getRoomAtPosition(new int[]{i,j}).getRoomColor();
+                }
+            }
+        }
+        return colorMap;
     }
 
     public boolean[][] getWhichRoomsExist(){
-        boolean[][] whichMapExist = new boolean[map.length][map[0].length];
+        boolean[][] whichMapExist = new boolean[map.size][map.size];
 
-        for (int i=0; i<map.length;i++){
-            for (int j=0;j<map[i].length;j++){
+        for (int i=0; i<map.size;i++){
+            for (int j=0;j<map.size;j++){
                 whichMapExist[i][j] = roomExists(new int[]{i, j});
             }
         }
@@ -110,7 +110,6 @@ public class MapHelper {
 
     public void setMapPos(int[] newPos){
         mapPos = newPos;
-        game.closeDoors();
         updateMap();
     }
 
@@ -122,12 +121,8 @@ public class MapHelper {
         return exploredRooms;
     }
 
-    private static boolean roomExists(int[] index){
-        try{
-            return map[index[0]][index[1]] != null;
-        } catch(ArrayIndexOutOfBoundsException e){
-            return false;
-        }
+    private boolean roomExists(int[] index){
+        return map.doesRoomExist(index);
     }
 
 

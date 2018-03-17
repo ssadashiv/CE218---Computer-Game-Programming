@@ -7,7 +7,17 @@ import java.io.IOException;
  * Created by el16035 on 13/02/2018.
  */
 public class Sprite {
-    public static Image ASTEROID1, MILKYWAY1, PLAYER_SHIP, MEDIUM_SAUCER, LARGE_SAUCER, BULLET, BASIC_BULLET, DOOR_BUTTON_NOT_PRESSED, DOOR_BUTTON_PRESSED;
+    public static Image
+            ASTEROID1,
+            MILKYWAY1,
+            PLAYER_SHIP,
+            MEDIUM_SAUCER,
+            LARGE_SAUCER,
+            BULLET,
+            BASIC_BULLET,
+            DOOR_BUTTON_NOT_PRESSED,
+            DOOR_BUTTON_PRESSED,
+            CHARGE_BOT;
 
     static {
         try {
@@ -20,7 +30,8 @@ public class Sprite {
             BASIC_BULLET = ImageManager.loadImage("basicBullet");
             DOOR_BUTTON_NOT_PRESSED = ImageManager.loadImage("doorbutton_not_pressed");
             DOOR_BUTTON_PRESSED = ImageManager.loadImage("doorbutton_pressed");
-        }catch (IOException e){
+            CHARGE_BOT = ImageManager.loadImage("charge_bot");
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

@@ -20,11 +20,6 @@ public class MapFileParser {
     private static char[][] obstacles;
     private static int obstacleCount;
 
-
-    static {
-
-    }
-
     public static char[][] getObstacles(){
         readFile();
         return obstacles;
@@ -55,16 +50,6 @@ public class MapFileParser {
             }
             i++;
         }
-
-        /*
-        GameObject temp;
-        while (input.hasNextLine()){
-            String line = (i == 0) ? firstLine : input.nextLine();
-            for (int j = 0; j<line.length(); j++) {
-                obstacles[i][j] = (line.charAt(j) == '#');
-            }
-            i++;
-        }*/
 
         for (int x = 0; x<obstacles.length;x++){
             for (int j=0;j<obstacles[x].length;j++){

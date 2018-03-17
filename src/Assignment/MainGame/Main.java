@@ -2,6 +2,7 @@ package Assignment.MainGame;
 
 
 import Assignment.Other.Constants;
+import Assignment.Other.SharedValues;
 
 /**
  * Created by el16035 on 10/03/2018.
@@ -21,7 +22,7 @@ public class Main {
 
         while (true){
             System.out.print("");
-            if (!frame.isPaused()){
+            if (!SharedValues.gamePaused){
                 frame.update();
                 try {
                     Thread.sleep(Constants.DELAY);

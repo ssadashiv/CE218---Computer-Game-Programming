@@ -27,7 +27,7 @@ public class MiniMap {
     public MiniMap(EastPanel container, MapHelper mapHelper){
         this.container = container;
         this.mapHelper = mapHelper;
-        updateMap();
+        //updateMap();
     }
 
     public void updateMap(){
@@ -75,5 +75,10 @@ public class MiniMap {
         g.translate(posX, posY);
         g.drawImage(PLAYER_SHIP_IMAGE, t, null);
         g.setTransform(t0);
+
+        int mapSize = mapSquareSize * currentMap.length;
+
+        g.setColor(Color.BLACK);
+        g.drawRect(0,0, mapSize, mapSize);
     }
 }

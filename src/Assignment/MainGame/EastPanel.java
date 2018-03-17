@@ -2,6 +2,7 @@ package Assignment.MainGame;
 
 import Assignment.GameObjects.Items.Item;
 import Assignment.GameObjects.PlayerShip;
+import Assignment.Other.SharedValues;
 import Assignment.Utilities.Map.MapHelper;
 import Assignment.Utilities.Map.MiniMap;
 
@@ -12,8 +13,7 @@ import java.util.List;
 /**
  * Created by el16035 on 15/03/2018.
  */
-public class EastPanel extends JPanel{
-    private static final int PANEL_WIDTH = 200;
+public class EastPanel extends InfoPanel{
 
     private MainFrame container;
     private MapHelper mapHelper;
@@ -25,8 +25,9 @@ public class EastPanel extends JPanel{
 
 
 
-    EastPanel(MainFrame container, MapHelper mapHelper, PlayerShip playerShip){
-        this.container = container;
+    EastPanel(int parentHeight, MapHelper mapHelper, PlayerShip playerShip){
+        super(parentHeight);
+
         this.mapHelper = mapHelper;
         this.playerShip = playerShip;
 
@@ -39,16 +40,11 @@ public class EastPanel extends JPanel{
     }
 
     @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(PANEL_WIDTH, container.getHeight());
-    }
-
-    @Override
     public void paintComponent(Graphics g0){
-        Graphics2D g = (Graphics2D) g0;
-
-        g.setColor(Color.WHITE);
-        g.fillRect(0,0, PANEL_WIDTH, container.getHeight());
-        miniMap.draw(g);
+        if (!SharedValues.gamePaused){
+            Graphics2D g = (Graphics2D) g0;
+            miniMap.draw(g);
+            super.paintComponent(g);
+        }
     }
 }

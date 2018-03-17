@@ -2,12 +2,11 @@ package Assignment.MainGame;
 
 
 import Assignment.GameObjects.*;
-import Assignment.Utilities.Controllers.KeyBindingController;
+import Assignment.Utilities.Controllers.PlayerControllers.KeyBindingController;
 import Assignment.Utilities.Map.Room;
 import Assignment.Utilities.HitDetection;
 import Assignment.Utilities.Map.*;
 import Assignment.Utilities.SoundManager;
-import Assignment.Utilities.Vector2D;
 
 import java.awt.*;
 import java.util.List;
@@ -15,37 +14,45 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-import static Assignment.Other.Constants.FRAME_SIZE;
-
 /**
  * Created by el16035 on 16/01/2018.
  */
 public class Game {
 
-    private int currentLevel;
-    private int score;
+
 
     public List<GameObject> objects;
     public KeyBindingController playerKeys;
     public PlayerShip playerShip;
 
     private boolean gameRunning = false;
+    private int currentLevel = 1;
+    private MapHelper mapHelper;
 
     public Game() {
         objects = new CopyOnWriteArrayList<>();
         //playerKeys = new PlayerKeys(container);
-
-
     }
 
     void newGame() {
+        mapHelper.setLevelAndMap(currentLevel);
+        playerShip.setMapHelper(mapHelper);
+        
         gameRunning = true;
         objects.clear();
-        score = 0;
         currentLevel = 1;
         spawnShip();
-        addObstacles();
+        updateMap();
+        System.out.println("NEW GAME");
+
+
     }
+
+    public void setMapHelper(MapHelper mapHelper) {
+        this.mapHelper = mapHelper;
+    }
+
+
 
     public boolean isGameRunning(){
         return gameRunning;
@@ -62,57 +69,16 @@ public class Game {
         objects.add(playerShip);
     }
 
-    private void addObstacles() {
-        char[][] obstacles = MapFileParser.getObstacles();
+    private void updateMap() {
+        System.out.println("GENERATING MAP");
         //objects.forEach(GameObject::updateGrid);
+        objects.clear();
 
-
-        Room currentRoom = new Room(obstacles);
+        Room currentRoom = mapHelper.getMap().getRoomAtPosition(playerShip.getMapPos());
+        currentRoom.setShip(playerShip);
         objects.addAll(currentRoom.getObjects());
-        /*double obstSize = (double) FRAME_SIZE.height / (double) obstacles[0].length;
-
-
-        for (int i = 0; i < obstacles.length; i++) {
-            for (int j = 0; j < obstacles[i].length; j++) {
-                if (obstacles[i][j] != '-') {
-                    //Initalize it as a placeholder.
-                    GameObject newObj = new Obstacle(new Vector2D(0,0), Color.BLACK, 0,0);
-                    switch (obstacles[i][j]) {
-                        //Obstacle
-                        case '#':
-                            newObj = new Obstacle(new Vector2D(j * obstSize, i * obstSize), Color.BLACK, (int) obstSize, (int) obstSize);
-                            break;
-
-                        //Button
-                        case '+':
-                            newObj =  new DoorButton(room, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2)), (int) obstSize / 5);
-                            room.addObjective(newObj);
-                            break;
-
-                        //Door
-                        case '@':
-                            newObj =  new Door(room, new Vector2D(j * obstSize, i * obstSize), (int) obstSize, (int) obstSize / 2);
-                            break;
-                        default:
-                            System.out.println("ERROR: Unknown symbol. Exiting program");
-                            System.exit(0);
-                    }
-
-                    objects.add(newObj);
-                }
-            }
-        }*/
-    }
-
-    void draw(Graphics2D g) {
-        g.setColor(Color.RED);
-        g.drawString("Score: " + score, 15, 15);
-        g.drawString("Lives Remaining: " + playerShip.getStats().getLivesRemaining (), 15, 35);
-        g.drawString("Current Level: " + currentLevel, 15, 55);
-    }
-
-    public void setMapHelper(MapHelper mh) {
-        playerShip.setMapHelper(mh);
+        objects.add(playerShip);
+        mapHelper.roomChanged = false;
     }
 
     public int[] shipMapPos() {
@@ -122,6 +88,10 @@ public class Game {
     public void update() {
         if (playerShip.dead) {
             spawnShip();
+        }
+
+        if (mapHelper.roomChanged){
+            this.switchRoom();
         }
 
         objects.forEach(GameObject::update);
@@ -136,7 +106,6 @@ public class Game {
             objects.clear();
             objects.addAll(alive);
 
-            //TODO: Make a better collisionhandler
             for (int i = 0; i < objects.size(); i++) {
                 for (int j = i + 1; j < objects.size(); j++) {
                     GameObject obj1 = objects.get(i);
@@ -151,7 +120,15 @@ public class Game {
         }
     }
 
-    public void closeDoors(){
+    private void switchRoom(){
+        System.out.println("ROOM CHANGED");
+        mapHelper.updateMap();
+        this.updateMap();
+        this.closeDoorsInNewRoom();
+    }
 
+    private void closeDoorsInNewRoom(){
+        List<Door> doors = objects.stream().filter(o -> o instanceof Door).map(o -> (Door) o).collect(Collectors.toList());
+        doors.forEach(Door::closeDoor);
     }
 }

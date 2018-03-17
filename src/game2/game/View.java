@@ -42,7 +42,6 @@ public class View extends JComponent{
 
         synchronized (Game.class){
             for (GameObject object : game.objects) object.draw(g);
-            game.draw(g);
         }
 
     }

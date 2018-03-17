@@ -27,8 +27,8 @@ public abstract class GameObject {
 
     public Vector2D position;
     public Vector2D velocity;
+    public Vector2D direction;
 
-    Vector2D direction;
     public boolean dead;
     public int radius;
     private Clip deathSound;
@@ -46,7 +46,7 @@ public abstract class GameObject {
     //Stores the last updated coordinates of the currenct object.
     //public List<int[]> gridPositions = new ArrayList<>();
 
-    GameObject(Vector2D position, Vector2D velocity, Vector2D direction, int radius, Clip deathSound, Image image) {
+    public GameObject(Vector2D position, Vector2D velocity, Vector2D direction, int radius, Clip deathSound, Image image) {
         this.position = position;
         this.velocity = velocity;
         this.direction = direction;
@@ -61,6 +61,7 @@ public abstract class GameObject {
         //updateGrid();
 
     }
+
 
     void setStats(int armour, int livesRemaining, int fireRate, int bulletSpeed, int bulletDamage, int contactDamage, int scrapOnDeath) {
         stats = new ObjectStats(armour, livesRemaining, fireRate, bulletSpeed, bulletDamage, contactDamage, scrapOnDeath);
@@ -156,7 +157,7 @@ public abstract class GameObject {
 
     public abstract boolean canHit(GameObject other);
 
-    boolean overlap(GameObject other) {
+    public boolean overlap(GameObject other) {
         if (this instanceof Obstacle || other instanceof Obstacle) {
             return getBounds().intersects(other.getBounds());
         }

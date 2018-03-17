@@ -1,0 +1,36 @@
+Updates 15.03.18
+
+New classes
+- MiniMap
+	- Stores the values of a minimap
+	- prints a minimap on a class SidePanel
+	- if a lpayer-s ship moves to a new map, it updates the minimap
+	- added two 2D arrays to MiniMap
+		- boolean[][] doesMapExist
+			- True if there is in fact a room in the provided position
+		- int[][] exploredRooms
+			-2 if the room at the position is exlpored
+			- 1 if the room at the position is a neighbour to any explored rooms
+			- 0 if not 2 or 1
+	-the minimap will only display rooms if the rooms
+		- have been visited by the player
+		- are next to a room that is visited by the player
+-SidePanel
+	- BorderLayout.EAST in MainFrame
+	- Contains
+		- A minimap, displaying the colours of every "room" in the current level
+
+-KeyBindingController
+	- Switched out the KeyListener with a class which inherits from KeyBinding
+	- Still does not work properly, something with releasing the buttons is off.
+
+Classes Changed
+- ObjectStats
+	- All the values are now stored in a HashMap instead of having their seperate variables.
+
+Other
+- Grid hit detection
+	- Introduced a grid system to the GameObjects
+	- They now have up to 4 coordinates on a grid
+	- I will update the hitDetection code to work with the grid. 
+

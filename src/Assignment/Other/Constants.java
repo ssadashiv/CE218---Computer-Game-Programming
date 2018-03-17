@@ -28,4 +28,7 @@ public class Constants {
 
     //Vectors for immobile game objects
     public static final Vector2D VEC_PLACEHOLDER = new Vector2D(0,0);
+
+    public static final long SWITCH_ROOM_ANIMATION_DURATION = 700;
+
 }

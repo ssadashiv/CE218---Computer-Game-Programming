@@ -1,6 +1,6 @@
 package Assignment.MainGame;
 
-import Assignment.Utilities.Controllers.KeyBindingController;
+import Assignment.Utilities.Controllers.PlayerControllers.KeyBindingController;
 import Assignment.Utilities.MMButtonListener;
 import Assignment.Utilities.Map.MapHelper;
 
@@ -21,6 +21,8 @@ public class MainFrame extends JFrame {
     private View view;
     private Game game;
     private MainMenu menu;
+    private EastPanel eastPanel;
+    private StatsPanel statsPanel;
 
 
 
@@ -40,12 +42,16 @@ public class MainFrame extends JFrame {
 
         menu = new MainMenu(bl);
         openMenu();
-        EastPanel eastPanel = new EastPanel(this, view.mapHelper, game.playerShip);
-
+        eastPanel = new EastPanel(getHeight(), view.mapHelper, game.playerShip);
         view.setEastPanel(eastPanel);
+
+        statsPanel = new StatsPanel(getHeight(), game.playerShip.getStats());
 
         getContentPane().add(BorderLayout.CENTER, menu);
         getContentPane().add(BorderLayout.EAST, eastPanel);
+        getContentPane().add(BorderLayout.WEST, statsPanel);
+
+
 
         pack();
         setResizable(true);
@@ -58,18 +64,20 @@ public class MainFrame extends JFrame {
         game.update();
         view.repaint();
     }
-    public boolean isPaused(){
+    /*public boolean isPaused(){
         return menu.isOpen();
     }
-
+*/
     public void openMenu(){
         menu.openPanel();
-
     }
 
     private void initNewGame(){
         game.newGame();
+        view.newGame();
         menu.closePanel();
+        eastPanel.updateMiniMap();
+        statsPanel.updateStats();
         getContentPane().add(BorderLayout.CENTER, view);
     }
 

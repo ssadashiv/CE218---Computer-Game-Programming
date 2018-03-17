@@ -1,4 +1,4 @@
-package Assignment.Utilities.Controllers;
+package Assignment.Utilities.Controllers.PlayerControllers;
 
 /**
  * Created by el16035 on 13/03/2018.

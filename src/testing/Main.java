@@ -1,5 +1,6 @@
 package testing;
 
+import Assignment.Utilities.Map.MapFileParser;
 import Assignment.Utilities.Map.Room;
 
 import java.awt.*;
@@ -17,7 +18,24 @@ public class Main {
     };
 
     public static void main(String[] args) {
-        boolean[][] roomMap = Room.generateMap(11);
+        char[][] map = MapFileParser.getObstacles();
+        System.out.println("BEFORE ROTATE\n");
+        for (char[] c : map) System.out.println(Arrays.toString(c));
+
+        char[][] newArray = new char[map.length][map[0].length];
+        for(int i=0; i<map[0].length; i++){
+            for(int j=map.length-1; j>=0; j--){
+                newArray[i][j] = map[j][i];
+            }
+        }
+
+        System.out.println("\nAFTER ROTATE\n");
+        for (char[] c : newArray) System.out.println(Arrays.toString(c));
+
+
+
+        //Testing map autogenerator
+        /* boolean[][] roomMap = Room.generateMap(11);
 
         for (int i=0;i<roomMap.length;i++){
             StringBuilder sb = new StringBuilder();
@@ -37,6 +55,6 @@ public class Main {
 
         for (int[] pos : edges){
             System.out.println("edge pos:"+ Arrays.toString(pos));
-        }
+        }*/
     }
 }

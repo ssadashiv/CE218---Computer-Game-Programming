@@ -41,5 +41,6 @@ public class Animation {
 
             }
         }, 0, DELAY);
+        movingObject.velocity.set(0, 0);
     }
 }

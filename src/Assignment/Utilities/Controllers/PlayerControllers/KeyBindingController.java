@@ -1,8 +1,7 @@
 
-package Assignment.Utilities.Controllers;
+package Assignment.Utilities.Controllers.PlayerControllers;
 
 import Assignment.MainGame.MainFrame;
-import game2.game.GameObject;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

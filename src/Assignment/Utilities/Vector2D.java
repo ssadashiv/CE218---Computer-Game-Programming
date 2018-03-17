@@ -31,7 +31,7 @@ public final class Vector2D {
     }
 
     // set coordinates based on argument vector
-    Vector2D set(Vector2D v) {
+    public Vector2D set(Vector2D v) {
         x = v.x;
         y = v.y;
         return this;
@@ -144,6 +144,8 @@ public final class Vector2D {
 
         return this;
     }
+
+
 
     // wrap-around operation, assumes w> 0 and h>0
     // remember to manage negative values of the coordinates
