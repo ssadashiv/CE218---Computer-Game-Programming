@@ -1,6 +1,10 @@
 package testing;
 
+import Assignment.Utilities.Map.Room;
+
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by el16035 on 13/03/2018.
@@ -13,10 +17,26 @@ public class Main {
     };
 
     public static void main(String[] args) {
-        double l = 1.9;
-        int i = (int) l;
+        boolean[][] roomMap = Room.generateMap(11);
 
-        System.out.println(i);
+        for (int i=0;i<roomMap.length;i++){
+            StringBuilder sb = new StringBuilder();
+            for (int j=0;j<roomMap[i].length;j++){
+                if (roomMap[i][j]){
+                    sb.append('#');
+                    continue;
+                }
 
+                sb.append('-');
+            }
+
+            System.out.println(sb.toString());
+        }
+
+        List<int[]> edges = Room.getEdgeRooms(roomMap);
+
+        for (int[] pos : edges){
+            System.out.println("edge pos:"+ Arrays.toString(pos));
+        }
     }
 }
