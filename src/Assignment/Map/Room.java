@@ -1,8 +1,7 @@
-package Assignment.Utilities.Map;
+package Assignment.Map;
 
 import Assignment.GameObjects.*;
 import Assignment.GameObjects.Enemies.ChargeBot;
-import Assignment.Other.RandomNumberHelper;
 import Assignment.Utilities.Vector2D;
 
 import java.awt.*;

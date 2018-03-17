@@ -1,4 +1,4 @@
-package Assignment.Utilities.Map;
+package Assignment.Map;
 
 import Assignment.MainGame.EastPanel;
 import Assignment.Utilities.Sprite;

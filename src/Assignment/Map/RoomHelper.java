@@ -1,4 +1,4 @@
-package Assignment.Utilities.Map;
+package Assignment.Map;
 
 /**
  * Created by eriklange on 17.03.2018.

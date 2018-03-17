@@ -1,6 +1,5 @@
-package Assignment.Utilities.Map;
+package Assignment.Map;
 
-import Assignment.GameObjects.PlayerShip;
 import Assignment.Other.RandomNumberHelper;
 
 import java.util.ArrayList;

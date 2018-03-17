@@ -1,7 +1,6 @@
-package Assignment.Utilities.Map;
+package Assignment.Map;
 
 import Assignment.GameObjects.GameObject;
-import Assignment.GameObjects.Obstacle;
 import Assignment.Other.SharedValues;
 
 import java.io.File;
