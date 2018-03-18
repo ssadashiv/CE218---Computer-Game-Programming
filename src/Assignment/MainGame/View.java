@@ -2,7 +2,7 @@ package Assignment.MainGame;
 
 import Assignment.GameObjects.Bullet;
 import Assignment.GameObjects.GameObject;
-import Assignment.Utilities.Map.MapHelper;
+import Assignment.Map.MapHelper;
 import Assignment.Utilities.Sprite;
 
 import javax.swing.*;

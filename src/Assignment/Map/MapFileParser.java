@@ -14,50 +14,75 @@ import static Assignment.Other.Constants.FRAME_SIZE;
  */
 public class MapFileParser {
     private static String DIR_NAME = "maps/";
-    private static String FILE_NAME = "maps";
     private static String FORMAT = ".txt";
-    private static char[][] obstacles;
-    private static int obstacleCount;
 
-    public static char[][] getObstacles(){
+
+    /*public static char[][] getObstacles(){
         readFile();
         return obstacles;
-    }
+    }*/
 
-    public static void readFile(){
+    public static char[][] readFile(String fileName, int fileRotations) {
         try {
-            fileToArray(new Scanner(new File(DIR_NAME + FILE_NAME + FORMAT)));
-        }catch (FileNotFoundException e){
+            char[][] objects = fileToArray(new Scanner(new File(DIR_NAME + fileName + FORMAT)));
+            if (fileRotations != 0) {
+                for (int i=0;i<fileRotations;i++){
+                    objects = rotateArray(objects);
+                }
+            }
+
+            return objects;
+
+        } catch (FileNotFoundException e) {
             System.out.println("File not found");
             System.exit(0);
         }
+
+        return null;
     }
 
-    private static void fileToArray(Scanner input){
+    private static char[][] fileToArray(Scanner input) {
         String firstLine = input.nextLine();
-        obstacleCount = firstLine.length();
-        obstacles = new char[obstacleCount][obstacleCount];
-        SharedValues.gridSize = obstacleCount;
+        int objectCount = firstLine.length();
+        char[][] objects = new char[objectCount][objectCount];
+
+        SharedValues.gridSize = objectCount;
         SharedValues.cellSize = (int) (FRAME_SIZE.getWidth() / (double) SharedValues.gridSize);
         int i = 0;
 
-        GameObject temp;
-        while (input.hasNextLine()){
+        while (input.hasNextLine()) {
             String line = (i == 0) ? firstLine : input.nextLine();
-            for (int j = 0; j<line.length(); j++) {
-                obstacles[i][j] = line.charAt(j);
+            for (int j = 0; j < line.length(); j++) {
+                objects[i][j] = line.charAt(j);
             }
             i++;
         }
 
-        for (int x = 0; x<obstacles.length;x++){
-            for (int j=0;j<obstacles[x].length;j++){
-                //String p = obstacles[x][j] ? "#" : "-";
-                System.out.print(obstacles[x][j]);
+       /* for (int x = 0; x<objects.length;x++){
+            for (int j=0;j<objects[x].length;j++){
+                //String p = objects[x][j] ? "#" : "-";
+                System.out.print(objects[x][j]);
             }
             System.out.println();
         }
-
+*/
         SharedValues.mapLoaded = true;
+
+        return objects;
+    }
+
+    private static char[][] rotateArray(char[][] objects) {
+
+        char[][] newArray = new char[objects.length][objects[0].length];
+
+
+        for (int i = 0; i < objects.length; i++) {
+            for (int j = 0; j < objects[i].length; j++) {
+                newArray[j][objects.length - 1 - i] = objects[i][j];
+            }
+        }
+
+
+        return newArray;
     }
 }

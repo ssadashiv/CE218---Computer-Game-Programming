@@ -1,0 +1,21 @@
+Updates 17.03.18 number 2
+
+New classes
+- BlackHole
+	- Creates a black hole which draws the player towards it with a gravitational pull
+
+Classes Changed
+- Map
+	- Every room in a map is no longer the same
+	- Added a few methods to calculate how many neighbours every room has and in what direction those neighbours are located.
+Other
+- Made new map textiles depending on how many neighbours a room has
+	- 1 door
+	- 2 doors
+		- Either across from each other or not
+	- 3 doors
+	- 4 doors
+- Made a method in MapFileParser to rotate the maps depending on where the doors are in a room.
+
+Error fixed:
+-

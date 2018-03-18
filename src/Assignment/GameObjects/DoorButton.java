@@ -1,7 +1,7 @@
 package Assignment.GameObjects;
 
 import Assignment.Utilities.HitDetection;
-import Assignment.Utilities.Map.Room;
+import Assignment.Map.Room;
 import Assignment.Utilities.SoundManager;
 import Assignment.Utilities.Sprite;
 import Assignment.Utilities.Vector2D;

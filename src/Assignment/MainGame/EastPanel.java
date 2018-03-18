@@ -3,10 +3,9 @@ package Assignment.MainGame;
 import Assignment.GameObjects.Items.Item;
 import Assignment.GameObjects.PlayerShip;
 import Assignment.Other.SharedValues;
-import Assignment.Utilities.Map.MapHelper;
-import Assignment.Utilities.Map.MiniMap;
+import Assignment.Map.MapHelper;
+import Assignment.Map.MiniMap;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 

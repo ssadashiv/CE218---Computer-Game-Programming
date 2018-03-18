@@ -2,7 +2,7 @@ package Assignment.MainGame;
 
 import Assignment.Utilities.Controllers.PlayerControllers.KeyBindingController;
 import Assignment.Utilities.MMButtonListener;
-import Assignment.Utilities.Map.MapHelper;
+import Assignment.Map.MapHelper;
 
 import javax.swing.*;
 import java.awt.*;

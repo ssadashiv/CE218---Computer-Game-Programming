@@ -23,14 +23,16 @@ public class MiniMap {
     private int[][] exploredRooms;
     private int[] mapPos;
 
+    private boolean testing = true;
 
-    public MiniMap(EastPanel container, MapHelper mapHelper){
+
+    public MiniMap(EastPanel container, MapHelper mapHelper) {
         this.container = container;
         this.mapHelper = mapHelper;
         //updateMap();
     }
 
-    public void updateMap(){
+    public void updateMap() {
         currentMap = mapHelper.getMiniMap();
         doesMapExist = mapHelper.getWhichRoomsExist();
         double width = container.getPreferredSize().width / currentMap.length;
@@ -42,20 +44,22 @@ public class MiniMap {
 
 
     //TODO: draw squares around all rooms
-    public void draw(Graphics2D g){
-        for (int i=0; i<currentMap.length;i++){
-            for (int j=0;j<currentMap[i].length;j++){
-                if (doesMapExist[i][j]){
+    public void draw(Graphics2D g) {
+        for (int i = 0; i < currentMap.length; i++) {
+            for (int j = 0; j < currentMap[i].length; j++) {
+                if (doesMapExist[i][j]) {
                     int expRoom = exploredRooms[i][j];
-                    if (expRoom != 0){
-                        if (expRoom == 1){
+                    if (expRoom != 0 || testing) {
+                        if (testing) {
+                            g.setColor(currentMap[i][j]);
+                        } else if (expRoom == 1) {
                             g.setColor(NEIGHBOUR_ROOM_COLOR);
-                        }else{
+                        } else {
                             g.setColor(currentMap[i][j]);
                         }
-                        g.fillRect(j*mapSquareSize, i*mapSquareSize, mapSquareSize, mapSquareSize);
+                        g.fillRect(j * mapSquareSize, i * mapSquareSize, mapSquareSize, mapSquareSize);
                         g.setColor(ROOM_MAP_SQUARE);
-                        g.drawRect(j*mapSquareSize, i*mapSquareSize, mapSquareSize, mapSquareSize);
+                        g.drawRect(j * mapSquareSize, i * mapSquareSize, mapSquareSize, mapSquareSize);
 
                     }
                 }
@@ -66,12 +70,12 @@ public class MiniMap {
         double imH = PLAYER_SHIP_IMAGE.getHeight(null);
         AffineTransform t = new AffineTransform();
 
-        t.scale(mapSquareSize/ imW / 2, mapSquareSize / imH / 2);
+        t.scale(mapSquareSize / imW / 2, mapSquareSize / imH / 2);
         t.translate(-imW / 2.0, -imH / 2.0);
         AffineTransform t0 = g.getTransform();
 
-        int posX = mapPos[1] * mapSquareSize + (mapSquareSize/2);
-        int posY = mapPos[0] * mapSquareSize + (mapSquareSize/2);
+        int posX = mapPos[1] * mapSquareSize + (mapSquareSize / 2);
+        int posY = mapPos[0] * mapSquareSize + (mapSquareSize / 2);
         g.translate(posX, posY);
         g.drawImage(PLAYER_SHIP_IMAGE, t, null);
         g.setTransform(t0);
@@ -79,6 +83,6 @@ public class MiniMap {
         int mapSize = mapSquareSize * currentMap.length;
 
         g.setColor(Color.BLACK);
-        g.drawRect(0,0, mapSize, mapSize);
+        g.drawRect(0, 0, mapSize, mapSize);
     }
 }

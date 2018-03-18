@@ -66,21 +66,18 @@ public abstract class Ship extends GameObject {
 
         if (action.shoot && !chargingBullet) {
             mkBullet();
-            chargingBullet = true;
             bulletTimer();
         }
     }
 
     private void bulletTimer(){
-        Timer t = new Timer();
-
-        t.schedule(new TimerTask() {
+        chargingBullet = true;
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 chargingBullet = false;
             }
         }, stats.getFireRate());
-
     }
 
     private void mkBullet() {

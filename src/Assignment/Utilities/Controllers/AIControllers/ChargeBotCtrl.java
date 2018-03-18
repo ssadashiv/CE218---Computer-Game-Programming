@@ -46,12 +46,18 @@ public class ChargeBotCtrl implements AIController {
             if (!SharedValues.gamePaused) {
                 if (bot.dead) cancel();
                 if (ship != null) {
-                    if (shipInSector()){
-                        action.direction.set(getVecToObject(ship.position).normalise());
-                    }else{
-                        action.direction.set(getVecToObject(bot.getChargingStationPos()).normalise());
+                    if (shipInSector()) {
+                        action.direction.set(new Vector2D(ship.position).subtract(bot.position).normalise());
+                    } else {
+                        action.direction.set(new Vector2D(bot.getChargingStationPos()).subtract(bot.position).normalise());
                     }
-                    action.velocity = new Vector2D(action.direction).mult(bot.speed / bot.direction.mag());
+
+                    /*if (shipInSector()){
+                        action.direction.set(bot.position.getVecToObject(ship.position).normalise());
+                    }else{
+                        action.direction.set(bot.position.getVecToObject(bot.getChargingStationPos()).normalise());
+                    }*/
+                    action.velocity = new Vector2D(action.direction).mult(bot.speed / action.direction.mag());
 
                    /* System.out.println("VELO="+action.velocity.toString());
                     System.out.println("DIR="+action.direction.toString());*/
@@ -59,12 +65,12 @@ public class ChargeBotCtrl implements AIController {
             }
         }
 
-        private Vector2D getVecToObject(Vector2D v) {
+        /*private Vector2D getVecToObject(Vector2D v) {
             return new Vector2D(v).subtract(bot.position);
-        }
+        }*/
 
-        private boolean shipInSector(){
-            return getVecToObject(ship.position).mag() <= bot.getSectorRadius();
+        private boolean shipInSector() {
+            return new Vector2D(bot.position).subtract(ship.position).mag() <= bot.getSectorRadius();
         }
     }
 }

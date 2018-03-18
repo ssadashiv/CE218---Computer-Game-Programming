@@ -3,12 +3,11 @@ package Assignment.MainGame;
 
 import Assignment.GameObjects.*;
 import Assignment.Utilities.Controllers.PlayerControllers.KeyBindingController;
-import Assignment.Utilities.Map.Room;
+import Assignment.Map.Room;
 import Assignment.Utilities.HitDetection;
-import Assignment.Utilities.Map.*;
+import Assignment.Map.*;
 import Assignment.Utilities.SoundManager;
 
-import java.awt.*;
 import java.util.List;
 
 import java.util.concurrent.CopyOnWriteArrayList;

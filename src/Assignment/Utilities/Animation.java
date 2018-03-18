@@ -17,14 +17,10 @@ public class Animation {
         movingObject.canMove = false;
 
         int frames = (int) duration / DELAY;
-        System.out.println("frames="+frames);
         Vector2D startPos = movingObject.position;
 
         double xPerFrame = (endPos.x - startPos.x) / frames;
         double yPerFrame = (endPos.y - startPos.y) / frames;
-
-        System.out.println("xperframe="+xPerFrame);
-        System.out.println("yperframe="+yPerFrame);
 
 
         new Timer().schedule(new TimerTask() {

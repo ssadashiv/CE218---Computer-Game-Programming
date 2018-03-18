@@ -3,20 +3,19 @@ package Assignment.Map;
 import Assignment.Other.RandomNumberHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static Assignment.Map.MapConstants.*;
 
 /**
  * Created by el16035 on 17/03/2018.
  */
 public class Map {
-    private static final int WEST_ROOM = 0;
-    private static final int NORTH_ROOM = 1;
-    private static final int EAST_ROOM = 2;
-    private static final int SOUTH_ROOM = 3;
 
 
-    Room[][] rooms;
-    public int size;
+    private Room[][] rooms;
+    int size;
     private int[] initPos;
 
 
@@ -54,17 +53,47 @@ public class Map {
     }
 
     //TODO: Make a list of Lists of rooms. each list of rooms with x amount of exit doors
-    public void generateRooms() {
-        char[][] tempObstacles = MapFileParser.getObstacles();
+    private void generateRooms() {
+        //char[][] tempObstacles = MapFileParser.getObstacles();
         boolean[][] roomLocations = generateMap();
 
         for (int i = 0; i < roomLocations.length; i++) {
             for (int j = 0; j < roomLocations[i].length; j++) {
                 if (roomLocations[i][j]) {
-                    rooms[i][j] = new Room(tempObstacles);
+                    rooms[i][j] = new Room();
                 }
             }
         }
+
+        for (int i = 0; i< rooms.length;i++){
+            for (int j=0; j<rooms[i].length;j++){
+                if (rooms[i][j] != null) rooms[i][j].setRoomMap(getNeighbours(new int[]{i,j}));
+            }
+        }
+    }
+
+    private boolean[] getNeighbours(int[] roomPos){
+        boolean[] neighbours = new boolean[4];
+
+        int[] currentTest;
+
+        currentTest = new int[]{roomPos[0] - 1, roomPos[1]};
+        if (doesRoomExist(currentTest)) neighbours[NORTH_ROOM] = true;
+
+        currentTest = new int[]{roomPos[0] + 1, roomPos[1]};
+        if (doesRoomExist(currentTest)) neighbours[SOUTH_ROOM] = true;
+
+        currentTest = new int[]{roomPos[0], roomPos[1]-1};
+        if (doesRoomExist(currentTest)) neighbours[WEST_ROOM] = true;
+
+        currentTest = new int[]{roomPos[0], roomPos[1]+1};
+        if (doesRoomExist(currentTest)) neighbours[EAST_ROOM] = true;
+
+
+        /*System.out.println("roomPos=" + Arrays.toString(roomPos));
+        System.out.println("neighbours=" + Arrays.toString(neighbours));*/
+
+        return neighbours;
     }
 
 
@@ -100,6 +129,8 @@ public class Map {
                 roomsGenerated++;
             }
         }
+
+        printMap(roomMap);
 
         return roomMap;
 
@@ -170,10 +201,11 @@ public class Map {
         //Initializing the array with length 4, because 4 directions
         int[] validDirections = new int[4];
 
-        validDirections[WEST_ROOM] = getValidDirections(map, new int[]{currentPos[0] - 1, currentPos[1]});
-        validDirections[NORTH_ROOM] = getValidDirections(map, new int[]{currentPos[0], currentPos[1] - 1});
-        validDirections[EAST_ROOM] = getValidDirections(map, new int[]{currentPos[0] + 1, currentPos[1]});
-        validDirections[SOUTH_ROOM] = getValidDirections(map, new int[]{currentPos[0], currentPos[1] + 1});
+        validDirections[NORTH_ROOM] = getValidDirections(map, new int[]{currentPos[0] - 1, currentPos[1]});
+        validDirections[SOUTH_ROOM] = getValidDirections(map, new int[]{currentPos[0] + 1, currentPos[1]});
+
+        validDirections[WEST_ROOM] = getValidDirections(map, new int[]{currentPos[0], currentPos[1] - 1});
+        validDirections[EAST_ROOM] = getValidDirections(map, new int[]{currentPos[0], currentPos[1] + 1});
 
         return validDirections;
     }
@@ -229,6 +261,22 @@ public class Map {
 */
         return count;
 
+    }
+
+    private static void printMap(boolean[][] roomMap){
+        for (int i=0;i<roomMap.length;i++){
+            StringBuilder sb = new StringBuilder();
+            for (int j=0;j<roomMap[i].length;j++){
+                if (roomMap[i][j]){
+                    sb.append('#');
+                    continue;
+                }
+
+                sb.append('-');
+            }
+
+            System.out.println(sb.toString());
+        }
     }
 
     //Returns the chances of a room spawning. The chances are timed by 100, so 5% = 50

@@ -24,10 +24,22 @@ public class Room {
     private PlayerShip ship;
     private char[][] objects;
 
-    public Room(char[][] objects) {
+    //boolean array identifying which sides this room have neighbours.
+    //index 0=west, 1=north, 2=east, 3= south;
+
+    public Room() {
+        setRoomColor();
+        reset();
+    }
+
+    /*public Room(char[][] objects) {
         this.objects = objects;
         setRoomColor();
         reset();
+    }
+*/
+    void setRoomMap(boolean[] neighbours) {
+        objects = RoomHelper.readFile(neighbours);
     }
 
     public void setShip(PlayerShip ship){
@@ -78,8 +90,14 @@ public class Room {
                             objectives.add(new ChargeBot(ship, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2))));
                             break;
 
+
+                        //Black hole
+                        case 'B':
+                            objectives.add(new BlackHole(ship, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2))));
+                            break;
+
                         default:
-                            System.out.println("ERROR: Unknown symbol. Exiting program");
+                            System.out.println("ERROR: Unknown symbol'"+objects[i][j]+"'. Exiting program");
                             System.exit(0);
                     }
                 }
@@ -96,8 +114,8 @@ public class Room {
     }
 
 
+    //TODO: Reset all enemies and buttons.
     public void reset() {
-        System.out.println("Resetting room");
         canOpenDoors = false;
     }
 

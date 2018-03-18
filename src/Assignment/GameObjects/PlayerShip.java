@@ -1,7 +1,7 @@
 package Assignment.GameObjects;
 
 import Assignment.Utilities.Animation;
-import Assignment.Utilities.Map.MapHelper;
+import Assignment.Map.MapHelper;
 import Assignment.Utilities.Vector2D;
 import Assignment.Utilities.Controllers.PlayerControllers.Controller;
 import Assignment.Utilities.SoundManager;
@@ -18,6 +18,8 @@ import static Assignment.Other.SharedValues.cellSize;
 /**
  * Created by el16035 on 29/01/2018.
  */
+
+//TODO: Make controlling the ship smoother. OR! Make items which make the handling smoother
 public class PlayerShip extends Ship {
     private static final int RADIUS = 15;
     private static final Clip DEATH_SOUND = SoundManager.bangMedium;
@@ -47,11 +49,13 @@ public class PlayerShip extends Ship {
     private static final int CONTACT_DAMAGE = 30;
     private static final int SCRAP_ON_DEATH = 0;
 
-    boolean invincible = true;
+    private boolean invincible = true;
     private int countDown = 3;
 
     private MapHelper mapHelper;
     private int[] mapPos;
+
+    public Vector2D gravitationalPull = new Vector2D(0,0);
 
     public PlayerShip(Controller ctrl) {
         super(ctrl, INIT_POS, INIT_VEL, INIT_DIR, RADIUS, DEATH_SOUND, IMAGE);
@@ -102,6 +106,7 @@ public class PlayerShip extends Ship {
 
         }
 
+        position.subtract(gravitationalPull);
         super.update();
     }
 

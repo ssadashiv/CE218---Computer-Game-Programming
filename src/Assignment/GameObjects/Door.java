@@ -1,7 +1,7 @@
 package Assignment.GameObjects;
 
 import Assignment.Utilities.Animation;
-import Assignment.Utilities.Map.Room;
+import Assignment.Map.Room;
 import Assignment.Utilities.Vector2D;
 
 import java.awt.*;

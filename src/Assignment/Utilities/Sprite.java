@@ -17,7 +17,8 @@ public class Sprite {
             BASIC_BULLET,
             DOOR_BUTTON_NOT_PRESSED,
             DOOR_BUTTON_PRESSED,
-            CHARGE_BOT;
+            CHARGE_BOT,
+            BLACK_HOLE;
 
     static {
         try {
@@ -31,6 +32,7 @@ public class Sprite {
             DOOR_BUTTON_NOT_PRESSED = ImageManager.loadImage("doorbutton_not_pressed");
             DOOR_BUTTON_PRESSED = ImageManager.loadImage("doorbutton_pressed");
             CHARGE_BOT = ImageManager.loadImage("charge_bot");
+            BLACK_HOLE = ImageManager.loadImage("black_hole");
         } catch (IOException e) {
             e.printStackTrace();
         }
