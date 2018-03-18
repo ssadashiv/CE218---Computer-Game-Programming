@@ -15,6 +15,8 @@ public class MapHelper {
     //If the room is a neighbour to a room that is visited.
     public static final int ROOM_NEIGHBOR_TO_VISIT = 1;
 
+
+
     //Unexplored room
     public static final int ROOM_NOT_VISIBLE = 0;
 
@@ -76,26 +78,27 @@ public class MapHelper {
     private void setVisitedRooms(){
         exploredRooms[mapPos[0]][mapPos[1]] = ROOM_VISITED;
     }
-
+/*
     public Color getRoomColor(int[] index){
         if (roomExists(index)) return map.getRoomAtPosition(index).getRoomColor();
 
         System.out.println("return null");
         return null;
-    }
+    }*/
 
-    public Color[][] getMiniMap(){
+   /* public Color[][] getMiniMap(){
         Color[][] colorMap = new Color[map.size][map.size];
         for (int i =0;i<colorMap.length;i++){
             for (int j=0;j<colorMap[i].length;j++){
                 int[] index = new int[]{i,j};
                 if (map.doesRoomExist(index)){
-                    colorMap[i][j] = map.getRoomAtPosition(new int[]{i,j}).getRoomColor();
+                    colorMap[i][j] = ROOM_VISITED_COLOR;
+                    //map.getRoomAtPosition(new int[]{i,j}).getRoomColor();
                 }
             }
         }
         return colorMap;
-    }
+    }*/
 
     public boolean[][] getWhichRoomsExist(){
         boolean[][] whichMapExist = new boolean[map.size][map.size];

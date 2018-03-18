@@ -2,12 +2,13 @@ package Assignment.Map;
 
 import Assignment.GameObjects.*;
 import Assignment.GameObjects.Enemies.ChargeBot;
+import Assignment.GameObjects.Enemies.ChargeStation;
+import Assignment.MainGame.Game;
 import Assignment.Utilities.Vector2D;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.stream.Collectors;
 
 import static Assignment.Other.Constants.FRAME_SIZE;
 
@@ -17,18 +18,19 @@ import static Assignment.Other.Constants.FRAME_SIZE;
 public class Room {
     private boolean canOpenDoors;
 
+
     //Enemies and buttons that needs to be pushed for a
     private List<GameObject> objectives = new ArrayList<>();
     private List<Obstacle> obstacles = new ArrayList<>();
-    private Color roomColor;
     private PlayerShip ship;
     private char[][] objects;
+    private boolean roomCleared = false;
 
     //boolean array identifying which sides this room have neighbours.
     //index 0=west, 1=north, 2=east, 3= south;
 
     public Room() {
-        setRoomColor();
+        //setRoomColor();
         reset();
     }
 
@@ -46,7 +48,7 @@ public class Room {
         this.ship = ship;
         initObjects(objects);
     }
-
+/*
     private void setRoomColor() {
         Random ran = new Random();
         float r = ran.nextFloat();
@@ -58,47 +60,51 @@ public class Room {
 
     public Color getRoomColor() {
         return roomColor;
-    }
+    }*/
 
     private void initObjects(char[][] objects) {
-        double obstSize = (double) FRAME_SIZE.height / (double) objects[0].length;
-        for (int i = 0; i < objects.length; i++) {
-            for (int j = 0; j < objects[i].length; j++) {
-                if (objects[i][j] != '-') {
-                    switch (objects[i][j]) {
+        if (!roomCleared){
+            double obstSize = (double) FRAME_SIZE.height / (double) objects[0].length;
+            for (int i = 0; i < objects.length; i++) {
+                for (int j = 0; j < objects[i].length; j++) {
+                    if (objects[i][j] != '-') {
+                        switch (objects[i][j]) {
 
-                        //OBSTACLES. WALLS OR DOORS
-                        //Obstacle
-                        case '#':
-                            obstacles.add(new Obstacle(new Vector2D(j * obstSize, i * obstSize), Color.BLACK, (int) obstSize, (int) obstSize));
-                            break;
+                            //OBSTACLES. WALLS OR DOORS
+                            //Obstacle
+                            case '#':
+                                obstacles.add(new Wall(new Vector2D(j * obstSize + (obstSize / 2), i * obstSize + (obstSize / 2)), (int) obstSize, (int) obstSize));
+                                break;
 
-                        //Door
-                        case '@':
-                            obstacles.add(new Door(this, new Vector2D(j * obstSize, i * obstSize), (int) obstSize, (int) obstSize / 2));
-                            break;
-
-
-                        //OBJECTIVES. EITHER BUTTONS OR ENEMIES
-                        //Button
-                        case '+':
-                            objectives.add(new DoorButton(this, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2)), (int) obstSize / 5));
-                            break;
-
-                        //ChargeBot
-                        case 'C':
-                            objectives.add(new ChargeBot(ship, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2))));
-                            break;
+                            //Door
+                            case '@':
+                                obstacles.add(new Door(this, new Vector2D(j * obstSize+ (obstSize / 2), i * obstSize + (obstSize / 2)), (int) obstSize / 2, (int) obstSize));
+                                break;
 
 
-                        //Black hole
-                        case 'B':
-                            objectives.add(new BlackHole(ship, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2))));
-                            break;
+                            //OBJECTIVES. EITHER BUTTONS OR ENEMIES
+                            //Button
+                            case '+':
+                                objectives.add(new DoorButton(this, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2)), (int) obstSize / 5));
+                                break;
 
-                        default:
-                            System.out.println("ERROR: Unknown symbol'"+objects[i][j]+"'. Exiting program");
-                            System.exit(0);
+                            //ChargeBot. Add a ChargeStation as well
+                            case 'C':
+                                ChargeStation chargeStation = new ChargeStation(new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2)));
+                                objectives.add(new ChargeBot(ship, chargeStation, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2))));
+                                obstacles.add(chargeStation);
+                                break;
+
+
+                            //Black hole
+                            case 'B':
+                                objectives.add(new BlackHole(ship, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2))));
+                                break;
+
+                            default:
+                                System.out.println("ERROR: Unknown symbol'"+objects[i][j]+"'. Exiting program");
+                                System.exit(0);
+                        }
                     }
                 }
             }
@@ -124,6 +130,23 @@ public class Room {
         canOpenDoors = false;
     }
 
+    public void updateObjectives(){
+        List<GameObject> alive = objectives.stream().filter(o -> !o.dead).collect(Collectors.toList());
+        synchronized (Game.class){
+            objectives.clear();
+            objectives.addAll(alive);
+
+            if (objectives.isEmpty()) {
+                roomCleared();
+            }
+        }
+    }
+
+    private void roomCleared(){
+        roomCleared = true;
+        canOpenDoors = true;
+    }
+
     public void removeObjective(GameObject obj) {
         System.out.println("removing object");
 
@@ -136,11 +159,9 @@ public class Room {
         for (GameObject o : objectives) System.out.println("MEMBER" + o.getClass().getName());
         //Check whether there are more unpressed buttons
         if (objectives.isEmpty()) {
-            System.out.println("OBJECTIVES EMPTY");
-            canOpenDoors = true;
-            return;
+            roomCleared();
         }
-        canOpenDoors = false;
+        //canOpenDoors = false;
     }
 
     public boolean canOpenDoors() {

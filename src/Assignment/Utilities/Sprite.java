@@ -8,31 +8,29 @@ import java.io.IOException;
  */
 public class Sprite {
     public static Image
-            ASTEROID1,
-            MILKYWAY1,
+            BACKGROUND,
+            WALL,
+            DOOR,
             PLAYER_SHIP,
-            MEDIUM_SAUCER,
-            LARGE_SAUCER,
-            BULLET,
             BASIC_BULLET,
             DOOR_BUTTON_NOT_PRESSED,
             DOOR_BUTTON_PRESSED,
             CHARGE_BOT,
+            CHARGE_STATION,
             BLACK_HOLE;
 
     static {
         try {
-            ASTEROID1 = ImageManager.loadImage("asteroid1");
-            MILKYWAY1 = ImageManager.loadImage("milkyway1");
+            BACKGROUND = ImageManager.loadImage("background");
+            WALL = ImageManager.loadImage("wall");
+            DOOR = ImageManager.loadImage("door");
             PLAYER_SHIP = ImageManager.loadImage("playerShip");
-            MEDIUM_SAUCER = ImageManager.loadImage("smallSaucer");
-            LARGE_SAUCER = ImageManager.loadImage("mediumSaucer");
-            BULLET = ImageManager.loadImage("bullet");
             BASIC_BULLET = ImageManager.loadImage("basicBullet");
             DOOR_BUTTON_NOT_PRESSED = ImageManager.loadImage("doorbutton_not_pressed");
             DOOR_BUTTON_PRESSED = ImageManager.loadImage("doorbutton_pressed");
             CHARGE_BOT = ImageManager.loadImage("charge_bot");
             BLACK_HOLE = ImageManager.loadImage("black_hole");
+            CHARGE_STATION = ImageManager.loadImage("charge_station");
         } catch (IOException e) {
             e.printStackTrace();
         }

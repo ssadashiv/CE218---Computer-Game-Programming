@@ -1,8 +1,6 @@
 package Assignment.Utilities;
 
-import Assignment.GameObjects.DoorButton;
-import Assignment.GameObjects.GameObject;
-import Assignment.GameObjects.Obstacle;
+import Assignment.GameObjects.*;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -49,48 +47,87 @@ public class HitDetection {
         return "";
     }
 
-    public static void HitObstacle(GameObject obj1, GameObject obj2){
-        GameObject otherObject;
-        Obstacle obstacle;
+    public static void HitObstacle(Obstacle obstacle, GameObject object){
 
-        if (obj1 instanceof Obstacle) {
-            otherObject = obj2;
-            obstacle = (Obstacle) obj1;
-        } else {
-            otherObject = obj1;
-            obstacle = (Obstacle) obj2;
-        }
-
-        Vector2D obsPos = new Vector2D(obstacle.position);
+        //Vector2D obsPos = new Vector2D(obstacle.position);
         Rectangle obsBounds = obstacle.getBounds();
 
-        String direction = HitDetection.whichDirection(otherObject, obstacle);
+        String direction = HitDetection.whichDirection(object, obstacle);
 
         switch (direction) {
             case HitDetection.NORTH:
-                otherObject.position.y = obsPos.y - otherObject.radius;
-                otherObject.velocity.y *= WALL_REFLECT;
+                object.position.y = obsBounds.y - (object.height/2);
+                object.velocity.y *= WALL_REFLECT;
                 break;
             case HitDetection.SOUTH:
-                otherObject.position.y = obsPos.y + obsBounds.height + otherObject.radius;
-                otherObject.velocity.y *= WALL_REFLECT;
+                object.position.y = obsBounds.y + obsBounds.height + (object.height/2);
+                object.velocity.y *= WALL_REFLECT;
                 break;
             case HitDetection.WEST:
-                otherObject.position.x = obsPos.x - otherObject.radius;
-                otherObject.velocity.x *= WALL_REFLECT;
+                object.position.x = obsBounds.x - (object.width/2);
+                object.velocity.x *= WALL_REFLECT;
                 break;
             case HitDetection.EAST:
-                otherObject.position.x = obsPos.x + obsBounds.width + otherObject.radius;
-                otherObject.velocity.x *= WALL_REFLECT;
+                object.position.x = obsBounds.x + obsBounds.width + (object.width/2);
+                object.velocity.x *= WALL_REFLECT;
                 break;
 
         }
     }
 
-    public static void HitDoorButton(GameObject obj1, GameObject obj2){
-        DoorButton button = obj1 instanceof DoorButton ? (DoorButton) obj1 : (DoorButton) obj2;
+    public static void HitDoorButton(DoorButton button){
         button.pressButton();
     }
+
+    public static void BulletHitSomething(Bullet bullet, GameObject object){
+        if (isOneObstacle(bullet, object)) return;
+
+        object.getStats().addArmour(-bullet.damage);
+        bullet.dead = true;
+    }
+
+    public static void ContactHit(GameObject obj1, GameObject obj2){
+        if (isOneObstacle(obj1, obj2) || isOneBullet(obj1, obj2)) return;
+
+        obj1.getStats().addArmour(- obj2.getStats().getContactDamage());
+        obj2.getStats().addArmour(- obj1.getStats().getContactDamage());
+    }
+
+    private static boolean isOneObstacle(GameObject obj1, GameObject obj2){
+        if (obj1 instanceof Obstacle || obj2 instanceof Obstacle){
+            if (obj1 instanceof Obstacle){
+                HitObstacle((Obstacle) obj1, obj2);
+            }else{
+                HitObstacle((Obstacle) obj2, obj1);
+            }
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
+    private static boolean isOneBullet(GameObject obj1, GameObject obj2){
+        if (obj1 instanceof Bullet || obj2 instanceof Bullet){
+            if (obj1 instanceof Bullet){
+                BulletHitSomething((Bullet) obj1, obj2);
+            }else{
+                BulletHitSomething((Bullet) obj2, obj1);
+            }
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
+
+    /*if (other instanceof Bullet){
+            HitDetection.BulletHitSomething((Bullet) other, this);
+            return;
+        }*/
 
     public static boolean isSameGrid(GameObject obj1, GameObject obj2){
         List<int[]> smallestGrid;

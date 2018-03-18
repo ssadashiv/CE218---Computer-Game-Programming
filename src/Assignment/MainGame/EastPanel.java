@@ -6,6 +6,7 @@ import Assignment.Other.SharedValues;
 import Assignment.Map.MapHelper;
 import Assignment.Map.MiniMap;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
@@ -13,25 +14,30 @@ import java.util.List;
  * Created by el16035 on 15/03/2018.
  */
 public class EastPanel extends InfoPanel{
-
-    private MainFrame container;
-    private MapHelper mapHelper;
+    private static final Color BG_COLOR = new Color(32, 0, 101);
     private PlayerShip playerShip;
-
 
     private MiniMap miniMap;
     private List<Item> items;
 
-
+    private JLabel miniMapLabel = new JLabel("Minimap");
+    private static final int LABEL_X = 0;
+    private static final int LABEL_Y = 5;
+    private static final int LABEL_HEIGHT = 20;
+    private static final int LABEL_WIDTH = InfoPanel.PANEL_WIDTH;
 
     EastPanel(int parentHeight, MapHelper mapHelper, PlayerShip playerShip){
-        super(parentHeight);
-
-        this.mapHelper = mapHelper;
+        super(parentHeight, BG_COLOR);
         this.playerShip = playerShip;
+        miniMapLabel.setBounds(LABEL_X, LABEL_Y, LABEL_WIDTH, LABEL_HEIGHT);
+        miniMapLabel.setHorizontalAlignment(JLabel.CENTER);
+        miniMapLabel.setVerticalAlignment(JLabel.CENTER);
+        add(miniMapLabel);
 
-        miniMap = new MiniMap(this, mapHelper);
+        int initY = miniMapLabel.getY() + miniMapLabel.getHeight();
+        miniMap = new MiniMap(this, mapHelper, initY);
     }
+
 
     public void updateMiniMap(){
         miniMap.updateMap();
@@ -42,8 +48,8 @@ public class EastPanel extends InfoPanel{
     public void paintComponent(Graphics g0){
         if (!SharedValues.gamePaused){
             Graphics2D g = (Graphics2D) g0;
-            miniMap.draw(g);
             super.paintComponent(g);
+            miniMap.draw(g);
         }
     }
 }

@@ -1,11 +1,9 @@
 package Assignment.GameObjects;
 
-import Assignment.Utilities.Animation;
+import Assignment.GameObjects.Enemies.Enemy;
+import Assignment.Utilities.*;
 import Assignment.Map.MapHelper;
-import Assignment.Utilities.Vector2D;
 import Assignment.Utilities.Controllers.PlayerControllers.Controller;
-import Assignment.Utilities.SoundManager;
-import Assignment.Utilities.Sprite;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
@@ -61,8 +59,7 @@ public class PlayerShip extends Ship {
         super(ctrl, INIT_POS, INIT_VEL, INIT_DIR, RADIUS, DEATH_SOUND, IMAGE);
         setInfo(STEER_RATE, MAG_ACC, DRAG);
         setStats(INIT_ARMOUR, INIT_LIVES, FIRE_RATE, BULLET_SPEED, BULLET_DAMAGE, CONTACT_DAMAGE, SCRAP_ON_DEATH);
-
-        timeOutInvincible();
+        //timeOutInvincible();
     }
 
 
@@ -161,8 +158,15 @@ public class PlayerShip extends Ship {
         }, delay, period);
     }
 
+
+
+    @Override
+    public void hitDetected(GameObject other) {
+        HitDetection.ContactHit(this, other);
+    }
+
     public boolean canHit(GameObject other) {
-        return other instanceof Obstacle || other instanceof DoorButton;
+        return other instanceof Obstacle || other instanceof DoorButton || other instanceof Enemy;
     }
 
     public boolean canShoot(GameObject other) {
@@ -179,6 +183,4 @@ public class PlayerShip extends Ship {
         }
         return 0;*/
     }
-
-
 }

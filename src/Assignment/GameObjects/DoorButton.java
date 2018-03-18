@@ -23,31 +23,22 @@ public class DoorButton extends GameObject {
     private Room room;
 
     public DoorButton(Room room, Vector2D position, int radius){
-        super(position, VEC_PLACEHOLDER, VEC_PLACEHOLDER, radius, SOUND, NOT_PRESSED);
+        super(position, VEC_PLACEHOLDER, VEC_PLACEHOLDER, radius*2, radius*2,  SOUND, NOT_PRESSED);
         this.room = room;
     }
-
-    public boolean isPressed(){
-        return isPressed;
-    }
-
 
     @Override
     public boolean canHit(GameObject other) {
         return other instanceof PlayerShip && !isPressed;
     }
 
-    public void collisionHandling(GameObject other) {
-        if (canHit(other)) {
-            if (overlap(other)) {
-                HitDetection.HitDoorButton(other, this);
-            }
-        }
-    }
-
     public void pressButton(){
         room.removeObjective(this);
-        isPressed = true;
         setImage(PRESSED);
+    }
+
+    @Override
+    public void hitDetected(GameObject other) {
+        HitDetection.HitDoorButton(this);
     }
 }

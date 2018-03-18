@@ -28,7 +28,7 @@ public abstract class Ship extends GameObject {
     private boolean chargingBullet = false;
 
     Ship(Controller ctrl, Vector2D pos, Vector2D vel, Vector2D direction, int radius, Clip deathSound, Image image) {
-        super(pos, vel, direction, radius, deathSound, image);
+        super(pos, vel, direction, radius*2, radius*2, deathSound, image);
         this.action = ctrl.action();
         prevDirection = new Vector2D(direction);
     }
@@ -84,7 +84,7 @@ public abstract class Ship extends GameObject {
         //init the bullet just outside the turret.
         Vector2D bulVel = new Vector2D(velocity);
         bulVel.addScaled(direction, Bullet.MUZZLE_VEL);
-        bullet = new Bullet(new Vector2D(turretVec), bulVel, new Vector2D(direction), this);
+        bullet = new Bullet(this, new Vector2D(turretVec), bulVel, new Vector2D(direction));
         SoundManager.fire();
     }
 }

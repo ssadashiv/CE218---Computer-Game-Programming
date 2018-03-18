@@ -7,6 +7,8 @@ import Assignment.Map.MapHelper;
 import javax.swing.*;
 import java.awt.*;
 
+import static Assignment.Other.Constants.FRAME_HEIGHT;
+
 /**
  * Created by el16035 on 16/01/2018.
  */
@@ -42,10 +44,10 @@ public class MainFrame extends JFrame {
 
         menu = new MainMenu(bl);
         openMenu();
-        eastPanel = new EastPanel(getHeight(), view.mapHelper, game.playerShip);
+        eastPanel = new EastPanel(FRAME_HEIGHT, view.mapHelper, game.playerShip);
         view.setEastPanel(eastPanel);
 
-        statsPanel = new StatsPanel(getHeight(), game.playerShip.getStats());
+        statsPanel = new StatsPanel(FRAME_HEIGHT, game.playerShip.getStats());
 
         getContentPane().add(BorderLayout.CENTER, menu);
         getContentPane().add(BorderLayout.EAST, eastPanel);
@@ -54,6 +56,7 @@ public class MainFrame extends JFrame {
 
 
         pack();
+        //TODO: Make this FALSE
         setResizable(true);
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

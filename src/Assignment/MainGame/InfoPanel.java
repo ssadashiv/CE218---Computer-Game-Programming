@@ -11,11 +11,13 @@ import java.awt.*;
 
 //TODO: Add backgrounds for the information panels
 public class InfoPanel extends JPanel{
-    private static final int PANEL_WIDTH = 200;
+    public static final int PANEL_WIDTH = 200;
     private int panelHeight;
+    private Color bgColor;
 
-    public InfoPanel(int panelHeight){
+    public InfoPanel(int panelHeight, Color bgColor){
         this.panelHeight = panelHeight;
+        this.setBackground(bgColor);
     }
 
     @Override
@@ -24,7 +26,8 @@ public class InfoPanel extends JPanel{
     }
 
     public void paintComponent(Graphics2D g) {
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, PANEL_WIDTH, panelHeight);
+        super.paintComponent(g);/*
+        g.setColor(bgColor);
+        g.fillRect(0, 0, PANEL_WIDTH, panelHeight);*/
     }
 }

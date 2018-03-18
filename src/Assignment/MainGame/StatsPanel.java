@@ -13,6 +13,7 @@ import java.util.Map;
  * Created by el16035 on 17/03/2018.
  */
 public class StatsPanel extends InfoPanel {
+    private static final Color BG_COLOR = new Color(50, 21, 75);
     private static final int Y_DIFF = 15;
     private static final int X_POS = 15;
 
@@ -20,7 +21,7 @@ public class StatsPanel extends InfoPanel {
     private Map<String, Integer> statsMap;
 
     public StatsPanel(int parentHeight, ObjectStats stats) {
-        super(parentHeight);
+        super(parentHeight, BG_COLOR);
         this.stats = stats;
     }
 
@@ -37,7 +38,7 @@ public class StatsPanel extends InfoPanel {
 
             int yVal = Y_DIFF;
 
-            g.setColor(Color.RED);
+            g.setColor(Color.WHITE);
             for (String s : statsMap.keySet()){
                 g.drawString(s + ": " + statsMap.get(s), X_POS, yVal);
                 yVal += Y_DIFF;

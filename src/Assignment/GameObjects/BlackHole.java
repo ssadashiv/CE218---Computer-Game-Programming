@@ -22,6 +22,7 @@ import static Assignment.Other.SharedValues.cellSize;
 //Class for black holes. The black holes' gravitational pull are never strong enough to not let a player move
     //TODO: Make it so that the player can always escape from the black hole
     //TODO: Make it stronger for every level
+    //TODO: Make a WHITE hole which repels the player from the hole. Whenever a player falls into the black hole, they get teleported to a white hole.
 public class BlackHole extends GameObject {
     private static final Image NOT_PRESSED = Sprite.BLACK_HOLE;
     private static final Clip SOUND = SoundManager.beat2;
@@ -33,7 +34,7 @@ public class BlackHole extends GameObject {
     private int gravPullIntensity;
 
     public BlackHole(PlayerShip ship, Vector2D position){
-        super(position, VEC_PLACEHOLDER, VEC_PLACEHOLDER, RADIUS, SOUND, NOT_PRESSED);
+        super(position, VEC_PLACEHOLDER, VEC_PLACEHOLDER, RADIUS*2, RADIUS*2, SOUND, NOT_PRESSED);
         gravPullIntensity = new Random().nextInt(MAX_GRAV_PULL + 1 - MIN_GRAV_PULL) + MIN_GRAV_PULL;
 
         new Timer().schedule(new GravitationalPull(ship), 0, DELAY);
@@ -46,10 +47,9 @@ public class BlackHole extends GameObject {
         return false;
     }
 
-    public void collisionHandling(GameObject other) {
-        if (canHit(other)) {
-            super.collisionHandling(other);
-        }
+    @Override
+    public void hitDetected(GameObject other) {
+        //TODO: Teleport to the corresponding white hole.
     }
 
 

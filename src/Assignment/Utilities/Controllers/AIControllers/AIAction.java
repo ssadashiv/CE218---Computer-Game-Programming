@@ -7,7 +7,7 @@ import Assignment.Utilities.Vector2D;
  */
 public class AIAction {
     public Vector2D velocity = new Vector2D(0,0);
-    public Vector2D direction = new Vector2D(0,0);
+    public Vector2D direction = new Vector2D(1,0);
 
     public boolean targetInRange;
 }

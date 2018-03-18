@@ -27,6 +27,7 @@ public class Game {
     private boolean gameRunning = false;
     private int currentLevel = 1;
     private MapHelper mapHelper;
+    private Room currentRoom;
 
     public Game() {
         objects = new CopyOnWriteArrayList<>();
@@ -69,11 +70,8 @@ public class Game {
     }
 
     private void updateMap() {
-        System.out.println("GENERATING MAP");
-        //objects.forEach(GameObject::updateGrid);
         objects.clear();
-
-        Room currentRoom = mapHelper.getMap().getRoomAtPosition(playerShip.getMapPos());
+        currentRoom = mapHelper.getMap().getRoomAtPosition(playerShip.getMapPos());
         currentRoom.setShip(playerShip);
         objects.addAll(currentRoom.getObjects());
         objects.add(playerShip);
@@ -92,6 +90,8 @@ public class Game {
         if (mapHelper.roomChanged){
             this.switchRoom();
         }
+
+        currentRoom.updateObjectives();
 
         objects.forEach(GameObject::update);
         List<GameObject> alive = objects.stream().filter(o -> !o.dead).collect(Collectors.toList());
@@ -120,7 +120,6 @@ public class Game {
     }
 
     private void switchRoom(){
-        System.out.println("ROOM CHANGED");
         mapHelper.updateMap();
         this.updateMap();
         this.closeDoorsInNewRoom();

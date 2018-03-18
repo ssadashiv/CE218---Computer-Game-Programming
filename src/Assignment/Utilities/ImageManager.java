@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 
 public class ImageManager {
@@ -22,7 +23,13 @@ public class ImageManager {
 
     public static Image loadImage(String fname) throws IOException {
         BufferedImage img = null;
-        img = ImageIO.read(new File(path + fname + ext));
+        try{
+            img = ImageIO.read(new File(path + fname + ext));
+        }catch (IIOException e){
+            System.out.println("Error: "+ e.toString());
+            System.out.println("filename="+fname);
+        }
+
         images.put(fname, img);
         return img;
     }

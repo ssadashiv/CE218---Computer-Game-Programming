@@ -50,6 +50,7 @@ public class ChargeBotCtrl implements AIController {
                         action.direction.set(new Vector2D(ship.position).subtract(bot.position).normalise());
                     } else {
                         action.direction.set(new Vector2D(bot.getChargingStationPos()).subtract(bot.position).normalise());
+                        if (action.direction.x == 0 && action.direction.y == 0) action.direction.y = -1;
                     }
 
                     /*if (shipInSector()){
