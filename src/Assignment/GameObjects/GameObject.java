@@ -178,20 +178,7 @@ public abstract class GameObject implements CollisionHandling{
     public void collisionHandling(GameObject other) {
         if (canHit(other)){
             if (overlap(other)) {
-                System.out.println("OVERLAP");
                 this.hitDetected(other);
-
-           /* if (other instanceof Obstacle) {
-                HitDetection.HitObstacle(this, other);
-            } else if (other instanceof DoorButton) {
-                HitDetection.HitDoorButton(this, other);
-            } else if (other instanceof Bullet) {
-                HitDetection.BulletHitSomething(this, other);
-            } else {
-                this.hit();
-                other.hit();
-            }
-            */
             }
         }
     }

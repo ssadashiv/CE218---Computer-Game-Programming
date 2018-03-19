@@ -25,7 +25,8 @@ import static Assignment.Other.Constants.FRAME_SIZE;
 public class View extends JComponent {
     //background colour
 
-    private static Image im = Sprite.BACKGROUND;
+    private static Image im1 = Sprite.BACKGROUND_STARS;
+    private static Image im2 = Sprite.BACKGROUND_SPACESTATION;
     AffineTransform bgTransf;
 
 
@@ -57,8 +58,8 @@ public class View extends JComponent {
         //paint the background
         //g.setBackground(Sprite.map);
 
-        double imWidth = im.getWidth(null);
-        double imHeight = im.getHeight(null);
+        double imWidth = im1.getWidth(null);
+        double imHeight = im1.getHeight(null);
 
         double stretchX = (imWidth > Constants.FRAME_WIDTH ? 1 : Constants.FRAME_WIDTH / imWidth);
         double stretchY = (imHeight > Constants.FRAME_HEIGHT ? 1 : Constants.FRAME_WIDTH / imHeight);
@@ -68,8 +69,9 @@ public class View extends JComponent {
 
 
         //paint the background
-        g.drawImage(im, bgTransf, null);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        g.drawImage(im1, bgTransf, null);
+        g.drawImage(im2, bgTransf, null);
+        //g.fillRect(0, 0, getWidth(), getHeight());
 
 
 

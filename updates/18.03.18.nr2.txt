@@ -1,0 +1,11 @@
+Updates 18.03.18 nr 2
+
+New classes
+- Hole
+	- Abstract Class for the BlackHole and WhiteHole
+	- Includes a method which runs on a timer which calculates the gravitational pull on the ship.
+- BlackHole
+	- A hole the player can collide with. Upon collision, the player gets teleported to the corresponding WhiteHole in the same room.
+	- Gravitational pull pulls the player towards the black hole
+- WhiteHole
+	- A white hole which pushes the player away from the hole. 

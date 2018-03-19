@@ -8,7 +8,7 @@ import java.awt.*;
  * Created by el16035 on 16/01/2018.
  */
 public class Constants {
-    public static final boolean TESTING = true;
+    public static final boolean TESTING = false;
 
     public static final int FRAME_HEIGHT = 640;
     public static final int FRAME_WIDTH = 640;

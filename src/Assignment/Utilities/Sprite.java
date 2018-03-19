@@ -8,7 +8,8 @@ import java.io.IOException;
  */
 public class Sprite {
     public static Image
-            BACKGROUND,
+            BACKGROUND_STARS,
+            BACKGROUND_SPACESTATION,
             WALL,
             DOOR,
             PLAYER_SHIP,
@@ -17,11 +18,13 @@ public class Sprite {
             DOOR_BUTTON_PRESSED,
             CHARGE_BOT,
             CHARGE_STATION,
-            BLACK_HOLE;
+            BLACK_HOLE,
+            WHITE_HOLE;
 
     static {
         try {
-            BACKGROUND = ImageManager.loadImage("background");
+            BACKGROUND_STARS = ImageManager.loadImage("background_stars");
+            BACKGROUND_SPACESTATION = ImageManager.loadImage("background_spacestation");
             WALL = ImageManager.loadImage("wall");
             DOOR = ImageManager.loadImage("door");
             PLAYER_SHIP = ImageManager.loadImage("playerShip");
@@ -30,6 +33,7 @@ public class Sprite {
             DOOR_BUTTON_PRESSED = ImageManager.loadImage("doorbutton_pressed");
             CHARGE_BOT = ImageManager.loadImage("charge_bot");
             BLACK_HOLE = ImageManager.loadImage("black_hole");
+            WHITE_HOLE = ImageManager.loadImage("white_hole");
             CHARGE_STATION = ImageManager.loadImage("charge_station");
         } catch (IOException e) {
             e.printStackTrace();

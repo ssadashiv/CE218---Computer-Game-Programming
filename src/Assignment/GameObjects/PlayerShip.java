@@ -103,7 +103,7 @@ public class PlayerShip extends Ship {
 
         }
 
-        position.subtract(gravitationalPull);
+        velocity.addScaled(gravitationalPull, DT);
         super.update();
     }
 
@@ -162,6 +162,11 @@ public class PlayerShip extends Ship {
 
     @Override
     public void hitDetected(GameObject other) {
+        if (other instanceof BlackHole){
+            other.hitDetected(this);
+            return;
+        }
+
         HitDetection.ContactHit(this, other);
     }
 
@@ -171,16 +176,5 @@ public class PlayerShip extends Ship {
 
     public boolean canShoot(GameObject other) {
         return false;
-    }
-
-    public void collisionHandling(GameObject other) {
-        if (canHit(other)) super.collisionHandling(other);
-
-        /* if (canHit(other)){
-            if (super.collisionHandling(other) != 0){
-                return 10;
-            }
-        }
-        return 0;*/
     }
 }

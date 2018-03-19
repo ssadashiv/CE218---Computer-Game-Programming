@@ -29,14 +29,14 @@ public class Map {
         return rooms;
     }
 
-    public int[] getInitPos() {
+    int[] getInitPos() {
         return initPos;
     }
 
-    public boolean doesRoomExist(int[] index){
-        try{
+    boolean doesRoomExist(int[] index) {
+        try {
             return rooms[index[0]][index[1]] != null;
-        } catch(ArrayIndexOutOfBoundsException e){
+        } catch (ArrayIndexOutOfBoundsException e) {
             return false;
         }
     }
@@ -52,7 +52,6 @@ public class Map {
         return null;
     }
 
-    //TODO: Make a list of Lists of rooms. each list of rooms with x amount of exit doors
     private void generateRooms() {
         //char[][] tempObstacles = MapFileParser.getObstacles();
         boolean[][] roomLocations = generateMap();
@@ -65,14 +64,17 @@ public class Map {
             }
         }
 
-        for (int i = 0; i< rooms.length;i++){
-            for (int j=0; j<rooms[i].length;j++){
-                if (rooms[i][j] != null) rooms[i][j].setRoomMap(getNeighbours(new int[]{i,j}));
+
+        //for loop identifying on which sides this room have neighbours.
+        //index 0=west, 1=north, 2=east, 3= south;
+        for (int i = 0; i < rooms.length; i++) {
+            for (int j = 0; j < rooms[i].length; j++) {
+                if (rooms[i][j] != null) rooms[i][j].setRoomMap(getNeighbours(new int[]{i, j}));
             }
         }
     }
 
-    private boolean[] getNeighbours(int[] roomPos){
+    private boolean[] getNeighbours(int[] roomPos) {
         boolean[] neighbours = new boolean[4];
 
         int[] currentTest;
@@ -83,10 +85,10 @@ public class Map {
         currentTest = new int[]{roomPos[0] + 1, roomPos[1]};
         if (doesRoomExist(currentTest)) neighbours[SOUTH_ROOM] = true;
 
-        currentTest = new int[]{roomPos[0], roomPos[1]-1};
+        currentTest = new int[]{roomPos[0], roomPos[1] - 1};
         if (doesRoomExist(currentTest)) neighbours[WEST_ROOM] = true;
 
-        currentTest = new int[]{roomPos[0], roomPos[1]+1};
+        currentTest = new int[]{roomPos[0], roomPos[1] + 1};
         if (doesRoomExist(currentTest)) neighbours[EAST_ROOM] = true;
 
 
@@ -263,11 +265,11 @@ public class Map {
 
     }
 
-    private static void printMap(boolean[][] roomMap){
-        for (int i=0;i<roomMap.length;i++){
+    private static void printMap(boolean[][] roomMap) {
+        for (int i = 0; i < roomMap.length; i++) {
             StringBuilder sb = new StringBuilder();
-            for (int j=0;j<roomMap[i].length;j++){
-                if (roomMap[i][j]){
+            for (int j = 0; j < roomMap[i].length; j++) {
+                if (roomMap[i][j]) {
                     sb.append('#');
                     continue;
                 }

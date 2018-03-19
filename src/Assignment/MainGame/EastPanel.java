@@ -14,7 +14,7 @@ import java.util.List;
  * Created by el16035 on 15/03/2018.
  */
 public class EastPanel extends InfoPanel{
-    private static final Color BG_COLOR = new Color(32, 0, 101);
+    private static final Color BG_COLOR = new Color(104, 99, 92);
     private PlayerShip playerShip;
 
     private MiniMap miniMap;
@@ -29,9 +29,11 @@ public class EastPanel extends InfoPanel{
     EastPanel(int parentHeight, MapHelper mapHelper, PlayerShip playerShip){
         super(parentHeight, BG_COLOR);
         this.playerShip = playerShip;
+
         miniMapLabel.setBounds(LABEL_X, LABEL_Y, LABEL_WIDTH, LABEL_HEIGHT);
         miniMapLabel.setHorizontalAlignment(JLabel.CENTER);
         miniMapLabel.setVerticalAlignment(JLabel.CENTER);
+        miniMapLabel.setForeground(new Color(218, 120,0));
         add(miniMapLabel);
 
         int initY = miniMapLabel.getY() + miniMapLabel.getHeight();

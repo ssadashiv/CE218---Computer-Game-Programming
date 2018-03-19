@@ -1,77 +1,44 @@
 package Assignment.GameObjects;
 
-import Assignment.Other.SharedValues;
 import Assignment.Utilities.SoundManager;
 import Assignment.Utilities.Sprite;
 import Assignment.Utilities.Vector2D;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
-import java.util.Random;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import static Assignment.Other.Constants.DELAY;
 import static Assignment.Other.Constants.VEC_PLACEHOLDER;
-import static Assignment.Other.SharedValues.cellSize;
 
 /**
  * Created by eriklange on 18.03.2018.
  */
 
 //Class for black holes. The black holes' gravitational pull are never strong enough to not let a player move
-    //TODO: Make it so that the player can always escape from the black hole
-    //TODO: Make it stronger for every level
-    //TODO: Make a WHITE hole which repels the player from the hole. Whenever a player falls into the black hole, they get teleported to a white hole.
-public class BlackHole extends GameObject {
-    private static final Image NOT_PRESSED = Sprite.BLACK_HOLE;
-    private static final Clip SOUND = SoundManager.beat2;
-    private static final int MAX_GRAV_PULL = 4;
-    private static final int MIN_GRAV_PULL = 2;
 
-    private static final int RADIUS = cellSize / 4;
+public class BlackHole extends Hole {
+    private static final Image IMAGE = Sprite.BLACK_HOLE;
 
-    private int gravPullIntensity;
-
+    private WhiteHole whiteHole;
     public BlackHole(PlayerShip ship, Vector2D position){
-        super(position, VEC_PLACEHOLDER, VEC_PLACEHOLDER, RADIUS*2, RADIUS*2, SOUND, NOT_PRESSED);
-        gravPullIntensity = new Random().nextInt(MAX_GRAV_PULL + 1 - MIN_GRAV_PULL) + MIN_GRAV_PULL;
-
-        new Timer().schedule(new GravitationalPull(ship), 0, DELAY);
+        super(position, IMAGE);
+        new Timer().schedule(new GravitationalPull(ship, 1.0, "Black Hole"), 0, DELAY);
 
     }
 
+    public void setWhiteHole(WhiteHole whiteHole) {
+        this.whiteHole = whiteHole;
+    }
 
     @Override
     public boolean canHit(GameObject other) {
-        return false;
+        return other instanceof PlayerShip;
     }
 
     @Override
     public void hitDetected(GameObject other) {
         //TODO: Teleport to the corresponding white hole.
-    }
-
-
-    private class GravitationalPull extends TimerTask {
-        private PlayerShip ship;
-        private Vector2D vecToShip;
-
-        private GravitationalPull(PlayerShip ship) {
-            this.ship = ship;
-        }
-
-        @Override
-        public void run() {
-            if (!SharedValues.gamePaused) {
-                if (ship != null) {
-                    vecToShip = new Vector2D(ship.position).subtract(position).normalise();
-                    ship.gravitationalPull = new Vector2D(vecToShip.mult(gravPullIntensity));
-
-                   /* System.out.println("VELO="+action.velocity.toString());
-                    System.out.println("DIR="+action.direction.toString());*/
-                }
-            }
-        }
+        other.position = new Vector2D(whiteHole.position);
     }
 }
