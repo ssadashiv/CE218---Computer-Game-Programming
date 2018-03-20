@@ -16,3 +16,4 @@ public class MapConstants {
     public static final int SOUTH_ROOM = 3;
 
 }
+

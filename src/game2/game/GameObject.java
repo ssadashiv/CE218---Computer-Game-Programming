@@ -7,6 +7,7 @@ import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
+import static Assignment.Other.Constants.DRAG;
 import static game2.Constants.FRAME_HEIGHT;
 import static game2.Constants.FRAME_WIDTH;
 import static game2.Constants.DT;
@@ -57,7 +58,7 @@ public abstract class GameObject {
         g.translate(position.x, position.y);
         g.drawImage(image, t, null);
         g.setTransform(t0);
-        if (isTarget) targetOval(g);*/
+        if (isTarget) drawInvincibilityOval(g);*/
     }
 
 

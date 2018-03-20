@@ -22,6 +22,9 @@ public class Obstacle extends GameObject {
     }
 
     @Override
+    public void update() {}
+
+    @Override
     public boolean canHit(GameObject other) {
         return true;
     }

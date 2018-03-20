@@ -8,7 +8,9 @@ import java.awt.*;
  * Created by el16035 on 16/01/2018.
  */
 public class Constants {
-    public static final boolean TESTING = false;
+    public static final int MAP_SIZE = 16;
+
+    public static final boolean TESTING = true;
 
     public static final int FRAME_HEIGHT = 640;
     public static final int FRAME_WIDTH = 640;
@@ -23,7 +25,7 @@ public class Constants {
     public static final double WALL_REFLECT = -0.2;
 
     //TODO: find a way for objects to reflect off each other.
-    public static final double OBJECT_REFLECT = 0;
+    public static final double OBJECT_REFLECT = 0.3;
 
     //Constant speed loss factor for any controlled GameObject
     public static final double DRAG = 0.01;

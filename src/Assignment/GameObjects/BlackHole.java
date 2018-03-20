@@ -19,12 +19,11 @@ import static Assignment.Other.Constants.VEC_PLACEHOLDER;
 
 public class BlackHole extends Hole {
     private static final Image IMAGE = Sprite.BLACK_HOLE;
-
+    private static final double FACTOR = 1.0;
     private WhiteHole whiteHole;
-    public BlackHole(PlayerShip ship, Vector2D position){
-        super(position, IMAGE);
-        new Timer().schedule(new GravitationalPull(ship, 1.0, "Black Hole"), 0, DELAY);
 
+    public BlackHole(Vector2D position){
+        super(position, IMAGE);
     }
 
     public void setWhiteHole(WhiteHole whiteHole) {
@@ -40,5 +39,10 @@ public class BlackHole extends Hole {
     public void hitDetected(GameObject other) {
         //TODO: Teleport to the corresponding white hole.
         other.position = new Vector2D(whiteHole.position);
+    }
+
+    @Override
+    public double getFactor() {
+        return FACTOR;
     }
 }

@@ -18,8 +18,13 @@ public class Sprite {
             DOOR_BUTTON_PRESSED,
             CHARGE_BOT,
             CHARGE_STATION,
+            ZAPPER,
+            SAUCER,
+            BASIC_ROCKET,
             BLACK_HOLE,
-            WHITE_HOLE;
+            WHITE_HOLE,
+    COIN_MONEY_MAN,
+    COIN_BULLET;
 
     static {
         try {
@@ -27,14 +32,20 @@ public class Sprite {
             BACKGROUND_SPACESTATION = ImageManager.loadImage("background_spacestation");
             WALL = ImageManager.loadImage("wall");
             DOOR = ImageManager.loadImage("door");
-            PLAYER_SHIP = ImageManager.loadImage("playerShip");
-            BASIC_BULLET = ImageManager.loadImage("basicBullet");
+            PLAYER_SHIP = ImageManager.loadImage("player_spaceship");
+            BASIC_BULLET = ImageManager.loadImage("basic_bullet");
             DOOR_BUTTON_NOT_PRESSED = ImageManager.loadImage("doorbutton_not_pressed");
             DOOR_BUTTON_PRESSED = ImageManager.loadImage("doorbutton_pressed");
             CHARGE_BOT = ImageManager.loadImage("charge_bot");
+            CHARGE_STATION = ImageManager.loadImage("charge_station");
+            ZAPPER = ImageManager.loadImage("zapper");
+            SAUCER = ImageManager.loadImage("saucer");
+            BASIC_ROCKET = ImageManager.loadImage("basic_rocket");
             BLACK_HOLE = ImageManager.loadImage("black_hole");
             WHITE_HOLE = ImageManager.loadImage("white_hole");
-            CHARGE_STATION = ImageManager.loadImage("charge_station");
+
+            COIN_MONEY_MAN = ImageManager.loadImage("coin_money_man");
+            COIN_BULLET = ImageManager.loadImage("coin_bullet");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -10,6 +10,7 @@ import java.awt.*;
 import static Assignment.Other.Constants.FRAME_HEIGHT;
 import static Assignment.Other.Constants.FRAME_WIDTH;
 import static Assignment.Other.Constants.SWITCH_ROOM_ANIMATION_DURATION;
+import static Assignment.Other.SharedValues.cellSize;
 
 /**
  * Created by el16035 on 16/03/2018.
@@ -49,12 +50,31 @@ public class Door extends Obstacle{
         } else if (position.x < FRAME_WIDTH / 4) {
             position.x -= width / 2;
         }
+
         if (position.y > FRAME_HEIGHT / 4 * 3) {
             position.y += width / 2;
         } else if (position.y < FRAME_HEIGHT / 4) {
             position.y -= width / 2;
         }
         initPos = new Vector2D(position);
+
+        if (position.x <= cellSize || position.x > FRAME_WIDTH / 4 * 3){
+            if (position.y < FRAME_WIDTH/2){
+                position.y -= height;
+            }else{
+                position.y += height;
+            }
+        }
+
+
+        if (position.y <= cellSize || position.y > FRAME_HEIGHT / 4 * 3){
+            if (position.x < FRAME_HEIGHT/2){
+                position.x -= height;
+            }else{
+                position.x += height;
+            }
+        }
+
 
     }
 
@@ -64,24 +84,7 @@ public class Door extends Obstacle{
 
     public void closeDoor(){
         //inits the doors as open, then animates them to close.
-        if (position.x == 0 || position.x > FRAME_WIDTH / 4 * 3){
-            if (position.y < FRAME_WIDTH/2){
-                position.y -= height;
-            }else{
-                position.y += height;
-            }
-        }
-
-
-        if (position.y == 0 || position.y > FRAME_HEIGHT / 4 * 3){
-            if (position.x < FRAME_HEIGHT/2){
-                position.x -= width;
-            }else{
-                position.x += width;
-            }
-        }
-
-        Animation.moveObject(this, initPos, SWITCH_ROOM_ANIMATION_DURATION);
+        Animation.moveObject(this, initPos, SWITCH_ROOM_ANIMATION_DURATION/2);
     }
 
 }

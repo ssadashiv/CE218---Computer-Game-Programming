@@ -45,30 +45,18 @@ public class ChargeBotCtrl implements AIController {
         public void run() {
             if (!SharedValues.gamePaused) {
                 if (bot.dead) cancel();
-                if (ship != null) {
-                    if (shipInSector()) {
+                if (ship != null && bot.getChargingStationPos() != null) {
+                    if (shipInSector() && !bot.hasRunOutOfEnergy()) {
                         action.direction.set(new Vector2D(ship.position).subtract(bot.position).normalise());
                     } else {
                         action.direction.set(new Vector2D(bot.getChargingStationPos()).subtract(bot.position).normalise());
                         if (action.direction.x == 0 && action.direction.y == 0) action.direction.y = -1;
                     }
 
-                    /*if (shipInSector()){
-                        action.direction.set(bot.position.getVecToObject(ship.position).normalise());
-                    }else{
-                        action.direction.set(bot.position.getVecToObject(bot.getChargingStationPos()).normalise());
-                    }*/
                     action.velocity = new Vector2D(action.direction).mult(bot.speed / action.direction.mag());
-
-                   /* System.out.println("VELO="+action.velocity.toString());
-                    System.out.println("DIR="+action.direction.toString());*/
                 }
             }
         }
-
-        /*private Vector2D getVecToObject(Vector2D v) {
-            return new Vector2D(v).subtract(bot.position);
-        }*/
 
         private boolean shipInSector() {
             return new Vector2D(bot.position).subtract(ship.position).mag() <= bot.getSectorRadius();

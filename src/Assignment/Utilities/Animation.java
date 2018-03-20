@@ -12,7 +12,6 @@ import static Assignment.Other.Constants.DELAY;
  */
 public class Animation {
 
-
     public static void moveObject(GameObject movingObject, Vector2D endPos, long duration){
         movingObject.canMove = false;
 
@@ -32,6 +31,7 @@ public class Animation {
                 startPos.y += yPerFrame;
                 if (frameCount == frames) {
                     movingObject.canMove = true;
+                    movingObject.switchingRooms = false;
                     cancel();
                 }
 

@@ -1,12 +1,10 @@
 package Assignment.GameObjects.Enemies;
 
-import Assignment.GameObjects.Bullet;
-import Assignment.GameObjects.GameObject;
-import Assignment.GameObjects.Obstacle;
 import Assignment.GameObjects.PlayerShip;
+import Assignment.Utilities.EnergyBar;
 import Assignment.Utilities.Controllers.AIControllers.AIAction;
 import Assignment.Utilities.Controllers.AIControllers.ChargeBotCtrl;
-import Assignment.Utilities.HitDetection;
+import Assignment.Utilities.Gravity.ForceFieldGravity;
 import Assignment.Utilities.SoundManager;
 import Assignment.Utilities.Sprite;
 import Assignment.Utilities.Vector2D;
@@ -14,22 +12,24 @@ import Assignment.Utilities.Vector2D;
 import javax.sound.sampled.Clip;
 import java.awt.*;
 
+import static Assignment.Other.Constants.DT;
 import static Assignment.Other.SharedValues.cellSize;
 
 /**
  * Created by el16035 on 17/03/2018.
  */
 public class ChargeBot extends Enemy {
-    AIAction ctrl;
-    private static final Vector2D INIT_DIR = new Vector2D(0, 1);
-    private static final Vector2D INIT_VEL = new Vector2D(0, 0);
-    private static final int RADIUS = cellSize / 2;
-
     private static final Clip DEATH_SOUND = SoundManager.bangLarge;
     private static final Image IMAGE = Sprite.CHARGE_BOT;
 
+    private static final Vector2D INIT_DIR = new Vector2D(0, 1);
+    private static final Vector2D INIT_VEL = new Vector2D(0, 0);
+    private static final int RADIUS = cellSize / 2;
+    private static final int SPEED = 100;
 
-    //Stats
+
+
+    //STATS
     private static final int INIT_ARMOUR = 50;
     private static final int INIT_LIVES = 1;
 
@@ -41,27 +41,56 @@ public class ChargeBot extends Enemy {
     private static final int BULLET_DAMAGE = 0;
     private static final int CONTACT_DAMAGE = 30;
     private static final int SCRAP_ON_DEATH = 20;
+    //END OF STATS
+
+    //Energy
+    private static final int MAX_ENERGY = 2500;
+    private int currentEnergy = 2500;
+    private boolean runOutOfEnergy = false;
 
     private ChargeStation chargeStation;
     private Vector2D chargingPos;
 
 
-    public double speed = 100;
+
     private int sectorRadius = 150;
 
+    private EnergyBar energyBar;
 
-    public ChargeBot(PlayerShip ship, ChargeStation chargeStation, Vector2D position) {
-        super(position, INIT_VEL, INIT_DIR, RADIUS, RADIUS, DEATH_SOUND, IMAGE);
+    private AIAction ctrl;
+
+
+    public ChargeBot( PlayerShip ship, Vector2D position) {
+        super(position, INIT_VEL, INIT_DIR, SPEED, RADIUS, RADIUS, DEATH_SOUND, IMAGE);
+        setStats();
         ctrl = new ChargeBotCtrl(this, ship).aiAction();
         ctrl.velocity = new Vector2D(INIT_VEL);
         ctrl.direction = new Vector2D(INIT_DIR);
+        this.energyBar = new EnergyBar(this);
+        isInvincible = true;
+    }
 
+    public void setChargeStation(ChargeStation chargeStation) {
         this.chargeStation = chargeStation;
         this.chargingPos = chargeStation.position;
-
         moveBotNextToStation();
-        setStats(INIT_ARMOUR, INIT_LIVES, FIRE_RATE, BULLET_SPEED, BULLET_DAMAGE, CONTACT_DAMAGE, SCRAP_ON_DEATH);
+    }
 
+    @Override
+    public void setStats() {
+        super.setStats(INIT_ARMOUR, INIT_LIVES, FIRE_RATE, BULLET_SPEED, BULLET_DAMAGE, CONTACT_DAMAGE, SCRAP_ON_DEATH);
+    }
+
+    public boolean hasRunOutOfEnergy() {
+        return runOutOfEnergy;
+    }
+
+    public int getMaxEnergy() {
+        return MAX_ENERGY;
+    }
+
+    public int getCurrentEnergy() {
+        return currentEnergy;
     }
 
     private void moveBotNextToStation() {
@@ -76,8 +105,36 @@ public class ChargeBot extends Enemy {
         return sectorRadius;
     }
 
+    private boolean isInChargingSector() {
+        return position.dist(chargingPos) <= chargeStation.getChargingRadius();
+    }
+
     @Override
     public void update() {
+        field.update(this, DT);
+        if (isInChargingSector() && currentEnergy < MAX_ENERGY) {
+            currentEnergy+= 10;
+
+            if (runOutOfEnergy) {
+                if (currentEnergy >= MAX_ENERGY){
+                    currentEnergy = MAX_ENERGY;
+                    isInvincible = true;
+                    runOutOfEnergy = false;
+                }else{
+                    isInvincible = false;
+                }
+            }
+        } else if (!isInChargingSector()) {
+            if (currentEnergy > 0) {
+                currentEnergy -= 10;
+            }
+            if (currentEnergy == 0) {
+                runOutOfEnergy = true;
+                System.out.println("EMPTY");
+            }
+
+        }
+
         velocity = ctrl.velocity;
         direction = ctrl.direction;
 
@@ -86,29 +143,19 @@ public class ChargeBot extends Enemy {
 
     @Override
     public void draw(Graphics2D g) {
+        g.setColor(new Color(255, 255, 0, 60));
+        g.drawOval((int) position.x - sectorRadius, (int) position.y - sectorRadius, sectorRadius * 2, sectorRadius * 2);
+        energyBar.draw(g);
 
-        g.setColor(new Color(255, 255, 0, 50));
-        g.fillOval((int) position.x - sectorRadius, (int) position.y - sectorRadius, sectorRadius * 2, sectorRadius * 2);
+        if (runOutOfEnergy){
+           drawExclamationMark(g);
+        }
         super.draw(g);
     }
 
-
-/*
-
-    @Override
-    public boolean canHit(GameObject other) {
-        return other instanceof Obstacle || other instanceof PlayerShip;
-    }
-*/
-
-    @Override
-    public boolean canHit(GameObject other) {
-        if (other instanceof Bullet) {
-            if (((Bullet) other).getParent() instanceof PlayerShip) {
-                return true;
-            }
-        }
-
-        return other instanceof Obstacle || other instanceof PlayerShip;
+    private void drawExclamationMark(Graphics2D g){
+        g.setColor(Color.RED);
+        g.setStroke(new BasicStroke(2f));
+        g.drawString("!!", (int) energyBar.position.x + (energyBar.WIDTH/2), (int) energyBar.position.y - 10);
     }
 }

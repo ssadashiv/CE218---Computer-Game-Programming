@@ -1,6 +1,5 @@
 package Assignment.Map;
 
-import Assignment.GameObjects.GameObject;
 import Assignment.Other.SharedValues;
 
 import java.io.File;
@@ -8,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import static Assignment.Other.Constants.FRAME_SIZE;
+import static Assignment.Other.Constants.MAP_SIZE;
 
 /**
  * Created by el16035 on 14/03/2018.

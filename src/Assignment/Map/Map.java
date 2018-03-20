@@ -1,9 +1,9 @@
 package Assignment.Map;
 
-import Assignment.Other.RandomNumberHelper;
+import Assignment.Utilities.Gravity.ForceFieldGravity;
+import Assignment.Utilities.RandomNumberHelper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static Assignment.Map.MapConstants.*;

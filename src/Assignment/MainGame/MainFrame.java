@@ -66,6 +66,7 @@ public class MainFrame extends JFrame {
     void update(){
         game.update();
         view.repaint();
+        statsPanel.repaint();
     }
     /*public boolean isPaused(){
         return menu.isOpen();

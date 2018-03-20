@@ -1,9 +1,7 @@
 package Assignment.GameObjects.Enemies;
 
-import Assignment.GameObjects.Bullet;
 import Assignment.GameObjects.GameObject;
 import Assignment.GameObjects.Obstacle;
-import Assignment.Utilities.HitDetection;
 import Assignment.Utilities.SoundManager;
 import Assignment.Utilities.Sprite;
 import Assignment.Utilities.Vector2D;

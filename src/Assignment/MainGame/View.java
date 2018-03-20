@@ -1,9 +1,9 @@
 package Assignment.MainGame;
 
-import Assignment.GameObjects.Bullet;
+import Assignment.GameObjects.Projectiles.Bullet;
 import Assignment.GameObjects.GameObject;
+import Assignment.GameObjects.Obstacle;
 import Assignment.Map.MapHelper;
-import Assignment.Map.Room;
 import Assignment.Other.Constants;
 import Assignment.Utilities.Sprite;
 
@@ -74,13 +74,10 @@ public class View extends JComponent {
         //g.fillRect(0, 0, getWidth(), getHeight());
 
 
-
-
         List<GameObject> copyObj = new LinkedList<>(game.objects);
 
         int[] newPos = game.shipMapPos();
         if (!isSamePosition(newPos)) {
-            System.out.println("swap");
             mapHelper.setMapPos(newPos);
             mapPos = mapHelper.getMapPos();
             //currentBG = mapHelper.getRoomColor(mapPos);
@@ -95,10 +92,21 @@ public class View extends JComponent {
         }
 
         eastPanel.updateMiniMap();
+
+        //Drawing the obstacles first
         Iterator<GameObject> it = copyObj.iterator();
         while (it.hasNext()) {
-            it.next().draw(g);
+            GameObject o = it.next();
+            if (o instanceof Obstacle) o.draw(g);
         }
+
+        Iterator<GameObject> it2 = copyObj.iterator();
+        while (it2.hasNext()) {
+            GameObject o = it2.next();
+            if (!(o instanceof Obstacle)) o.draw(g);
+        }
+
+
     }
 
     public void setEastPanel(EastPanel eastPanel) {

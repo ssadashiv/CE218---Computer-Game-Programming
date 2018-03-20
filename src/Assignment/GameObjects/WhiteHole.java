@@ -13,10 +13,10 @@ import static Assignment.Other.Constants.DELAY;
  */
 public class WhiteHole extends Hole {
     private static final Image IMAGE = Sprite.WHITE_HOLE;
+    private static final double FACTOR = -1.0;
 
-    public WhiteHole(PlayerShip ship, Vector2D position) {
+    public WhiteHole(Vector2D position) {
         super(position, IMAGE);
-        new Timer().schedule(new GravitationalPull(ship, -1.0, "White hole"), 0, DELAY);
     }
 
     @Override
@@ -26,5 +26,10 @@ public class WhiteHole extends Hole {
     @Override
     public boolean canHit(GameObject other) {
         return false;
+    }
+
+    @Override
+    public double getFactor() {
+        return FACTOR;
     }
 }

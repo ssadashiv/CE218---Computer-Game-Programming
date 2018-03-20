@@ -2,16 +2,24 @@ package Assignment.MainGame;
 
 
 import Assignment.GameObjects.*;
+import Assignment.GameObjects.Enemies.CoinMoneyMan;
+import Assignment.GameObjects.Projectiles.Projectile;
 import Assignment.Utilities.Controllers.PlayerControllers.KeyBindingController;
 import Assignment.Map.Room;
+import Assignment.Utilities.Gravity.ForceFieldGravity;
 import Assignment.Utilities.HitDetection;
 import Assignment.Map.*;
 import Assignment.Utilities.SoundManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
+
+import static Assignment.Other.Constants.SWITCH_ROOM_ANIMATION_DURATION;
 
 /**
  * Created by el16035 on 16/01/2018.
@@ -29,12 +37,19 @@ public class Game {
     private MapHelper mapHelper;
     private Room currentRoom;
 
+    private boolean newGame = true;
+
+    private ForceFieldGravity forceFieldGravity = new ForceFieldGravity();
+
     public Game() {
         objects = new CopyOnWriteArrayList<>();
         //playerKeys = new PlayerKeys(container);
     }
 
     void newGame() {
+        for (GameObject o : objects) o.dead = true;
+            
+        newGame = true;
         mapHelper.setLevelAndMap(currentLevel);
         playerShip.setMapHelper(mapHelper);
         
@@ -44,6 +59,9 @@ public class Game {
         spawnShip();
         updateMap();
         System.out.println("NEW GAME");
+
+        switchRoom();
+        newGame = false;
 
 
     }
@@ -64,6 +82,15 @@ public class Game {
     }
 
     private void spawnShip() {
+        if (playerShip.dead) {
+            if (playerShip.getStats().getLivesRemaining() == 0){
+                //noMoreLives();
+                return;
+            }else {
+                playerShip.dead = false;
+            }
+
+        }
         playerShip.resetPosition();
         SoundManager.extraShip();
         objects.add(playerShip);
@@ -96,11 +123,20 @@ public class Game {
         objects.forEach(GameObject::update);
         List<GameObject> alive = objects.stream().filter(o -> !o.dead).collect(Collectors.toList());
 
+        List<Projectile> projectiles = new ArrayList<>();
+
+        alive.stream().filter(o -> o instanceof Turret).forEach(o -> {
+            projectiles.addAll(((Turret) o).getProjectiles());
+            ((Turret) o).clearProjectiles();
+        });
+
+        alive.addAll(projectiles);
+       /*
         if (playerShip.bullet != null) {
             alive.add(playerShip.bullet);
             playerShip.bullet = null;
         }
-
+*/
         synchronized (Game.class) {
             objects.clear();
             objects.addAll(alive);
@@ -123,10 +159,29 @@ public class Game {
         mapHelper.updateMap();
         this.updateMap();
         this.closeDoorsInNewRoom();
+        List<Hole> holes = new ArrayList<>();
+        for (GameObject o : objects){
+            if (o instanceof Hole) holes.add((Hole) o);
+            o.setField(forceFieldGravity);
+        }
+
+        forceFieldGravity.setHoles(holes);
     }
 
     private void closeDoorsInNewRoom(){
         List<Door> doors = objects.stream().filter(o -> o instanceof Door).map(o -> (Door) o).collect(Collectors.toList());
-        doors.forEach(Door::closeDoor);
+
+        if (newGame){
+            doors.forEach(Door::closeDoor);
+            return;
+        }
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                doors.forEach(Door::closeDoor);
+            }
+        }, SWITCH_ROOM_ANIMATION_DURATION);
+
     }
 }

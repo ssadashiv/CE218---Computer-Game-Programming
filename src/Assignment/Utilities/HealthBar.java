@@ -1,4 +1,4 @@
-package Assignment.Other;
+package Assignment.Utilities;
 
 import Assignment.GameObjects.GameObject;
 import Assignment.GameObjects.ObjectStats;

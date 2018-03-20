@@ -14,7 +14,7 @@ public class ObjectStats {
     private static final String ARMOUR = "armour";
     private static final String LIVES_REMAINING = "lives remaining";
 
-    //The interval between every time the ship can shoot bullets. in milliseconds
+    //The interval between every time the ship can shoot coinBullets. in milliseconds
     private static final String FIRE_RATE = "fire rate";
     private static final String BULLET_SPEED = "bullet speed";
     private static final String BULLET_DAMAGE = "bullet damage";
@@ -26,7 +26,10 @@ public class ObjectStats {
     private Map<String, Integer> stats = new HashMap<>();
     private ObjectStats initStats;
 
-    ObjectStats(int armour, int livesRemaining, int fireRate, int bulletSpeed, int bulletDamage, int contactDamage, int scrapOnDeath){
+    private GameObject parent;
+
+    ObjectStats(GameObject parent, int armour, int livesRemaining, int fireRate, int bulletSpeed, int bulletDamage, int contactDamage, int scrapOnDeath){
+        this.parent = parent;
         stats.put(MAX_ARMOUR, armour);
         stats.put(ARMOUR, armour);
         stats.put(LIVES_REMAINING, livesRemaining);
@@ -60,6 +63,7 @@ public class ObjectStats {
     }
 
     public void addArmour(int amount) {
+        if (amount < 0) parent.timeOutInvincible();
         stats.put(ARMOUR, getArmour() + amount);
     }
 

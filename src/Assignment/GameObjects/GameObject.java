@@ -1,16 +1,12 @@
 package Assignment.GameObjects;
 
-import Assignment.Other.HealthBar;
-import Assignment.Utilities.CollisionHandling;
-import Assignment.Utilities.HitDetection;
-import Assignment.Utilities.SoundManager;
-import Assignment.Utilities.Vector2D;
+import Assignment.Utilities.*;
+import Assignment.Utilities.Gravity.ForceFieldGravity;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.List;
 
 import static Assignment.Other.Constants.*;
@@ -21,6 +17,7 @@ import static Assignment.Other.SharedValues.gridSize;
  * Created by el16035 on 05/02/2018.
  */
 public abstract class GameObject implements CollisionHandling{
+    public ForceFieldGravity field;
 
     Vector2D initPos;
     Vector2D initVel;
@@ -38,13 +35,19 @@ public abstract class GameObject implements CollisionHandling{
     private Image image;
 
     public boolean canMove = true;
+    public boolean switchingRooms = false;
 
-    ObjectStats stats;
+
+    public boolean isInvincible = false;
+    public ObjectStats stats;
     private HealthBar healthBar;
 
     public List<int[]> gridCoordinates = new ArrayList<>();
-    //public boolean[][] grid;
+    //public Map<Vector2D, Integer> hitDetectionBubbles = new HashMap<>();
 
+    public Vector2D gravitationalPull = new Vector2D(0, 0);
+
+    //public boolean[][] grid;
     //Stores the last updated coordinates of the currenct object.
     //public List<int[]> gridPositions = new ArrayList<>();
 
@@ -52,7 +55,7 @@ public abstract class GameObject implements CollisionHandling{
         this.position = position;
         this.velocity = velocity;
         this.direction = direction;
-        this.radius = width /2;
+        this.radius = width / 2;
         this.width = width;
         this.height = height;
         this.deathSound = deathSound;
@@ -66,8 +69,15 @@ public abstract class GameObject implements CollisionHandling{
 
 
     public void setStats(int armour, int livesRemaining, int fireRate, int bulletSpeed, int bulletDamage, int contactDamage, int scrapOnDeath) {
-        stats = new ObjectStats(armour, livesRemaining, fireRate, bulletSpeed, bulletDamage, contactDamage, scrapOnDeath);
+        stats = new ObjectStats(this, armour, livesRemaining, fireRate, bulletSpeed, bulletDamage, contactDamage, scrapOnDeath);
         healthBar = new HealthBar(this);
+    }
+    public ObjectStats getStats() {
+        return stats;
+    }
+
+    public void setField(ForceFieldGravity field) {
+        this.field = field;
     }
 
     public void updateGrid() {
@@ -98,6 +108,8 @@ public abstract class GameObject implements CollisionHandling{
         }*/
 
     }
+    public void timeOutInvincible() {
+    }
 
     private boolean withinArrRange(int[] intArr) {
         for (int i = 0; i < intArr.length; i++) {
@@ -106,22 +118,29 @@ public abstract class GameObject implements CollisionHandling{
         return true;
     }
 
-    public ObjectStats getStats() {
-        return stats;
-    }
 
-    private void hit() {
-        SoundManager.play(deathSound);
-        dead = true;
+
+    public void hit() {
+        if (stats.getLivesRemaining() == 0){
+            SoundManager.play(deathSound);
+            dead = true;
+            //TODO: Animation.explosion(this);
+        }else{
+
+        }
     }
 
     public void update() {
-        if (stats != null){
-            if (stats.getArmour() <= 0){
+        if (stats != null) {
+            if (stats.getArmour() <= 0) {
                 dead = true;
+                System.out.println("updating");
+                System.out.println("lives before="+stats.getLivesRemaining());
+                stats.addLivesRemaining(-1);
+                System.out.println("lives after="+stats.getLivesRemaining());
+
             }
         }
-
         if (canMove) position.addScaled(velocity, DT);
         //updateGrid();
         //position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
@@ -141,27 +160,29 @@ public abstract class GameObject implements CollisionHandling{
         g.drawImage(image, t, null);
         g.setTransform(t0);
 
-        if (TESTING) drawHitBox(g);
-
-
+        if (TESTING && this instanceof PlayerShip) drawHitBox(g);
         if (healthBar != null) healthBar.draw(g);
 
+        if (isInvincible){
+            drawInvincibilityOval(g);
+        }
+
+        //if (!(this instanceof Obstacle) && TESTING && this instanceof PlayerShip) drawHitBubbles(g);
     }
 
-    void drawHitBox(Graphics2D g){
+    void drawHitBox(Graphics2D g) {
         Rectangle r = getBounds();
         g.setColor(Color.RED);
         g.drawRect(r.x, r.y, r.width, r.height);
     }
 
 
-    public void targetOval(Graphics2D g) {
-        g.setColor(Color.GREEN);
-        g.drawOval((int) position.x - width / 2, (int) position.y - height / 2, width, height);
-
+    public void drawInvincibilityOval(Graphics2D g) {
+        g.setColor(new Color(255,0,0, 50));
+        g.fillOval((int) position.x - (height / 2), (int) position.y - (height / 2), width, height);
     }
 
-    void setImage(Image newImage){
+    void setImage(Image newImage) {
         this.image = newImage;
     }
 
@@ -171,12 +192,11 @@ public abstract class GameObject implements CollisionHandling{
         if (this instanceof Obstacle || other instanceof Obstacle) {
             return getBounds().intersects(other.getBounds());
         }
-        double length = position.dist(other.position);
-        return length < radius + other.radius;
+        return position.dist(other.position) < radius + other.radius;
     }
 
     public void collisionHandling(GameObject other) {
-        if (canHit(other)){
+        if (canHit(other)) {
             if (overlap(other)) {
                 this.hitDetected(other);
             }
@@ -184,6 +204,8 @@ public abstract class GameObject implements CollisionHandling{
     }
 
     public Rectangle getBounds() {
-        return new Rectangle((int) position.x - (width/2), (int) position.y - (height/2), width, height);
+        if (this instanceof PlayerShip)
+            return new Rectangle((int) position.x - (height / 2), (int) position.y - (height / 2), height, height);
+        return new Rectangle((int) position.x - (width / 2), (int) position.y - (height / 2), width, height);
     }
 }

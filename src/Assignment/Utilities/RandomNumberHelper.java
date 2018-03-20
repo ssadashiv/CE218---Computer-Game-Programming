@@ -1,4 +1,4 @@
-package Assignment.Other;
+package Assignment.Utilities;
 
 import java.util.List;
 import java.util.Random;

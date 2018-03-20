@@ -1,9 +1,10 @@
 package Assignment.Map;
 
 import Assignment.GameObjects.*;
-import Assignment.GameObjects.Enemies.ChargeBot;
-import Assignment.GameObjects.Enemies.ChargeStation;
+import Assignment.GameObjects.Enemies.*;
 import Assignment.MainGame.Game;
+import Assignment.Utilities.Gravity.ForceField;
+import Assignment.Utilities.Gravity.ForceFieldGravity;
 import Assignment.Utilities.Vector2D;
 
 import java.util.ArrayList;
@@ -42,9 +43,19 @@ public class Room {
         initObjects(objects);
     }
 
+    /*TODO:
+    * Add level difference
+    * The enemies get harder the more lvls you beat. let's say 10% higher stats every lvl.
+    * */
     private void initObjects(char[][] objects) {
+        clearObjects();
         double obstSize = (double) FRAME_SIZE.height / (double) objects[0].length;
         boolean whiteHoleAdded = false;
+
+        List<BlackHole> tempBHoles = new ArrayList<>();
+        List<ChargeBot> chargeBots = new ArrayList<>();
+        ChargeStation chargeStation = null;
+        //ChargeStation chargeStation
 
         for (int i = 0; i < objects.length; i++) {
             for (int j = 0; j < objects[i].length; j++) {
@@ -66,27 +77,44 @@ public class Room {
                         //OBJECTIVES. EITHER BUTTONS OR ENEMIES
                         //Button
                         case '+':
-                            if (!roomCleared)
-                                objectives.add(new DoorButton(this, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2)), (int) obstSize / 5));
+                            objectives.add(new DoorButton(this, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2)), (int) obstSize / 2));
                             break;
 
                         //ChargeBot. Add a ChargeStation as well
                         case 'C':
-                            ChargeStation chargeStation = new ChargeStation(new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2)));
-                            if (!roomCleared)
-                                objectives.add(new ChargeBot(ship, chargeStation, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2))));
-                            obstacles.add(chargeStation);
+                            if (chargeStation == null) {
+                                chargeStation = new ChargeStation(new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2)));
+                                obstacles.add(chargeStation);
+                            }
+                            chargeBots.add(new ChargeBot(ship, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2))));
+                            break;
+
+                        //BOSSES
+                        //CoinMoneyMan
+                        case 'M':
+                            objectives.add(new CoinMoneyMan(new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2))));
+                            break;
+                        //Zapper
+                        case 'Z':
+                            Zapper zapper = new Zapper(ship, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2)));
+                            objectives.add(zapper);
+                            break;
+
+                        //Saucer
+                        case 'S':
+                            Saucer saucer = new Saucer(ship, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2)));
+                            objectives.add(saucer);
                             break;
 
 
                         //Black hole
                         case 'B':
-                            otherObjects.add(new BlackHole(ship, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2))));
+                            tempBHoles.add(new BlackHole(new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2))));
                             break;
 
                         //White hole
                         case 'W':
-                            otherObjects.add(new WhiteHole(ship, new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2))));
+                            otherObjects.add(new WhiteHole(new Vector2D((j * obstSize) + (obstSize / 2), (i * obstSize) + (obstSize / 2))));
                             whiteHoleAdded = true;
                             break;
 
@@ -100,24 +128,38 @@ public class Room {
         }
 
         if (whiteHoleAdded) {
-            for (GameObject o : otherObjects) {
-                if (o instanceof BlackHole) {
-                    for (GameObject object : otherObjects) {
-                        if (object instanceof WhiteHole) {
-                            ((BlackHole) o).setWhiteHole((WhiteHole) object);
-                        }
+            for (BlackHole b : tempBHoles) {
+                for (GameObject o : otherObjects) {
+                    if (o instanceof WhiteHole) {
+                        b.setWhiteHole((WhiteHole) o);
+                        break;
                     }
                 }
             }
         }
+
+        if (chargeStation != null) {
+            for (ChargeBot cb : chargeBots) {
+                cb.setChargeStation(chargeStation);
+            }
+        }
+
+
+        otherObjects.addAll(tempBHoles);
+        objectives.addAll(chargeBots);
+    }
+
+    private void clearObjects(){
+        objectives.clear();
+        obstacles.clear();
+        otherObjects.clear();
     }
 
     public List<GameObject> getObjects() {
         List<GameObject> objects = new ArrayList<>();
-        objects.addAll(objectives);
+        if (!roomCleared) objects.addAll(objectives);
         objects.addAll(otherObjects);
         objects.addAll(obstacles);
-
 
         return objects;
     }
@@ -163,10 +205,5 @@ public class Room {
     public boolean canOpenDoors() {
         return canOpenDoors;
     }
-
-    public void closeDoors() {
-
-    }
-
 
 }
