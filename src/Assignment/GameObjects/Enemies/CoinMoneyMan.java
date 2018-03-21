@@ -4,6 +4,7 @@ import Assignment.GameObjects.*;
 import Assignment.GameObjects.Projectiles.Bullet;
 import Assignment.GameObjects.Projectiles.CoinBullet;
 import Assignment.GameObjects.Projectiles.Projectile;
+import Assignment.MainGame.Game;
 import Assignment.Utilities.Controllers.AIControllers.CoinMoneyManCtrl;
 import Assignment.Utilities.HitDetection;
 import Assignment.Utilities.SoundManager;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static Assignment.Other.Constants.DT;
 import static Assignment.Other.Constants.FRAME_WIDTH;
+import static Assignment.Other.SharedValues.lvlDifficulty;
 
 /**
  * Created by el16035 on 20/03/2018.
@@ -33,17 +35,18 @@ public class CoinMoneyMan extends Enemy implements Turret {
 
     private static final int SIZE = FRAME_WIDTH / 4;
     //STATS
-    private static final int INIT_ARMOUR = 1000;
+    //private static final int INIT_ARMOUR = 800;
+    private static final int INIT_ARMOUR = 800;
     private static final int INIT_LIVES = 1;
 
     //The fire rate of the bullet in milliseconds
-    private static final int FIRE_RATE = 3000;
+    private static final int FIRE_RATE = 4000;
 
     //the bullet speed. x pixels in a second
     private static final int BULLET_SPEED = 200;
-    private static final int BULLET_DAMAGE = 40;
+    private static final int BULLET_DAMAGE = 30;
     private static final int CONTACT_DAMAGE = 40;
-    private static final int SCRAP_ON_DEATH = 500;
+    private static final int SCRAP_ON_DEATH = 550;
     //END OF STATS
 
     private List<Projectile> coinBullets = new ArrayList<>();
@@ -57,7 +60,7 @@ public class CoinMoneyMan extends Enemy implements Turret {
 
     @Override
     public void setStats() {
-        super.setStats(INIT_ARMOUR, INIT_LIVES, FIRE_RATE, BULLET_SPEED, BULLET_DAMAGE, CONTACT_DAMAGE, SCRAP_ON_DEATH);
+        super.setStats((int) (INIT_ARMOUR * lvlDifficulty), INIT_LIVES, FIRE_RATE, (int) (BULLET_SPEED * lvlDifficulty), (int) (BULLET_DAMAGE * lvlDifficulty), (int) (CONTACT_DAMAGE * lvlDifficulty), (int) (SCRAP_ON_DEATH * lvlDifficulty));
     }
 
 
@@ -80,6 +83,10 @@ public class CoinMoneyMan extends Enemy implements Turret {
             return;
         }
         HitDetection.ContactHit(this, other);
+
+        if (dead && other instanceof PlayerShip) {
+            ((PlayerShip) other).bossKilled();
+        }
     }
 
 

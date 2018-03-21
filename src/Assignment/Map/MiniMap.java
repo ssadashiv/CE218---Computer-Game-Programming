@@ -8,6 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
+import static Assignment.Map.MapConstants.BOSS_ROOM;
+import static Assignment.Map.MapConstants.REGULAR_ROOM;
+import static Assignment.Map.MapConstants.SHOP_ROOM;
+
 /**
  * Created by el16035 on 15/03/2018.
  */
@@ -56,10 +60,8 @@ public class MiniMap {
             for (int j = 0; j < colorMap[i].length; j++) {
                 if (map[i][j]) {
                     int expRoom = exploredRooms[i][j];
-                    if (testing){
-                        g.setColor(VISITED_ROOM_COLOR);
-                    }
-                    if (expRoom != 0) {
+
+                    if (expRoom != 0 || testing) {
                         if (expRoom == 1) {
                             g.setColor(NEIGHBOUR_ROOM_COLOR);
                         } else {
@@ -70,6 +72,21 @@ public class MiniMap {
                         g.setColor(SQUARE_COLOR);
                         g.drawRect(j * mapSquareSize, i * mapSquareSize + miniMapInitY, mapSquareSize, mapSquareSize);
 
+                        Room room = mapHelper.getRoomAtPos(new int[]{i,j});
+                        if (room != null){
+                            String type = room.getRoomType();
+                            if (!type.equals(REGULAR_ROOM)){
+                                String letter = "";
+                                if (type.equals(BOSS_ROOM)){
+                                    letter = "B";
+                                }else if (type.equals(SHOP_ROOM)){
+                                    letter = "S";
+                                }
+
+                                g.setColor(Color.WHITE);
+                                g.drawString(letter, (j+1) * mapSquareSize - (mapSquareSize/2), (i+1) *mapSquareSize + (mapSquareSize/2));
+                            }
+                        }
                     }
                 }
             }

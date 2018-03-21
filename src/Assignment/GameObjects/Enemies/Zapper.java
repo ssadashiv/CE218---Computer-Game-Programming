@@ -16,6 +16,7 @@ import java.util.TimerTask;
 
 import static Assignment.Other.Constants.DT;
 import static Assignment.Other.SharedValues.cellSize;
+import static Assignment.Other.SharedValues.lvlDifficulty;
 
 /**
  * Created by el16035 on 19/03/2018.
@@ -67,8 +68,7 @@ public class Zapper extends Enemy {
 
     @Override
     public void setStats() {
-        super.setStats(INIT_ARMOUR, INIT_LIVES, FIRE_RATE, BULLET_SPEED, BULLET_DAMAGE, CONTACT_DAMAGE, SCRAP_ON_DEATH);
-    }
+        super.setStats((int) (INIT_ARMOUR*lvlDifficulty), INIT_LIVES, FIRE_RATE, (int) (BULLET_SPEED*lvlDifficulty), (int)(BULLET_DAMAGE*lvlDifficulty), (int)(CONTACT_DAMAGE*lvlDifficulty), (int)(SCRAP_ON_DEATH*lvlDifficulty));    }
 
     public void update() {
         field.update(this, DT);

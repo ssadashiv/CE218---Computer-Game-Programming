@@ -24,11 +24,11 @@ public class ObjectStats {
     private static final String SCRAP_ON_DEATH = "scrap on death";
 
     private Map<String, Integer> stats = new HashMap<>();
-    private ObjectStats initStats;
+    private final Map<String, Integer> initStats = new HashMap<>();
 
     private GameObject parent;
 
-    ObjectStats(GameObject parent, int armour, int livesRemaining, int fireRate, int bulletSpeed, int bulletDamage, int contactDamage, int scrapOnDeath){
+    ObjectStats(GameObject parent, int armour, int livesRemaining, int fireRate, int bulletSpeed, int bulletDamage, int contactDamage, int scrapOnDeath) {
         this.parent = parent;
         stats.put(MAX_ARMOUR, armour);
         stats.put(ARMOUR, armour);
@@ -38,40 +38,49 @@ public class ObjectStats {
         stats.put(BULLET_DAMAGE, bulletDamage);
         stats.put(CONTACT_DAMAGE, contactDamage);
         stats.put(SCRAP_ON_DEATH, scrapOnDeath);
-        initStats = new ObjectStats(stats);
+
+
+        initStats.put(MAX_ARMOUR, armour);
+        initStats.put(ARMOUR, armour);
+        initStats.put(LIVES_REMAINING, livesRemaining);
+        initStats.put(FIRE_RATE, fireRate);
+        initStats.put(BULLET_SPEED, bulletSpeed);
+        initStats.put(BULLET_DAMAGE, bulletDamage);
+        initStats.put(CONTACT_DAMAGE, contactDamage);
+        initStats.put(SCRAP_ON_DEATH, scrapOnDeath);
     }
 
-    ObjectStats(Map<String, Integer> initMap){
-        stats = new HashMap<>(initMap);
-    }
-
-    void newLife(){
+    void newLife() {
         stats.put(ARMOUR, getMaxArmour());
-        stats.put(LIVES_REMAINING, getLivesRemaining() -1);
+        stats.put(LIVES_REMAINING, getLivesRemaining() - 1);
     }
 
-    void resetStats(){
-        stats = new HashMap<>(initStats.getStats());
+    void resetStats() {
+        for (String s : initStats.keySet()) {
+            stats.put(s, initStats.get(s));
+        }
     }
 
     public Map<String, Integer> getStats() {
         return stats;
     }
 
-    public void addMaxArmour(int amount){
+    public void addMaxArmour(int amount) {
         stats.put(MAX_ARMOUR, getMaxArmour() + amount);
     }
 
     public void addArmour(int amount) {
         if (amount < 0) parent.timeOutInvincible();
         stats.put(ARMOUR, getArmour() + amount);
+        if (getArmour() <= 0) {
+            parent.dropScrapMetal(getScrapOnDeath());
+        }
     }
 
     //decrease lives remain
     public void addLivesRemaining(int amount) {
         stats.put(LIVES_REMAINING, getLivesRemaining() + amount);
     }
-
 
 
     /*
@@ -88,24 +97,25 @@ public class ObjectStats {
     public int getLivesRemaining() {
         return stats.get(LIVES_REMAINING);
     }
+
     public int getFireRate() {
-        return  stats.get(FIRE_RATE);
+        return stats.get(FIRE_RATE);
     }
 
     public int getBulletSpeed() {
-        return  stats.get(BULLET_SPEED);
+        return stats.get(BULLET_SPEED);
     }
 
     public int getBulletDamage() {
-        return  stats.get(BULLET_DAMAGE);
+        return stats.get(BULLET_DAMAGE);
     }
 
     public int getContactDamage() {
-        return  stats.get(CONTACT_DAMAGE);
+        return stats.get(CONTACT_DAMAGE);
     }
 
     public int getScrapOnDeath() {
-        return  stats.get(SCRAP_ON_DEATH);
+        return stats.get(SCRAP_ON_DEATH);
     }
 
 
@@ -128,6 +138,7 @@ public class ObjectStats {
     public void setFireRate(int newValue) {
         stats.put(FIRE_RATE, newValue);
     }
+
     public void setBulletSpeed(int newValue) {
         stats.put(BULLET_SPEED, newValue);
     }

@@ -18,11 +18,6 @@ import static Assignment.Other.SharedValues.gridSize;
  */
 public abstract class GameObject implements CollisionHandling{
     public ForceFieldGravity field;
-
-    Vector2D initPos;
-    Vector2D initVel;
-    Vector2D initDir;
-
     public Vector2D position;
     public Vector2D velocity;
     public Vector2D direction;
@@ -47,6 +42,8 @@ public abstract class GameObject implements CollisionHandling{
 
     public Vector2D gravitationalPull = new Vector2D(0, 0);
 
+    public ScrapMetal metal = null;
+
     //public boolean[][] grid;
     //Stores the last updated coordinates of the currenct object.
     //public List<int[]> gridPositions = new ArrayList<>();
@@ -61,10 +58,6 @@ public abstract class GameObject implements CollisionHandling{
         this.deathSound = deathSound;
         this.image = image;
         //updateGrid();
-
-        initPos = new Vector2D(position);
-        initVel = new Vector2D(velocity);
-        initDir = new Vector2D(direction);
     }
 
 
@@ -131,19 +124,7 @@ public abstract class GameObject implements CollisionHandling{
     }
 
     public void update() {
-        if (stats != null) {
-            if (stats.getArmour() <= 0) {
-                dead = true;
-                System.out.println("updating");
-                System.out.println("lives before="+stats.getLivesRemaining());
-                stats.addLivesRemaining(-1);
-                System.out.println("lives after="+stats.getLivesRemaining());
-
-            }
-        }
         if (canMove) position.addScaled(velocity, DT);
-        //updateGrid();
-        //position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
     }
 
 
@@ -160,15 +141,21 @@ public abstract class GameObject implements CollisionHandling{
         g.drawImage(image, t, null);
         g.setTransform(t0);
 
-        if (TESTING && this instanceof PlayerShip) drawHitBox(g);
+        if (TESTING) drawHitBox(g);
         if (healthBar != null) healthBar.draw(g);
 
         if (isInvincible){
             drawInvincibilityOval(g);
         }
-
-        //if (!(this instanceof Obstacle) && TESTING && this instanceof PlayerShip) drawHitBubbles(g);
     }
+
+    public void dropScrapMetal(int amount){
+        if (amount != 0){
+            metal = new ScrapMetal(position, amount);
+        }
+        dead = true;
+    }
+
 
     void drawHitBox(Graphics2D g) {
         Rectangle r = getBounds();

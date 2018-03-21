@@ -3,14 +3,13 @@ package Assignment.Map;
 import Assignment.GameObjects.*;
 import Assignment.GameObjects.Enemies.*;
 import Assignment.MainGame.Game;
-import Assignment.Utilities.Gravity.ForceField;
-import Assignment.Utilities.Gravity.ForceFieldGravity;
 import Assignment.Utilities.Vector2D;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static Assignment.Map.MapConstants.REGULAR_ROOM;
 import static Assignment.Other.Constants.FRAME_SIZE;
 
 /**
@@ -27,6 +26,7 @@ public class Room {
     private PlayerShip ship;
     private char[][] objects;
     private boolean roomCleared = false;
+    private String roomType = REGULAR_ROOM;
 
 
     public Room() {
@@ -34,8 +34,20 @@ public class Room {
         reset();
     }
 
-    void setRoomMap(boolean[] neighbours) {
-        objects = RoomHelper.readFile(neighbours);
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    void setRoomMap(boolean[] neighbours, boolean initPos) {
+        objects = RoomHelper.getRoomObjects(neighbours, roomType, initPos);
+    }
+
+    public void addLvlHole(LvlHole hole){
+        otherObjects.add(hole);
     }
 
     public void setShip(PlayerShip ship) {

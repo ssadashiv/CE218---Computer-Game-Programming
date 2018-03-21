@@ -20,6 +20,9 @@ public class MainFrame extends JFrame {
 
     private static final String WARNING_MESSAGE_NEW_GAME = "Do you want to start a new game?\nAll progress during your last run will be deleted.";
     private static final String LABEL_NEW_GAME = "New Game";
+
+    private static final String WARNING_MESSAGE_NEW_LEVEL = "Do you want to proceed to the next level?\nEnemies will get harder.";
+    private static final String LABEL_NEW_LEVEL = "Next Level";
     private View view;
     private Game game;
     private MainMenu menu;
@@ -30,7 +33,7 @@ public class MainFrame extends JFrame {
 
     MainFrame(String title){
         super(title);
-        game = new Game();
+        game = new Game(this);
         view = new View(game);
 
         KeyBindingController kbc = new KeyBindingController(view, this);
@@ -56,8 +59,7 @@ public class MainFrame extends JFrame {
 
 
         pack();
-        //TODO: Make this FALSE
-        setResizable(true);
+        setResizable(false);
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -67,11 +69,18 @@ public class MainFrame extends JFrame {
         game.update();
         view.repaint();
         statsPanel.repaint();
+        eastPanel.repaint();
     }
-    /*public boolean isPaused(){
-        return menu.isOpen();
+
+    public boolean nextLevel(){
+        int dialogResult = JOptionPane.showConfirmDialog (null, WARNING_MESSAGE_NEW_LEVEL, LABEL_NEW_LEVEL, JOptionPane.YES_NO_OPTION);
+        if (dialogResult == JOptionPane.YES_OPTION){
+            return true;
+        }else{
+            return false;
+        }
     }
-*/
+
     public void openMenu(){
         menu.openPanel();
     }

@@ -14,9 +14,7 @@ public class CoinMoneyManCtrl implements AIController {
     private static long fireDuration;
     private static final int BULLETS_FIRED_IN_DURATION = 14;
     private static final int DIRECTIONS = 4;
-
     private static final double ROTATION_ANGLE = 180;
-
 
     private AIAction action = new AIAction();
 
@@ -36,7 +34,6 @@ public class CoinMoneyManCtrl implements AIController {
             public void run() {
                 if (!SharedValues.gamePaused) {
                     if (CMMan.dead) cancel();
-                    System.out.println("ai action running");
                     rotating = r.nextBoolean();
                     shootInACross();
                 }
@@ -49,7 +46,6 @@ public class CoinMoneyManCtrl implements AIController {
 
 
     private void shootInACross() {
-        System.out.println("shoot in a cross");
         long interval = fireDuration / BULLETS_FIRED_IN_DURATION;
         final int totalBullets = BULLETS_FIRED_IN_DURATION * DIRECTIONS;
         final double angleDif = 360 / DIRECTIONS;
@@ -62,7 +58,6 @@ public class CoinMoneyManCtrl implements AIController {
             @Override
             public void run() {
                 if (!SharedValues.gamePaused) {
-                    System.out.println("running shootin a cross timertask. rotating=" + rotating);
                     if (rotating) {
                         currentRotationAngle = ROTATION_ANGLE / BULLETS_FIRED_IN_DURATION * iterations;
                     }

@@ -83,6 +83,11 @@ public class PlayerShip extends GameObject implements Turret {
 
     private List<Projectile> bullets = new ArrayList<>();
 
+    private int scrapMetal = 0;
+    private int score = 0;
+
+    public boolean bossKilled = false;
+
     public PlayerShip(Controller ctrl) {
         super(INIT_POS, INIT_VEL, INIT_DIR, WIDTH, HEIGHT, DEATH_SOUND, IMAGE);
         action = ctrl.action();
@@ -99,29 +104,52 @@ public class PlayerShip extends GameObject implements Turret {
     public void removeAllZappers() {
         attachedZappers.forEach(Zapper::detachFromShip);
         attachedZappers.clear();
-        calcZapperDamage();
+        zapperDamage = 0;
+    }
+
+    public int getScrapMetal() {
+        return scrapMetal;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void bossKilled(){
+        bossKilled = true;
     }
 
     private void calcZapperDamage() {
-        int count = 0;
-        for (Zapper z : attachedZappers) count -= z.getStats().getBulletDamage();
-        zapperDamage = count;
+        zapperDamage = 0;
+        for (Zapper z : attachedZappers) zapperDamage -= z.getStats().getBulletDamage();
     }
 
-    public void removeZapper(Zapper zapper) {
-        attachedZappers.remove(zapper);
-        calcZapperDamage();
-    }
 
     public void setStats() {
         super.setStats(INIT_ARMOUR, INIT_LIVES, FIRE_RATE, BULLET_SPEED, BULLET_DAMAGE, CONTACT_DAMAGE, SCRAP_ON_DEATH);
     }
 
+    public void newGame(){
+        scrapMetal = 0;
+        stats.resetStats();
+        resetPosition();
+    }
+
+    public void newLife(){
+        stats.newLife();
+        dead = false;
+        resetPosition();
+        timeOutInvincible();
+    }
+
     public void resetPosition() {
-        mapPos = mapHelper.getMapPos();
-        position = new Vector2D(initPos);
-        velocity = new Vector2D(initVel);
-        direction = new Vector2D(initDir);
+        int[] newPos = mapHelper.getInitPos();
+        System.out.println("initPos="+Arrays.toString(newPos));
+        mapPos = new int[]{newPos[0], newPos[1]};
+        mapHelper.updateMap();
+        position = new Vector2D(INIT_POS);
+        velocity = new Vector2D(INIT_VEL);
+        direction = new Vector2D(INIT_DIR);
     }
 
 
@@ -139,7 +167,6 @@ public class PlayerShip extends GameObject implements Turret {
         turretVec.set(position.x + radius * 0.8 * Math.cos(direction.angle()), position.y + radius * 0.8 * Math.sin(direction.angle()));
 
         if (zapperDamage != 0 && !dealingWithZappers) {
-            System.out.println("dealing with zappers");
             dealWithZappers();
         }
 
@@ -192,7 +219,8 @@ public class PlayerShip extends GameObject implements Turret {
     }
 
     public void draw(Graphics2D g) {
-        if (zapperDamage != 0) {
+        if (!attachedZappers.isEmpty()) {
+            System.out.println("Zappers size="+attachedZappers.size());
             g.setColor(Color.RED);
             g.drawString("!!SHAKE IT OFF!!", (int) position.x - 30, (int) position.y - height - 10);
         }
@@ -235,7 +263,6 @@ public class PlayerShip extends GameObject implements Turret {
 
                             if (!prevDir.equals(direction)) {
                                 clickCount++;
-                                System.out.println("click count=" + clickCount);
                                 prevDir = new Vector2D(direction);
                             }
                             count++;
@@ -263,7 +290,8 @@ public class PlayerShip extends GameObject implements Turret {
     //Method to make the ship switch maps
     private void switchRoom() {
         switchingRooms = true;
-
+        for (Zapper z : attachedZappers) z.dead = true;
+        attachedZappers.clear();
         mapHelper.setMapPos(mapPos);
         position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
         Vector2D newPos = new Vector2D(position);
@@ -290,8 +318,6 @@ public class PlayerShip extends GameObject implements Turret {
         Animation.moveObject(this, newPos, SWITCH_ROOM_ANIMATION_DURATION);
     }
 
-
-    @Override
     public void timeOutInvincible() {
         isInvincible = true;
         new Timer().schedule(new TimerTask() {
@@ -309,7 +335,15 @@ public class PlayerShip extends GameObject implements Turret {
             other.hitDetected(this);
             return;
         }
+
+        if (other instanceof ScrapMetal){
+            pickUpScrapMetal(((ScrapMetal) other).getAmount());
+            ((ScrapMetal) other).setAmount(0);
+            other.dead = true;
+            return;
+        }
         HitDetection.ContactHit(this, other);
+        timeOutInvincible();
     }
 
     private void bulletTimer() {
@@ -322,18 +356,16 @@ public class PlayerShip extends GameObject implements Turret {
         }, stats.getFireRate());
     }
 
-    public void mkBullet() {
-        //init the bullet just outside the turret.
-    }
-
     @Override
     public List<Projectile> getProjectiles() {
         return bullets;
     }
+
     @Override
     public void clearProjectiles() {
         bullets.clear();
     }
+
     @Override
     public void makeBullet(double angle) {
         SoundManager.fire();
@@ -348,10 +380,17 @@ public class PlayerShip extends GameObject implements Turret {
     }
 
     public boolean canShoot(GameObject other) {
-        return other instanceof Enemy || other instanceof Saucer;
+        return other instanceof Enemy;
     }
 
     public boolean canHit(GameObject other) {
-        return other instanceof Obstacle || other instanceof DoorButton || other instanceof Enemy || other instanceof Saucer || (other instanceof Projectile && !(other instanceof Bullet));
+        return other instanceof Obstacle || other instanceof DoorButton || other instanceof Enemy || (other instanceof Projectile && !(other instanceof Bullet));
+    }
+
+
+    public void pickUpScrapMetal(int amount){
+        scrapMetal += amount;
+        score += amount;
+        System.out.println("picked up "+amount + " scrap metal");
     }
 }

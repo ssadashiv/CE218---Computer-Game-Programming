@@ -9,6 +9,10 @@ public class MapConstants {
     public static final String MAP_1_DOORS = "maps_1_doors";
     public static final String MAP_3_DOORS = "maps_3_doors";
     public static final String MAP_4_DOORS = "maps_4_doors";
+    public static final String BOSS_ROOM = "boss_room";
+    public static final String SHOP_ROOM = "shop_room";
+
+    public static final String REGULAR_ROOM = "regular_room";
 
     public static final int WEST_ROOM = 0;
     public static final int NORTH_ROOM = 1;

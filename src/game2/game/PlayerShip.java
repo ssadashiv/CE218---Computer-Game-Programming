@@ -40,23 +40,10 @@ class PlayerShip extends Ship{
         super(ctrl, initPos, initVel, initDir, RADIUS, DEATH_SOUND, IMAGE);
 
         setInfo(STEER_RATE, MAG_ACC, DRAG);
-        timeOutInvincible();
     }
 
 
 
-    private void timeOutInvincible(){
-        int delay = 1000;
-        int period = 1000;
-
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            public void run() {
-                countDown --;
-                if (countDown== 0) invincible = false;
-            }
-        }, delay, period);
-    }
 
     public boolean canHit(GameObject other) {
         return (other instanceof Asteroid) && !invincible;

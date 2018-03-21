@@ -14,6 +14,7 @@ import java.awt.*;
 
 import static Assignment.Other.Constants.DT;
 import static Assignment.Other.SharedValues.cellSize;
+import static Assignment.Other.SharedValues.lvlDifficulty;
 
 /**
  * Created by el16035 on 17/03/2018.
@@ -26,7 +27,6 @@ public class ChargeBot extends Enemy {
     private static final Vector2D INIT_VEL = new Vector2D(0, 0);
     private static final int RADIUS = cellSize / 2;
     private static final int SPEED = 100;
-
 
 
     //STATS
@@ -52,7 +52,6 @@ public class ChargeBot extends Enemy {
     private Vector2D chargingPos;
 
 
-
     private int sectorRadius = 150;
 
     private EnergyBar energyBar;
@@ -60,7 +59,7 @@ public class ChargeBot extends Enemy {
     private AIAction ctrl;
 
 
-    public ChargeBot( PlayerShip ship, Vector2D position) {
+    public ChargeBot(PlayerShip ship, Vector2D position) {
         super(position, INIT_VEL, INIT_DIR, SPEED, RADIUS, RADIUS, DEATH_SOUND, IMAGE);
         setStats();
         ctrl = new ChargeBotCtrl(this, ship).aiAction();
@@ -78,7 +77,7 @@ public class ChargeBot extends Enemy {
 
     @Override
     public void setStats() {
-        super.setStats(INIT_ARMOUR, INIT_LIVES, FIRE_RATE, BULLET_SPEED, BULLET_DAMAGE, CONTACT_DAMAGE, SCRAP_ON_DEATH);
+        super.setStats((int) (INIT_ARMOUR * lvlDifficulty), INIT_LIVES, FIRE_RATE, (int) (BULLET_SPEED * lvlDifficulty), (int) (BULLET_DAMAGE * lvlDifficulty), (int) (CONTACT_DAMAGE * lvlDifficulty), (int) (SCRAP_ON_DEATH * lvlDifficulty));
     }
 
     public boolean hasRunOutOfEnergy() {
@@ -113,14 +112,14 @@ public class ChargeBot extends Enemy {
     public void update() {
         field.update(this, DT);
         if (isInChargingSector() && currentEnergy < MAX_ENERGY) {
-            currentEnergy+= 10;
+            currentEnergy += 10;
 
             if (runOutOfEnergy) {
-                if (currentEnergy >= MAX_ENERGY){
+                if (currentEnergy >= MAX_ENERGY) {
                     currentEnergy = MAX_ENERGY;
                     isInvincible = true;
                     runOutOfEnergy = false;
-                }else{
+                } else {
                     isInvincible = false;
                 }
             }
@@ -147,15 +146,15 @@ public class ChargeBot extends Enemy {
         g.drawOval((int) position.x - sectorRadius, (int) position.y - sectorRadius, sectorRadius * 2, sectorRadius * 2);
         energyBar.draw(g);
 
-        if (runOutOfEnergy){
-           drawExclamationMark(g);
+        if (runOutOfEnergy) {
+            drawExclamationMark(g);
         }
         super.draw(g);
     }
 
-    private void drawExclamationMark(Graphics2D g){
+    private void drawExclamationMark(Graphics2D g) {
         g.setColor(Color.RED);
         g.setStroke(new BasicStroke(2f));
-        g.drawString("!!", (int) energyBar.position.x + (energyBar.WIDTH/2), (int) energyBar.position.y - 10);
+        g.drawString("!!", (int) energyBar.position.x + (energyBar.WIDTH / 2), (int) energyBar.position.y - 10);
     }
 }

@@ -1,7 +1,5 @@
 package Assignment.Map;
 
-import java.awt.*;
-
 
 /**
  * Created by el16035 on 13/03/2018.
@@ -14,7 +12,6 @@ public class MapHelper {
 
     //If the room is a neighbour to a room that is visited.
     public static final int ROOM_NEIGHBOR_TO_VISIT = 1;
-
 
 
     //Unexplored room
@@ -31,10 +28,11 @@ public class MapHelper {
 
     private Map map;
     public boolean roomChanged = true;
-  /*  public MapHelper(){
-    }
-    */
-    public void setLevelAndMap(int currentLevel){
+
+    /*  public MapHelper(){
+      }
+      */
+    public void setLevelAndMap(int currentLevel) {
         this.currentLevel = currentLevel;
         newMap();
     }
@@ -43,30 +41,35 @@ public class MapHelper {
         return map;
     }
 
-    public boolean doesRoomExist(int[] position){
-        return map.doesRoomExist(position);
+    public boolean doesRoomExist(int[] position) {
+        return map.roomExists(position);
     }
 
-    public void newMap(){
+    public void newMap() {
         System.out.println("reset called in maphelper");
-        map = new Map(ROOM_SIZE_AT_LEVEL[currentLevel-1]);
+        int index = Math.min(ROOM_SIZE_AT_LEVEL.length-1, currentLevel);
+        map = new Map(ROOM_SIZE_AT_LEVEL[index]);
         mapPos = map.getInitPos();
         exploredRooms = new int[map.size][map.size];
         updateMap();
     }
 
-    public void updateMap(){
+    public void updateMap() {
         roomChanged = true;
         setNeighbourRooms();
         setVisitedRooms();
     }
 
-    private void setNeighbourRooms(){
+    public int[] getInitPos(){
+        return map.getInitPos();
+    }
+
+    private void setNeighbourRooms() {
         int[][] newVisibleRooms = new int[4][2];
-        newVisibleRooms[0] = new int[]{mapPos[0]-1, mapPos[1]};
-        newVisibleRooms[1] = new int[]{mapPos[0]+1, mapPos[1]};
-        newVisibleRooms[2] = new int[]{mapPos[0], mapPos[1]-1};
-        newVisibleRooms[3] = new int[]{mapPos[0], mapPos[1]+1};
+        newVisibleRooms[0] = new int[]{mapPos[0] - 1, mapPos[1]};
+        newVisibleRooms[1] = new int[]{mapPos[0] + 1, mapPos[1]};
+        newVisibleRooms[2] = new int[]{mapPos[0], mapPos[1] - 1};
+        newVisibleRooms[3] = new int[]{mapPos[0], mapPos[1] + 1};
 
         for (int[] newRoom : newVisibleRooms) {
             if (roomExists(newRoom) && exploredRooms[newRoom[0]][newRoom[1]] == 0) {
@@ -75,7 +78,13 @@ public class MapHelper {
         }
     }
 
-    private void setVisitedRooms(){
+    public Room getRoomAtPos(int[] index) {
+
+        return map.getRoomAtPosition(index);
+    }
+
+
+    private void setVisitedRooms() {
         exploredRooms[mapPos[0]][mapPos[1]] = ROOM_VISITED;
     }
 /*
@@ -91,7 +100,7 @@ public class MapHelper {
         for (int i =0;i<colorMap.length;i++){
             for (int j=0;j<colorMap[i].length;j++){
                 int[] index = new int[]{i,j};
-                if (map.doesRoomExist(index)){
+                if (map.roomExists(index)){
                     colorMap[i][j] = ROOM_VISITED_COLOR;
                     //map.getRoomAtPosition(new int[]{i,j}).getRoomColor();
                 }
@@ -100,34 +109,33 @@ public class MapHelper {
         return colorMap;
     }*/
 
-    public boolean[][] getWhichRoomsExist(){
+    public boolean[][] getWhichRoomsExist() {
         boolean[][] whichMapExist = new boolean[map.size][map.size];
 
-        for (int i=0; i<map.size;i++){
-            for (int j=0;j<map.size;j++){
+        for (int i = 0; i < map.size; i++) {
+            for (int j = 0; j < map.size; j++) {
                 whichMapExist[i][j] = roomExists(new int[]{i, j});
             }
         }
         return whichMapExist;
     }
 
-    public void setMapPos(int[] newPos){
+    public void setMapPos(int[] newPos) {
         mapPos = newPos;
         updateMap();
     }
 
-    public int[] getMapPos(){
-        return new int[]{mapPos[0],mapPos[1]};
+    public int[] getMapPos() {
+        return new int[]{mapPos[0], mapPos[1]};
     }
 
-    public int[][] getExploredRooms(){
+    public int[][] getExploredRooms() {
         return exploredRooms;
     }
 
-    private boolean roomExists(int[] index){
-        return map.doesRoomExist(index);
+    private boolean roomExists(int[] index) {
+        return map.roomExists(index);
     }
-
 
 
 }

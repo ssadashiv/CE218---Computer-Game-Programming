@@ -21,6 +21,7 @@ public abstract class Enemy extends GameObject {
     public Enemy(Vector2D position, Vector2D velocity, Vector2D direction, int speed, int width, int height, Clip deathSound, Image image) {
         super(position, velocity, direction, width, height, deathSound, image);
         this.speed = speed;
+
     }
 
     public void hitDetected(GameObject other) {

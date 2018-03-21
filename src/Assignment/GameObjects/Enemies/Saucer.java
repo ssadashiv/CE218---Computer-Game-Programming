@@ -4,6 +4,7 @@ import Assignment.GameObjects.*;
 import Assignment.GameObjects.Projectiles.Bullet;
 import Assignment.GameObjects.Projectiles.Projectile;
 import Assignment.GameObjects.Projectiles.Rocket;
+import Assignment.Other.SharedValues;
 import Assignment.Utilities.Controllers.AIControllers.AIAction;
 import Assignment.Utilities.Controllers.AIControllers.SaucerCtrl;
 import Assignment.Utilities.Gravity.ForceField;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static Assignment.Other.Constants.DT;
 import static Assignment.Other.Constants.VEC_PLACEHOLDER;
+import static Assignment.Other.SharedValues.lvlDifficulty;
 
 /**
  * Created by el16035 on 19/03/2018.
@@ -39,13 +41,11 @@ public class Saucer extends Enemy implements Turret {
 
 
     //STATS
-    //private static final int INIT_ARMOUR = 150;
-    private static final int INIT_ARMOUR = 1;
+    private static final int INIT_ARMOUR = 150;
     private static final int INIT_LIVES = 1;
 
     //The fire rate of the bullet in milliseconds
-    ///private static final int FIRE_RATE = 1000;
-    private static final int FIRE_RATE = 100000;
+    private static final int FIRE_RATE = 1500;
 
     //the bullet speed. x pixels in a second
     private static final int BULLET_SPEED = 200;
@@ -84,7 +84,7 @@ public class Saucer extends Enemy implements Turret {
 
     @Override
     public void setStats() {
-        super.setStats(INIT_ARMOUR, INIT_LIVES, FIRE_RATE, BULLET_SPEED, BULLET_DAMAGE, CONTACT_DAMAGE, SCRAP_ON_DEATH);
+        super.setStats((int) (INIT_ARMOUR*lvlDifficulty), INIT_LIVES, FIRE_RATE, (int) (BULLET_SPEED*lvlDifficulty), (int)(BULLET_DAMAGE*lvlDifficulty), (int)(CONTACT_DAMAGE*lvlDifficulty), (int)(SCRAP_ON_DEATH*lvlDifficulty));
     }
 
     @Override

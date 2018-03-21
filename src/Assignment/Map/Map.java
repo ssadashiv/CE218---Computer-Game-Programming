@@ -1,10 +1,10 @@
 package Assignment.Map;
 
-import Assignment.Utilities.Gravity.ForceFieldGravity;
 import Assignment.Utilities.RandomNumberHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static Assignment.Map.MapConstants.*;
 
@@ -33,7 +33,7 @@ public class Map {
         return initPos;
     }
 
-    boolean doesRoomExist(int[] index) {
+    boolean roomExists(int[] index) {
         try {
             return rooms[index[0]][index[1]] != null;
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -45,7 +45,7 @@ public class Map {
         //The position has to be an array of 2 coordinates
         if (position.length != 2) return null;
 
-        if (isValidPosition(position, size) && rooms[position[0]][position[1]] != null) {
+        if (roomExists(position)) {
             return rooms[position[0]][position[1]];
         }
 
@@ -64,40 +64,113 @@ public class Map {
             }
         }
 
+        createSpecialRoom(getPossibleLeafRooms(), BOSS_ROOM);
+        createSpecialRoom(getPossibleLeafRooms(), SHOP_ROOM);
 
         //for loop identifying on which sides this room have neighbours.
         //index 0=west, 1=north, 2=east, 3= south;
         for (int i = 0; i < rooms.length; i++) {
             for (int j = 0; j < rooms[i].length; j++) {
-                if (rooms[i][j] != null) rooms[i][j].setRoomMap(getNeighbours(new int[]{i, j}));
+                if (rooms[i][j] != null){
+                    boolean isInitPos = (initPos[0] == i && initPos[1] == j);
+                    rooms[i][j].setRoomMap(getNeighbours(new int[]{i, j}), isInitPos);
+                }
             }
         }
+
+        printMap(rooms);
     }
 
+    private void createSpecialRoom(List<int[]> leafRooms, String roomType) {
+        int[] randomPos = leafRooms.get(new Random().nextInt(leafRooms.size()));
+        rooms[randomPos[0]][randomPos[1]] = new Room();
+        rooms[randomPos[0]][randomPos[1]].setRoomType(roomType);
+
+    }
+
+    private List<int[]> getPossibleLeafRooms() {
+        List<int[]> leafRooms = new ArrayList<>();
+        for (int i = 0; i < rooms.length; i++) {
+            for (int j = 0; j < rooms[i].length; j++) {
+                int[] index = {i, j};
+                if (!roomExists(index) && getNeighbourCount(index) == 1) {
+                    if (!isNeighbourToSpecialRoom(index)) {
+                        leafRooms.add(index);
+                    }
+                }
+
+            }
+        }
+        return leafRooms;
+    }
+
+    private int getNeighbourCount(int[] roomPos) {
+        boolean[] neighbours = getNeighbours(roomPos);
+        int count = 0;
+        for (boolean b : neighbours) if (b) count++;
+        return count;
+    }
+
+
+    //Method returning a boolean array describing where the supplied room's neighbours are
     private boolean[] getNeighbours(int[] roomPos) {
         boolean[] neighbours = new boolean[4];
 
         int[] currentTest;
 
         currentTest = new int[]{roomPos[0] - 1, roomPos[1]};
-        if (doesRoomExist(currentTest)) neighbours[NORTH_ROOM] = true;
+        if (roomExists(currentTest)) neighbours[NORTH_ROOM] = true;
 
         currentTest = new int[]{roomPos[0] + 1, roomPos[1]};
-        if (doesRoomExist(currentTest)) neighbours[SOUTH_ROOM] = true;
+        if (roomExists(currentTest)) neighbours[SOUTH_ROOM] = true;
 
         currentTest = new int[]{roomPos[0], roomPos[1] - 1};
-        if (doesRoomExist(currentTest)) neighbours[WEST_ROOM] = true;
+        if (roomExists(currentTest)) neighbours[WEST_ROOM] = true;
 
         currentTest = new int[]{roomPos[0], roomPos[1] + 1};
-        if (doesRoomExist(currentTest)) neighbours[EAST_ROOM] = true;
-
-
-        /*System.out.println("roomPos=" + Arrays.toString(roomPos));
-        System.out.println("neighbours=" + Arrays.toString(neighbours));*/
+        if (roomExists(currentTest)) neighbours[EAST_ROOM] = true;
 
         return neighbours;
     }
 
+    private boolean isNeighbourToSpecialRoom(int[] roomPos) {
+        int[] currentTest;
+
+        currentTest = new int[]{roomPos[0] - 1, roomPos[1]};
+        if (roomExists(currentTest)) {
+            if (isSpecialRoom(currentTest)) {
+                return true;
+            }
+        }
+
+        currentTest = new int[]{roomPos[0] + 1, roomPos[1]};
+        if (roomExists(currentTest)) {
+            if (isSpecialRoom(currentTest)) {
+                return true;
+            }
+        }
+
+
+        currentTest = new int[]{roomPos[0], roomPos[1] - 1};
+        if (roomExists(currentTest)) {
+            if (isSpecialRoom(currentTest)) {
+                return true;
+            }
+        }
+
+        currentTest = new int[]{roomPos[0], roomPos[1] + 1};
+        if (roomExists(currentTest)) {
+            if (isSpecialRoom(currentTest)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isSpecialRoom(int[] pos) {
+        return !rooms[pos[0]][pos[1]].getRoomType().equals(REGULAR_ROOM);
+    }
 
     //Method for generating a map with size as width and height of the map
     private boolean[][] generateMap() {
@@ -115,7 +188,6 @@ public class Map {
         leafRooms.add(currentPos);
 
         int desiredRooms = size * 3 / 2;
-        System.out.println("desRoom=" + desiredRooms);
         int roomsGenerated = 1;
 
         //random generator which will produce a number between 0 and 3 which indicated the next direction for the new room
@@ -132,13 +204,11 @@ public class Map {
             }
         }
 
-        printMap(roomMap);
-
         return roomMap;
 
     }
 
-    //Method which will return rooms which has a neighboring room that only has 1 neighbour
+    //Method which will return rooms which has a possible neighboring room that only has 1 neighbour
     public List<int[]> getEdgeRooms(boolean[][] map) {
         List<int[]> edgeRooms = new ArrayList<>();
 
@@ -156,6 +226,7 @@ public class Map {
         }
         return edgeRooms;
     }
+
 
     //Return true if a position can make a room which have no neighbours except from the room that created it.
     private boolean canMakeLeafRoom(boolean[][] map, int[] currentPos) {
@@ -241,36 +312,28 @@ public class Map {
         if (isValidPosition(currentTest, map.length)) {
             if (!map[currentTest[0]][currentTest[1]]) count++;
         }
-
-
-        //Working
-        /*
-        if (isValidPosition(new int[]{currentPos[0] - 1, currentPos[1]}, map.length)) {
-            if (!map[currentPos[0] - 1][currentPos[1]]) count++;
-        }
-
-        if (isValidPosition(new int[]{currentPos[0] + 1, currentPos[1]}, map.length)) {
-            if (!map[currentPos[0] + 1][currentPos[1]]) count++;
-        }
-
-        if (isValidPosition(new int[]{currentPos[0], currentPos[1] - 1}, map.length)) {
-            if (!map[currentPos[0]][currentPos[1] - 1]) count++;
-        }
-
-        if (isValidPosition(new int[]{currentPos[0], currentPos[1] + 1}, map.length)) {
-            if (!map[currentPos[0]][currentPos[1] + 1]) count++;
-        }
-*/
         return count;
 
     }
 
-    private static void printMap(boolean[][] roomMap) {
+    private void printMap(Room[][] roomMap) {
         for (int i = 0; i < roomMap.length; i++) {
             StringBuilder sb = new StringBuilder();
             for (int j = 0; j < roomMap[i].length; j++) {
-                if (roomMap[i][j]) {
-                    sb.append('#');
+                if (roomExists(new int[]{i, j})) {
+                    String type = roomMap[i][j].getRoomType();
+
+                    switch (type) {
+                        case REGULAR_ROOM:
+                            sb.append('#');
+                            break;
+                        case BOSS_ROOM:
+                            sb.append('B');
+                            break;
+                        case SHOP_ROOM:
+                            sb.append('S');
+                            break;
+                    }
                     continue;
                 }
 

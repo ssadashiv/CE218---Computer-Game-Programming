@@ -23,8 +23,10 @@ public class Sprite {
             BASIC_ROCKET,
             BLACK_HOLE,
             WHITE_HOLE,
-    COIN_MONEY_MAN,
-    COIN_BULLET;
+            LVL_HOLE,
+            COIN_MONEY_MAN,
+            COIN_BULLET,
+            SCRAP_METAL;
 
     static {
         try {
@@ -43,9 +45,12 @@ public class Sprite {
             BASIC_ROCKET = ImageManager.loadImage("basic_rocket");
             BLACK_HOLE = ImageManager.loadImage("black_hole");
             WHITE_HOLE = ImageManager.loadImage("white_hole");
+            LVL_HOLE = ImageManager.loadImage("lvl_hole");
 
             COIN_MONEY_MAN = ImageManager.loadImage("coin_money_man");
             COIN_BULLET = ImageManager.loadImage("coin_bullet");
+
+            SCRAP_METAL = ImageManager.loadImage("scrap_metal");
         } catch (IOException e) {
             e.printStackTrace();
         }
