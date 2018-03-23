@@ -5,9 +5,7 @@ import game2.utilities.Vector2D;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 
-import static Assignment.Other.Constants.DRAG;
 import static game2.Constants.FRAME_HEIGHT;
 import static game2.Constants.FRAME_WIDTH;
 import static game2.Constants.DT;

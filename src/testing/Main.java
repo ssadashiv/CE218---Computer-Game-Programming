@@ -1,9 +1,6 @@
 package testing;
 
-import Assignment.Map.MapFileParser;
-
-import java.awt.*;
-import java.util.Arrays;
+import assignment2.map.MapFileParser;
 
 /**
  * Created by el16035 on 13/03/2018.
